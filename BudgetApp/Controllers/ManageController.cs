@@ -212,6 +212,28 @@ namespace BudgetApp.Controllers
             return RedirectToAction("Index", new { Message = ManageMessageId.RemovePhoneSuccess });
         }
 
+        //POST: Change Display Name
+        //public async Task<ActionResult> ChangeDisplayName(ManageLoginsViewModel model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(model);
+        //    }
+        //    var result = await UserManager.ChangePhoneNumberAsync(User.Identity.GetUserId(), model.DisplayName);
+        //    if (result.Succeeded)
+        //    {
+        //        var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+        //        if (user != null)
+        //        {
+        //            await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+        //        }
+        //        return RedirectToAction("Index", new { Message = ManageMessageId.AddPhoneSuccess });
+        //    }
+        //    // If we got this far, something failed, redisplay form
+        //    ModelState.AddModelError("", "Failed to verify phone");
+        //    return View(model);
+        //}
+
         //
         // GET: /Manage/ChangePassword
         public ActionResult ChangePassword()

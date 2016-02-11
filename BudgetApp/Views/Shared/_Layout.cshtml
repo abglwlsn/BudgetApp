@@ -8,6 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
     <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
 
 </head>
 <body>
@@ -101,7 +102,7 @@
                                 <li><a href="http://awest.azurewebsites.net" target="_blank" class="logo-pad text-title-sm">abigail west</a></li>
                             </ul>
                             <!-- right navbar -->
-                            <ul class="nav navbar-nav navbar-right top-navbar">
+                            <ul class="nav navbar-nav navbar-right top-navbar nav-pad">
                                 <li>@Html.Partial("_LoginPartial")</li>
                                 <li><a href=@Url.Action("About", "Home")>About</a></li>
                                 <!-- Dropdown User session -->
@@ -125,11 +126,11 @@
 
             <div class="body content rows scroll-y">
                 @RenderBody()
-                <hr />
-                <footer>
-                    <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-                </footer>
             </div>
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            </footer>
         </div>
     </div>
     @Scripts.Render("~/bundles/jquery")

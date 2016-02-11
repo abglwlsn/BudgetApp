@@ -29,17 +29,22 @@ namespace BudgetApp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Household household = db.Households.Find(id);
-            if (household == null)
+
+            Helper.HouseholdHelper help = new Helper.HouseholdHelper();
+            var user = User.Identity.GetUserId();
+            var hh = help.GetHousehold(user);
+                  
+            if (hh == null)
             {
                 return HttpNotFound();
             }
-            return View(household);
+            return View(hh);
         }
 
         // GET: Households/Create
         public ActionResult Create()
         {
+            ViewBag.ErrorMessage = TempData["ErrorMessage"];
             return View();
         }
 
@@ -48,60 +53,114 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateHouseholdViewModel model)
+        public ActionResult Create([Bind(Include="Id, HouseholdName, InviteCode")] string name)
         {
             Household household = new Household();
-
-            model.HouseholdName = household.Name;
-            model.AdminUserId = household.AdminUserId;
-
+            var id = User.Identity.GetUserId();
+            var user = db.Users.FirstOrDefault(u=>u.Id.Equals(id));
+            
             if (ModelState.IsValid)
             {
-                if (model.HouseholdName != null)
+                if (user.HouseholdId != null)
                 {
-                    household.AdminUserId = User.Identity.GetUserId();
-                    db.Households.Add(household);
-                    db.SaveChanges();
-                    return RedirectToAction("Details", "Households");
+                    ViewBag.ErrorMessage = "You can only belong to one household at a time. If you would  like to create a new household, please leave your current household.";
+                return View();
                 }
+
+                household.Name = name;
+                db.Households.Add(household);
+                db.SaveChanges();
+
+                user.AdminRights = true;
+                user.HouseholdId = household.Id;
+                household.Name = model.HouseholdName;
+                db.SaveChanges();
+
+                return RedirectToAction("Details", "Households", new { id = household.Id });
             }
-            return View(household);
+            return View();
         }
 
-        //POST: Households/Create
+        //POST: Households/Join
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Join(CreateHouseholdViewModel model)
+        public ActionResult Join(string InviteCode)
         {
             if (ModelState.IsValid)
             {
-                if (model.InviteCode != null)
+                if (InviteCode != null)
                 {
-                    var Iuser = db.InvitedUsers.Where(u => u.InviteCode.Equals(model.InviteCode) && u.Email.Equals(model.InviteEmail));
+                    var email = User.Identity.GetUserName();
+                    var Iuser = db.InvitedUsers.FirstOrDefault(u => u.InviteCode.Equals(InviteCode) && u.Email.Equals(email));
 
                     if (Iuser != null)
                     {
-                        //Household household = new Household;
-                        var user = household.Users.FirstOrDefault(u => u.Email.Equals(model.InviteEmail));
-                        model.User.HouseholdId = user.HouseholdId;
-                        household.Users.Add(user);
+                        var user = db.Users.FirstOrDefault(u => u.Email.Equals(Iuser.Email));
 
+                        user.HouseholdId = Iuser.HouseholdId;
+                        user.AdminRights = Iuser.AdminRights;
                         db.SaveChanges();
-                        return RedirectToAction("Details", "Households");
+
+                        return RedirectToAction("Details", "Households", new { id = user.HouseholdId });
                     }
                     else
                     {
-                        ViewBag.ErrorMessage = "Sorry, the invite code and email do not match.";
-                        return View(model);
+                        TempData["ErrorMessage"] = "Sorry, the invite code and email do not match.";
+                        return RedirectToAction("Create");
                     }
                 }
             }
 
-            return View(model);
+            return RedirectToAction("Create");
         }
 
+        //GET: Households/LeaveHousehold
+        public ActionResult LeaveHousehold(string id)
+        {
+            if (ModelState.IsValid)
+            {
+                ApplicationUser currentUser = db.Users.Find(User.Identity.GetUserId());
+                ApplicationUser user = db.Users.Find(id);
 
+                user.HouseholdId = null;
+                db.SaveChanges();
 
+                if (currentUser.Id==user.Id)
+                {
+                    return RedirectToAction("Login", "Account", null);
+                }
+                else
+                {
+                    return RedirectToAction("Details", "Household", new { id = currentUser.HouseholdId });
+                }
+            }
+            return View();
+        }
+
+        //GET: Households/ChangeAdmin
+        public ActionResult ChangeAdmin(string id)
+        {
+            if (ModelState.IsValid)
+            {
+                ApplicationUser user = db.Users.Find(id);
+                ApplicationUser currentUser = db.Users.Find(User.Identity.IsAuthenticated);
+                if (user != currentUser)
+                {
+                  if (user.AdminRights == true)
+                  {
+                      user.AdminRights = false;
+                  }
+                  else
+                  {
+                      user.AdminRights = true;
+                  }
+
+                  db.SaveChanges();
+                  return RedirectToAction("Details", "Household", new { id = user.HouseholdId });
+                }
+            }
+            return View();
+        }
 
 
         // GET: Households/Edit/5

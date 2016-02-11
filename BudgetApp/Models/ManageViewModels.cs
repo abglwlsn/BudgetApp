@@ -16,6 +16,7 @@ namespace BudgetApp.Models
 
     public class ManageLoginsViewModel
     {
+        public string DisplayName { get; set; }
         public IList<UserLoginInfo> CurrentLogins { get; set; }
         public IList<AuthenticationDescription> OtherLogins { get; set; }
     }

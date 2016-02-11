@@ -8,9 +8,22 @@ namespace BudgetApp.Models
 {
     public class Household
     {
+        public Household()
+        {
+            this.Users = new HashSet<ApplicationUser>();
+            this.BankAccounts = new HashSet<BankAccount>();
+            this.BudgetItems = new HashSet<BudgetItem>();
+            this.InvitedUsers = new HashSet<InvitedUser>();
+            this.Transactions = new HashSet<Transaction>();
+        }
+
         public int Id { get; set; }
         public string Name { get; set; }
-        public string AdminUserId { get; set; }
-        public ICollection<ApplicationUser> Users { get; set; }
+
+        public virtual ICollection<ApplicationUser> Users { get; set; }
+        public virtual ICollection<BankAccount> BankAccounts { get; set; }
+        public virtual ICollection<BudgetItem> BudgetItems { get; set; }
+        public virtual ICollection<InvitedUser> InvitedUsers { get; set; }
+        public virtual ICollection<Transaction> Transactions { get; set; }
     }
 }

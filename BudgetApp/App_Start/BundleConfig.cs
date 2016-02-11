@@ -10,6 +10,7 @@ namespace BudgetApp
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
+                        "~/Scripts/Site.js",
                         "~/Site Template/js/jquery.slimscroll.min.js",
                         "~/Site Template/js/morris.js",
                         "~/Site Template/js/classie.js",
@@ -52,8 +53,7 @@ namespace BudgetApp
                       "~/Site Template/css/summernote.css",
                       "~/Site Template/css/magnific-popup.css",
                       "~/Site Template/css/datepicker.css",
-                      "~/Content/bootstrap-social.css",
-                      "~/Content/site.css"
+                      "~/Content/bootstrap-social.css"
                       ));
         }
     }

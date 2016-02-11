@@ -1,7 +1,8 @@
 ﻿@model BudgetApp.Models.Household
-
+@using Microsoft.AspNet.Identity;
 @{
     ViewBag.Title = "Details";
+    var currUserId = User.Identity.GetUserId();
 }
 
 <h2>Details</h2>
@@ -9,34 +10,51 @@
 <div>
     <h4>Household</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+    <h6>@Html.DisplayNameFor(model => model.Name)</h6>
+      <h5>@Html.DisplayFor(model => model.Name)</h5>    
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+        @Html.DisplayNameFor(model => model.Users)
+        @foreach (var user in Model.Users)
+        {
+            <div class="row">
+                <p class="col-md-2 col-md-offset-1"><strong>@user.DisplayName</strong></p>
+                <p class="col-md-3">@user.Email</p>
+                <p class="col-md-1">@user.AdminRights</p>
+                @foreach (var budget in Model.BudgetItems)
+                {
+                <p class="col-md-4">
+                    <b>@budget.Name</b><br />
+                    @budget.Amount<br />
+                    @budget.Duration
+                </p>
+                }
+            </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Published)
-        </dt>
+            if (User.IsInRole("Admin"))
+            {
+                if (user.AdminRights == true)
+                {
+                    <a href=@Url.Action("ChangeAdmin", "Household", new { id = user.Id }) class="btn btn-dark">Remove Admin Rights</a>
+                }
+                else
+                {
+                    <a href=@Url.Action("ChangeAdmin", "Household", new { id = user.Id }) class="btn btn-dark">Give Admin Rights</a>
+                }
+                if (user.Id != currUserId)
+                {
+                <a href=@Url.Action("LeaveHousehold", "Households", new { id = user.Id }) class="btn btn-dark">Expel User</a>
+                    }
+                }
+            }
+ <div class="verify-contain">
+     <button type="button" id="leave" class="btn btn-dark">Leave Household</button>
+     <div id="verify">
+         <p class="text-danger">Are you sure you want to leave this household? You will lose all access to the information contained within. If you are the last member, the household will be deleted.</p>
+         @{  
+         <a href=@Url.Action("LeaveHousehold", "Households", new { id = currUserId }) }) class="btn btn-danger">Yes, leave household</a>
+             }
+     </div>
+ </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Published)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.AdminUserId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.AdminUserId)
-        </dd>
-
-    </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
