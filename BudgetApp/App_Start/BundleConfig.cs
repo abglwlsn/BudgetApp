@@ -10,19 +10,21 @@ namespace BudgetApp
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
-                        "~/Site Template/js/appear.js",
-                        "~/Site Template/js/custom.js",
-                        "~/Site Template/js/gmap3.min.js",
-                        "~/Site Template/js/jquery.fitvids.js",
+                        "~/Site Template/js/jquery.slimscroll.min.js",
+                        "~/Site Template/js/morris.js",
+                        "~/Site Template/js/classie.js",
+                        "~/Site Template/js/modalEffects.js",
+                        "~/Site Template/js/sortable.min.js",
+                        "~/Site Template/js/bootstrap-select.min.js",
+                        "~/Site Template/js/summernote.min.js",
                         "~/Site Template/js/jquery.magnific-popup.min.js",
-                        "~/Site Template/js/jquery.mb.YTPlayer.min.js",
-                        "~/Site Template/js/jquery.parallax-1.1.3.js",
-                        "~/Site Template/js/jquery.simple-text-rotator.min.js",
-                        "~/Site Template/js/jquery.superslides.min.js",
-                        "~/Site Template/js/owl.carousel.min.js",
-                        "~/Site Template/js/smoothscroll.js",
-                        "~/Site Template/js/submenu-fix.js",
-                        "~/Site Template/js/wow.min.js"
+                        "~/Site Template/js/bootstrap.file-input.js",
+                        "~/Site Template/js/bootstrap-datepicker.js",
+                        "~/Site Template/js/ickeck.min.js",
+                        "~/Site Template/js/jquery.snippet.js",
+                        "~/Site Template/js/jquery.easyWizard.js",
+                        "~/Site Template/js/scripts.js",
+                        "~/Site Template/js/lanceng.js"
                         ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -34,21 +36,23 @@ namespace BudgetApp
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
+                      "~/Scripts/bootstrap.min.js",
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Site Template/css/bootstrap-theme.css",
-                      "~/Site Template/css/greensea.css",
-                      "~/Site Template/css/magnific-popup.css",
-                      "~/Site Template/css/owl.carousel.css",
-                      "~/Site Template/css/simpletextrotator.css",
-                      "~/Site Template/css/stroke-gap-icons.css",
-                      "~/Site Template/css/superslides.css",
-                      "~/Site Template/css/vertical.min.css",
+                      "~/Content/bootstrap.min.css",
                       "~/Site Template/css/style.css",
+                      "~/Site Template/css/style-responsive.css",
+                      "~/Site Template/css/animate.css",
+                      "~/Site Template/css/morris.css",
+                      "~/Site Template/css/component.css",
+                      "~/Site Template/css/sortable-theme-bootstrap.css",
+                      "~/Site Template/css/green.css",
+                      "~/Site Template/css/bootstrap-select.min.css",
+                      "~/Site Template/css/summernote.css",
+                      "~/Site Template/css/magnific-popup.css",
+                      "~/Site Template/css/datepicker.css",
                       "~/Content/bootstrap-social.css",
-                      "~/Content/bootstrap.css",
                       "~/Content/site.css"
                       ));
         }

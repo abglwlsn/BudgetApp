@@ -1,5 +1,7 @@
 namespace BudgetApp.Migrations
 {
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -14,6 +16,13 @@ namespace BudgetApp.Migrations
 
         protected override void Seed(BudgetApp.Models.ApplicationDbContext context)
         {
+            var roleManager = new RoleManager<IdentityRole>(
+                new RoleStore<IdentityRole>(context));
+
+            if (!context.Roles.Any(r => r.Name == "Admin"))
+            {
+                roleManager.Create(new IdentityRole { Name = "Admin" });
+            }
             //  This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 

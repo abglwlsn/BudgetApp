@@ -1,6 +1,15 @@
 ﻿@{
     ViewBag.Title = "Contact";
 }
+@if (!User.Identity.IsAuthenticated)
+{
+    Layout = "~/Views/Shared/_AnonLayout.cshtml";
+}
+else
+{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 <h2>@ViewBag.Title.</h2>
 <h3>@ViewBag.Message</h3>
 

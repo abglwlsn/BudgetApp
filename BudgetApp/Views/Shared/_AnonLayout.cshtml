@@ -1,0 +1,64 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="container-fluid full-width">
+            <!-- BEGIN NAVBAR CONTENT-->
+            <div class="navbar navbar-default" role="navigation">
+                <div class="container-fluid">
+                    <!-- Navbar Header -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <i class="fa fa-angle-double-down"></i>
+                        </button>
+                    </div>
+                    <!-- /navbar header -->
+                    <!-- Navbar Collapse -->
+                    <div class="navbar-collapse collapse">
+                        <!-- left navbar -->
+                        <ul class="nav navbar-nav top nav-pad">
+                            <li><a href="http://awest.azurewebsites.net" target="_blank" class="text-title-sm">abigail west</a></li>
+                        </ul>
+                        <!-- right navbar -->
+                        <ul class="nav navbar-nav navbar-right top-navbar nav-pad">
+                            <li><a href=@Url.Action("Login", "Account") class="text-title">Cachin' Cash</a></li>
+                            @*<li>@Html.Partial("_LoginPartial")</li>*@
+                            <li><a href=@Url.Action("About", "Home")>About</a></li>
+                            <li><a href=@Url.Action("Contact", "Home")>Contact</a></li>
+                            <!-- Dropdown User session -->
+                            <li class="dropdown">
+                                <a href="#fakelink" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-chevron-down i-xs"></i></a>
+                                <ul class="dropdown-menu animated half flipInX">
+                                    <li><a href=@Url.Action("Index", "Manage")>Profile</a></li>
+                                    <li class="divider"></li>
+                                    <li><a class="md-trigger" data-modal="logout-modal">Logout</a></li>
+                                </ul>
+                            </li><!-- /dropdown user session-->
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /div .container-->
+            </div>
+            <!-- END NAVBAR CONTENT-->
+            <div class="body content rows scroll-y">
+                @RenderBody()
+                <hr />
+                <footer>
+                    <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+                </footer>
+            </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

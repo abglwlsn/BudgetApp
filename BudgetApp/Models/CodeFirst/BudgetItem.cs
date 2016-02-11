@@ -20,9 +20,11 @@ namespace BudgetApp.Models
         [Required]
         [Display(Name="Budget Resets After: ")]
         public int DurationId { get; set; }
+        public int CreatorId { get; set; }
 
         public virtual Category Category { get; set; }
         public virtual Household Household { get; set; }
         public virtual Duration Duration { get; set; }
+        public virtual ApplicationUser Creator { get; set; }
     }
 }

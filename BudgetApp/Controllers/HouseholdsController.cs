@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Microsoft.AspNet.Identity;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -47,17 +48,61 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Published,AdminUserId")] Household household)
+        public ActionResult Create(CreateHouseholdViewModel model)
+        {
+            Household household = new Household();
+
+            model.HouseholdName = household.Name;
+            model.AdminUserId = household.AdminUserId;
+
+            if (ModelState.IsValid)
+            {
+                if (model.HouseholdName != null)
+                {
+                    household.AdminUserId = User.Identity.GetUserId();
+                    db.Households.Add(household);
+                    db.SaveChanges();
+                    return RedirectToAction("Details", "Households");
+                }
+            }
+            return View(household);
+        }
+
+        //POST: Households/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Join(CreateHouseholdViewModel model)
         {
             if (ModelState.IsValid)
             {
-                db.Households.Add(household);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (model.InviteCode != null)
+                {
+                    var Iuser = db.InvitedUsers.Where(u => u.InviteCode.Equals(model.InviteCode) && u.Email.Equals(model.InviteEmail));
+
+                    if (Iuser != null)
+                    {
+                        //Household household = new Household;
+                        var user = household.Users.FirstOrDefault(u => u.Email.Equals(model.InviteEmail));
+                        model.User.HouseholdId = user.HouseholdId;
+                        household.Users.Add(user);
+
+                        db.SaveChanges();
+                        return RedirectToAction("Details", "Households");
+                    }
+                    else
+                    {
+                        ViewBag.ErrorMessage = "Sorry, the invite code and email do not match.";
+                        return View(model);
+                    }
+                }
             }
 
-            return View(household);
+            return View(model);
         }
+
+
+
+
 
         // GET: Households/Edit/5
         public ActionResult Edit(int? id)

@@ -10,7 +10,7 @@ namespace BudgetApp.Models
     public class ApplicationUser : IdentityUser
     {
         public string DisplayName { get; set; }
-        public int HouseholdId { get; set; }
+        public int? HouseholdId { get; set; }
         public virtual Household Household { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)

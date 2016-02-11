@@ -79,3 +79,10 @@ c:\users\abigail west\documents\visual studio 2015\Projects\BudgetApp\BudgetApp\
 c:\users\abigail west\documents\visual studio 2015\Projects\BudgetApp\BudgetApp\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 c:\users\abigail west\documents\visual studio 2015\Projects\BudgetApp\BudgetApp\obj\Debug\BudgetApp.dll
 c:\users\abigail west\documents\visual studio 2015\Projects\BudgetApp\BudgetApp\obj\Debug\BudgetApp.pdb
+c:\users\abigail west\documents\visual studio 2015\Projects\BudgetApp\BudgetApp\obj\Debug\BudgetApp.csprojResolveAssemblyReference.cache
+c:\users\abigail west\documents\visual studio 2015\Projects\BudgetApp\BudgetApp\bin\Owin.Security.Providers.dll
+c:\users\abigail west\documents\visual studio 2015\Projects\BudgetApp\BudgetApp\bin\SendGrid.dll
+c:\users\abigail west\documents\visual studio 2015\Projects\BudgetApp\BudgetApp\bin\SendGrid.SmtpApi.dll
+c:\users\abigail west\documents\visual studio 2015\Projects\BudgetApp\BudgetApp\bin\SendGridMail.dll
+c:\users\abigail west\documents\visual studio 2015\Projects\BudgetApp\BudgetApp\bin\System.Net.Http.Formatting.dll
+c:\users\abigail west\documents\visual studio 2015\Projects\BudgetApp\BudgetApp\bin\System.Net.Http.Formatting.xml

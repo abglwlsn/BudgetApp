@@ -16,6 +16,7 @@ using SendGrid;
 using System.Net.Mail;
 using System.Net;
 using System.Diagnostics;
+using BudgetApp;
 
 namespace BudgetApp
 {
@@ -140,4 +141,4 @@ public class ApplicationSignInManager : SignInManager<ApplicationUser, string>
         return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
     }
 }
-}
+

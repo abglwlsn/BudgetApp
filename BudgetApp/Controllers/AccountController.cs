@@ -16,6 +16,8 @@ namespace BudgetApp.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
+
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -76,11 +78,30 @@ namespace BudgetApp.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
+            var user = await UserManager.FindByNameAsync(model.Email);
+            if (user != null)
+            {
+                if (!await UserManager.IsEmailConfirmedAsync(user.Id))
+                {
+                    string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account-Resend");
+                    ViewBag.errorMessage = "You must have a confirmed email to log in. The confirmation link has been resent to your email account.";
+                    return View("Error");
+                }
+            }
+
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    if (user.HouseholdId!=null)
+                    {
+                    return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Create", "Households");
+                    }
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -152,19 +173,18 @@ namespace BudgetApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, DisplayName = model.DisplayName };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code },protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Thank you for registering with Cachin' Cash! Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>.");
+                    string callbackurl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
+                    //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
-                    return RedirectToAction("Index", "Home");
+                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
+
+                    ViewBag.Message = "Check your email to confirm your account. You must confirm your address before you are able to log in.";
+
+                    return View("Info");
                 }
                 AddErrors(result);
             }
@@ -208,7 +228,7 @@ namespace BudgetApp.Controllers
             {
                 string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Confirm your account", "hank you for registering with Cachin' Cash! Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>.");
+                await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Thank you for registering with Cachin' Cash! Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>.");
             }
             return RedirectToAction("ConfirmationSent");
         }
@@ -400,7 +420,7 @@ namespace BudgetApp.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, DisplayName = model.DisplayName};
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -408,7 +428,7 @@ namespace BudgetApp.Controllers
                     if (result.Succeeded)
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                        return RedirectToLocal(returnUrl);
+                        return RedirectToAction("Index", "Home");
                     }
                 }
                 AddErrors(result);
@@ -455,6 +475,8 @@ namespace BudgetApp.Controllers
 
             base.Dispose(disposing);
         }
+
+
 
         #region Helpers
         // Used for XSRF protection when adding external logins
@@ -512,6 +534,15 @@ namespace BudgetApp.Controllers
                 }
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
+        }
+
+        private async Task<string> SendEmailConfirmationTokenAsync(string userID, string subject)
+        {
+            string code = await UserManager.GenerateEmailConfirmationTokenAsync(userID);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userID, code = code }, protocol: Request.Url.Scheme);
+            await UserManager.SendEmailAsync(userID, subject, "Please confirm your account with Cachin' Cash by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+            return callbackUrl;
         }
         #endregion
     }

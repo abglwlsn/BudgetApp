@@ -6,37 +6,132 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+    <div class="container-fluid">
+        <!-- logo-->
+        <div class="logo-brand header sidebar rows">
+            <div class="logo">
+                <h1><a href=@Url.Action("Index", "Home")> CACHIN' CASH</a></h1>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
+        </div>
+        <!-- BEGIN SIDEBAR -->
+        <div class="left side-menu">
+            <div class="body rows scroll-y">
+                <!-- Scrolling sidebar -->
+                <div class="sidebar-inner slimscroller">
+
+                    <!-- User Session -->
+                    <div class="media">
+                        @*<a class="pull-left" href="">
+                                <img class="media-object img-circle" src="assets/img/avatar/masarie.jpg" alt="Avatar">
+                            </a>*@
+                        <div class="media-body">
+                            Welcome back,
+                            <h4 class="media-heading"><strong>DISPLAY NAME</strong></h4>
+                            <a class="md-trigger" data-modal="logout-modal-alt">Logout</a>
+                        </div><!-- End div .media-body -->
+                    </div><!-- End div .media -->
+                    <!-- Search form -->
+                    @*<div id="search">
+                            <form role="form">
+                                <input type="text" class="form-control search" placeholder="Search here...">
+                                <i class="fa fa-search"></i>
+                            </form>
+                        </div>*@<!-- End div #search -->
+                    <!-- Sidebar menu -->
+                    <div id="sidebar-menu">
+                        <ul>
+                            <li><a href=@Url.Action("Index", "Home")><i class="fa fa-bar-chart"></i> Dashboard</a></li>
+                            <li><a href=@Url.Action("Create", "Transactions")><i class="fa fa-fw fa-plus"></i> Add Transaction</a></li>
+                            <li><a href=@Url.Action("Index", "Transactions")><i class="fa fa-fw fa-exchange"></i>Transaction History</a></li>
+                            <li><a href=@Url.Action("Index", "BudgetItems")><i class="fa fa-fw fa-bolt"></i>View Budgets</a></li>
+                            <li>
+                                <a href="#fakelink"><i class="fa fa-cogs"></i><i class="fa fa-fw fa-angle-double-down i-right"></i> Manage</a>
+                                <ul>
+                                    <li><a href=@Url.Action("Index", "Categories")><i class="fa fa-fw fa-angle-right"></i> Categories </a></li>
+                                    <li><a href=@Url.Action("Manage", "BudgetItems")><i class="fa fa-fw fa-angle-right"></i> Budgets</a></li>
+                                    <li><a href=@Url.Action("Index", "Manage")><i class="fa fa-fw fa-angle-right"></i> Profile</a></li>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li><a href=@Url.Action("Index", "Account")><i class="fa fa-fw fa-angle-right"></i> Accounts</a></li>
+                                        <li><a href=@Url.Action("Index", "InvitedUsers")><i class="fa fa-fw fa-angle-right"></i> Users</a></li>
+                                    }
+                                </ul>
+                            </li>
+                        </ul>
+                        <div class="clear"></div>
+                    </div><!-- End div #sidebar-menu -->
+                </div><!-- End div .sidebar-inner .slimscroller -->
+            </div><!-- End div .body .rows .scroll-y -->
+            <!-- Sidebar footer -->
+            <div class="footer rows animated fadeInUpBig">
+                <a href=@Url.Action("Index", "Demo") class="btn btn-success btn-demo">DEMO</a>
+                @*<div class="progress progress-xs progress-striped active">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                        <span class="progress-precentage">80&#37;</span>
+                    </div>*@<!-- End div .pogress-bar -->
+                <a data-toggle="tooltip" title="See task progress" class="btn btn-default md-trigger" data-modal="task-progress"><i class="fa fa-inbox"></i></a>
+            </div><!-- End div .progress .progress-xs -->
+        </div><!-- End div .footer .rows -->
+        <!-- END SIDEBAR -->
+        <!-- BEGIN CONTENT -->
+        <div class="right content-page">
+            <!-- BEGIN CONTENT HEADER -->
+            <div class="header content rows-content-header">
+                <!-- Button mobile view to collapse sidebar menu -->
+                <button class="button-menu-mobile show-sidebar"><i class="fa fa-bars"></i></button>
+                <!-- BEGIN NAVBAR CONTENT-->
+                <div class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <!-- Navbar Header -->
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                <i class="fa fa-angle-double-down"></i>
+                            </button>
+                        </div>
+                        <!-- /navbar header -->
+                        <!-- Navbar Collapse -->
+                        <div class="navbar-collapse collapse">
+                            <!-- left navbar -->
+                            <ul class="nav navbar-nav top nav-pad">
+                                <li><a href="http://awest.azurewebsites.net" target="_blank" class="logo-pad text-title-sm">abigail west</a></li>
+                            </ul>
+                            <!-- right navbar -->
+                            <ul class="nav navbar-nav navbar-right top-navbar">
+                                <li>@Html.Partial("_LoginPartial")</li>
+                                <li><a href=@Url.Action("About", "Home")>About</a></li>
+                                <!-- Dropdown User session -->
+                                <li class="dropdown">
+                                    <a href="#fakelink" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-chevron-down i-xs"></i></a>
+                                    <ul class="dropdown-menu animated half flipInX">
+                                        <li><a href=@Url.Action("Index", "Manage")>Profile</a></li>
+                                        <li class="divider"></li>
+                                        <li><a class="md-trigger" data-modal="logout-modal">Logout</a></li>
+                                    </ul>
+                                </li><!-- /dropdown user session-->
+                            </ul>
+                        </div><!-- /.navbar-collapse -->
+                    </div><!-- /div .container-->
+                </div>
+                <!-- END NAVBAR CONTENT-->
+            </div>
+            <!-- END CONTENT HEADER -->
+
+
+
+            <div class="body content rows scroll-y">
+                @RenderBody()
+                <hr />
+                <footer>
+                    <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+                </footer>
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

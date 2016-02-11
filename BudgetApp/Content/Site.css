@@ -1,4 +1,78 @@
-﻿body {
+﻿
+.nav-pad {
+    padding:0 25px;
+}
+
+.left {
+    width:20%;
+}
+
+.right {
+    left:20%;
+}
+
+.full-width {
+    right: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width:100%;
+}
+
+a {
+    color:#cf9c63;
+}
+
+/* ----------- FONTS -----------*/
+
+.text-title {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight:700;
+    font-size:1.5em;
+}
+
+.text-title-sm {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight:400;
+    font-size:1.2em;
+}
+
+/* ---------- SIDE BAR ---------*/
+
+/* ----------- IMAGES ----------*/
+
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+.logo-pad {
+    padding-top:5px!important;
+}
+
+/*------------ BUTTONS ---------*/
+
+.btn.btn-dark {
+	border-color: #111;
+	background: #111;
+	color: #fff;
+}
+
+.btn.btn-dark:hover {
+	border-color: #1F1E1E;
+	background: #1F1E1E;
+	color: #fff;
+}
+
+.btn-demo {
+    position:absolute;
+    right:7px;
+    bottom:7px;
+}
+
+/*-------------------------DEFAULTS ----------------------*/
+body {
     padding-top: 50px;
     padding-bottom: 20px;
 }
@@ -16,9 +90,3 @@
     white-space: normal;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
-}
