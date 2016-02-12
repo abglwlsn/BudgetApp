@@ -53,14 +53,15 @@
                             <li>
                                 <a href="#fakelink"><i class="fa fa-cogs"></i><i class="fa fa-fw fa-angle-double-down i-right"></i> Manage</a>
                                 <ul>
+                                    <li><a href=@Url.Action("Details", "Households")><i class="fa fa-fw fa-angle-right"></i> Household</a></li>
                                     <li><a href=@Url.Action("Index", "Categories")><i class="fa fa-fw fa-angle-right"></i> Categories </a></li>
                                     <li><a href=@Url.Action("Manage", "BudgetItems")><i class="fa fa-fw fa-angle-right"></i> Budgets</a></li>
                                     <li><a href=@Url.Action("Index", "Manage")><i class="fa fa-fw fa-angle-right"></i> Profile</a></li>
-                                    @if (User.IsInRole("Admin"))
-                                    {
-                                        <li><a href=@Url.Action("Index", "Account")><i class="fa fa-fw fa-angle-right"></i> Accounts</a></li>
+                                    @*@if (User.IsInRole("Admin"))
+                                    {*@
+                                        <li><a href=@Url.Action("Index", "BankAccounts")><i class="fa fa-fw fa-angle-right"></i> Accounts</a></li>
                                         <li><a href=@Url.Action("Index", "InvitedUsers")><i class="fa fa-fw fa-angle-right"></i> Users</a></li>
-                                    }
+                                    @*}*@
                                 </ul>
                             </li>
                         </ul>

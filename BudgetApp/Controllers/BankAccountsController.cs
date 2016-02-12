@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BudgetApp.Models;
+using Microsoft.AspNet.Identity;
 
 namespace BudgetApp.Controllers
 {
@@ -51,8 +52,13 @@ namespace BudgetApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,HouseholdId,Name,Balance")] BankAccount bankAccount)
         {
+            var id = User.Identity.GetUserId();
+            var user = db.Users.FirstOrDefault(u => u.Id.Equals(id));
+
             if (ModelState.IsValid)
             {
+                bankAccount.HouseholdId = user.Household.Id;
+
                 db.BankAccounts.Add(bankAccount);
                 db.SaveChanges();
                 return RedirectToAction("Index");

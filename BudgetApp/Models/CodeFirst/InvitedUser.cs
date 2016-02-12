@@ -10,11 +10,14 @@ namespace BudgetApp.Models
     {
         public int Id { get; set; }
         public int HouseholdId { get; set; }
+        [Required]
+        public string Name { get; set; }
         [Required(ErrorMessage = "Please provide an email address for the invited party.")]
         [EmailAddress]
         public string Email { get; set; }
         [Display(Name ="Household Invite Code")]
         public string InviteCode { get; set; }
+        public string InvitedBy { get; set; }
         public bool AdminRights { get; set; }
 
         public virtual Household Household { get; set; }

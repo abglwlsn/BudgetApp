@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using BudgetApp.Models;
 using Microsoft.AspNet.Identity;
 using System.Web.Security;
+using System.Configuration;
 
 namespace BudgetApp.Controllers
 {
@@ -51,7 +52,7 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,HouseholdId,Email,AdminRights,InviteCode")] InvitedUser invitedUser)
+        public ActionResult Create([Bind(Include = "Id,HouseholdId,Name,Email,AdminRights,InviteCode")] InvitedUser invitedUser)
         {
             if (ModelState.IsValid)
             {
@@ -60,13 +61,28 @@ namespace BudgetApp.Controllers
  
                 invitedUser.HouseholdId = user.HouseholdId.GetValueOrDefault();
                 invitedUser.InviteCode = Membership.GeneratePassword(10, 4);
+                invitedUser.InvitedBy = user.FirstName + user.LastName;
+
+                //if (AdminRights==true)
+                //{
+                //    give Admin rights
+                //}
+
+                //How to force delete of entry after certain time period? Or leave entry but generate new code?
+                var es = new EmailService();
+                var msg = new IdentityMessage();
+                var dt = DateTime.Now.AddDays(7).ToLongDateString();
+                msg.Destination = invitedUser.Email; //ConfigurationManager.AppSettings["ContactEmail"];
+                msg.Body = invitedUser.InvitedBy + "has invited you to join their household on Cachin' Cash! To access Cachin' Cash's extensive tools for financial management, copy the following Invite Code and then visit the Cachin' Cash website by clicking <a href=\"http://awest-cachincash.azurewebsites.net\">here</a>. After registering, enter your Invite Code in the indicated text box to join the household. <br/>This code is only active until" + dt + ", after which point you can request a new code from " + invitedUser.InvitedBy + ".<br/><br/>Invite Code:" + invitedUser.InviteCode;
+                msg.Subject = "Invitation to join Cachin' Cash";
+                es.SendAsync(msg);
 
                 db.InvitedUsers.Add(invitedUser);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Households", (new { id = user.HouseholdId }));
             }
 
-            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", invitedUser.HouseholdId);
+            //ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", invitedUser.HouseholdId);
             return View(invitedUser);
         }
         

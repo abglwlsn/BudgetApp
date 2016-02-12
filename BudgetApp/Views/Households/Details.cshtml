@@ -5,47 +5,71 @@
     var currUserId = User.Identity.GetUserId();
 }
 
-<h2>Details</h2>
 
-<div>
-    <h4>Household</h4>
+<section class="household">
+    <h2>Household: <strong>@Html.DisplayFor(model => model.Name)</strong></h2>
     <hr />
-    <h6>@Html.DisplayNameFor(model => model.Name)</h6>
-      <h5>@Html.DisplayFor(model => model.Name)</h5>    
-
-        @Html.DisplayNameFor(model => model.Users)
-        @foreach (var user in Model.Users)
-        {
-            <div class="row">
-                <p class="col-md-2 col-md-offset-1"><strong>@user.DisplayName</strong></p>
-                <p class="col-md-3">@user.Email</p>
-                <p class="col-md-1">@user.AdminRights</p>
-                @foreach (var budget in Model.BudgetItems)
+    <h4>Users</h4>
+    <div class="row">
+        <p class="category-header col-md-2 col-md-offset-1">User</p>
+        <p class="category-header col-md-3">Email</p>
+        <p class="category-header col-md-1">Admin?</p>
+    </div>
+    @foreach (var user in Model.Users)
+    {
+        <div class="row">
+            <p class="col-md-2 col-md-offset-1"><strong>@user.FirstName</strong></p>
+            <p class="col-md-3">@user.Email</p>
+            <p class="col-md-1">@user.AdminRights</p>
+            @foreach (var budget in Model.BudgetItems)
                 {
                 <p class="col-md-4">
                     <b>@budget.Name</b><br />
                     @budget.Amount<br />
                     @budget.Duration
                 </p>
-                }
-            </div>
-
-            if (User.IsInRole("Admin"))
-            {
-                if (user.AdminRights == true)
-                {
-                    <a href=@Url.Action("ChangeAdmin", "Household", new { id = user.Id }) class="btn btn-dark">Remove Admin Rights</a>
-                }
-                else
-                {
-                    <a href=@Url.Action("ChangeAdmin", "Household", new { id = user.Id }) class="btn btn-dark">Give Admin Rights</a>
-                }
-                if (user.Id != currUserId)
-                {
-                <a href=@Url.Action("LeaveHousehold", "Households", new { id = user.Id }) class="btn btn-dark">Expel User</a>
-                    }
-                }
             }
+        </div>
+
+        if (User.IsInRole("Admin"))
+        {
+            if (user.AdminRights == true)
+            {
+                <a href=@Url.Action("ChangeAdmin", "Household", new { id = user.Id }) class="btn btn-dark">Remove Admin Rights</a>
+            }
+            else
+            {
+                <a href=@Url.Action("ChangeAdmin", "Household", new { id = user.Id }) class="btn btn-dark">Give Admin Rights</a>
+            }
+            if (user.Id != currUserId)
+            {
+                <a href=@Url.Action("LeaveHousehold", "Households", new { id = user.Id }) class="btn btn-dark">Expel User</a>
+            }
+        }
+    }
+</section>
+<section class="invitedUsers">
+    <h4>Invited Users</h4>
+    <div class="row">
+        <p class="category-header col-md-2 col-md-offset-1">Invitee</p>
+        <p class="category-header col-md-3">Email</p>
+        <p class="category-header col-md-1">Admin?</p>
+    </div>
+    @foreach (var user in Model.InvitedUsers)
+    {
+        <div class="row">
+            <p class="col-md-2 col-md-offset-1"><strong>@user.Name</strong></p>
+            <p class="col-md-3">@user.Email</p>
+            <p class="col-md-1">@user.AdminRights</p>
+        </div>
+    }
+    <a href=@Url.Action("Create", "InvitedUsers", null) class="btn btn-dark">Invite New User</a>
+</section>
+
+
+
+
+
  <div class="verify-contain">
      <button type="button" id="leave" class="btn btn-dark">Leave Household</button>
      <div id="verify">
@@ -56,5 +80,4 @@
      </div>
  </div>
 
-</div>
 

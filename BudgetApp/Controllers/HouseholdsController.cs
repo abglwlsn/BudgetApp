@@ -25,15 +25,19 @@ namespace BudgetApp.Controllers
         // GET: Households/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            Helper.HouseholdHelper help = new Helper.HouseholdHelper();
+            var user = User.Identity.GetUserId();
+            var hh = help.GetHousehold(user);
+
+            if (id == null && hh != null)
+            {
+                id = hh.Id;
+            }
+            else if (id == null && hh == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Helper.HouseholdHelper help = new Helper.HouseholdHelper();
-            var user = User.Identity.GetUserId();
-            var hh = help.GetHousehold(user);
-                  
             if (hh == null)
             {
                 return HttpNotFound();
@@ -44,7 +48,7 @@ namespace BudgetApp.Controllers
         // GET: Households/Create
         public ActionResult Create()
         {
-            ViewBag.ErrorMessage = TempData["ErrorMessage"];
+            ViewBag.JoinErrorMessage = TempData["ErrorMessage"];
             return View();
         }
 
@@ -53,9 +57,8 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include="Id, HouseholdName, InviteCode")] string name)
+        public ActionResult Create([Bind(Include="Id, HouseholdName, InviteCode")]Household household)
         {
-            Household household = new Household();
             var id = User.Identity.GetUserId();
             var user = db.Users.FirstOrDefault(u=>u.Id.Equals(id));
             
@@ -67,13 +70,11 @@ namespace BudgetApp.Controllers
                 return View();
                 }
 
-                household.Name = name;
                 db.Households.Add(household);
                 db.SaveChanges();
 
                 user.AdminRights = true;
                 user.HouseholdId = household.Id;
-                household.Name = model.HouseholdName;
                 db.SaveChanges();
 
                 return RedirectToAction("Details", "Households", new { id = household.Id });
@@ -99,6 +100,9 @@ namespace BudgetApp.Controllers
 
                         user.HouseholdId = Iuser.HouseholdId;
                         user.AdminRights = Iuser.AdminRights;
+                        db.SaveChanges();
+
+                        db.InvitedUsers.Remove(Iuser);
                         db.SaveChanges();
 
                         return RedirectToAction("Details", "Households", new { id = user.HouseholdId });

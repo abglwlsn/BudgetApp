@@ -237,7 +237,7 @@
     <Compile Include="Models\CodeFirst\Household.cs" />
     <Compile Include="Models\CodeFirst\InvitedUser.cs" />
     <Compile Include="Models\CodeFirst\Transaction.cs" />
-    <Compile Include="Models\HouseholdViewModels.cs" />
+    <Compile Include="Models\ContactMessage.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BudgetApp.Models;
+using System.Data.Entity;
 
 namespace BudgetApp.Controllers
 {
@@ -14,6 +15,7 @@ namespace BudgetApp.Controllers
     [Authorize]
     public class ManageController : Controller
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -65,8 +67,12 @@ namespace BudgetApp.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
+            var user = db.Users.Find(userId);
             var model = new IndexViewModel
             {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
@@ -74,6 +80,43 @@ namespace BudgetApp.Controllers
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
             return View(model);
+        }
+
+        //GET: /Manage/Edit
+        public ActionResult Edit()
+        {
+            return View();
+        }
+
+        //POST: /Manage/Edit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include="FirstName,LastName,Email")]IndexViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userId = User.Identity.GetUserId();
+                var user = db.Users.Find(userId);
+
+                if (db.Users.Any(m=>m.Email==user.Email))
+                {
+                    ViewBag.ErrorMessage = "This email already exists. The same email cannot be applied to two different households.";
+                    return View();
+                }
+                else
+                {
+                    user.FirstName = model.FirstName;
+                    user.LastName = model.LastName;
+                    user.Email = model.Email;
+
+                    db.SaveChanges();
+
+                    return View();
+                }
+
+            }
+
+            return RedirectToAction("Index");
         }
 
         //
@@ -213,13 +256,13 @@ namespace BudgetApp.Controllers
         }
 
         //POST: Change Display Name
-        //public async Task<ActionResult> ChangeDisplayName(ManageLoginsViewModel model)
+        //public async Task<ActionResult> ChangeFirstName(ManageLoginsViewModel model)
         //{
         //    if (!ModelState.IsValid)
         //    {
         //        return View(model);
         //    }
-        //    var result = await UserManager.ChangePhoneNumberAsync(User.Identity.GetUserId(), model.DisplayName);
+        //    var result = await UserManager.ChangePhoneNumberAsync(User.Identity.GetUserId(), model.FirstName);
         //    if (result.Succeeded)
         //    {
         //        var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());

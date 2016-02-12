@@ -27,7 +27,7 @@ namespace BudgetApp
             await configSendGridasync(message);
         }
 
-    private async Task configSendGridasync(IdentityMessage message)
+        private async Task configSendGridasync(IdentityMessage message)
         {
             var username = ConfigurationManager.AppSettings["SendGridUserName"];
             var password = ConfigurationManager.AppSettings["SendGridPassword"];
