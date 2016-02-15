@@ -1,0 +1,84 @@
+﻿@using BudgetApp.Models
+@model LoginViewModel
+@{
+    Layout = "~/Views/Shared/_AnonLayout.cshtml";
+}
+@{
+    ViewBag.Title = "Log in";
+}
+
+<div class="header-banner">
+    <h1>Welcome to <span class="text-success">Cachin' Cash!</span></h1>
+    <h2 class="subtitle">A personal budgeting service to help you stash more cash</h2>
+</div>
+<section class="col-md-7 full-content-large animated fadeInDownBig">
+    <div class="login-wrap">
+        <div class="welcome-content">
+            <h3>Turn your financial stresses into successes!</h3>
+            <ul class="fa-ul">
+                <li class="fa-li fa fa-bolt">Compare spending and income with simple, attractive visuals.</li>
+                <li class="fa-li fa fa-bolt">Categorize your transactions to see the spread of your spending</li>
+                <li class="fa-li fa fa-bolt">Create budgets to help keep you on track - view current spending as compared to your budget totals. Cachin' Cash will even send you warnings when you're getting close to your limits!</li>
+                <li class="fa-li fa fa-bolt">Budgets also help you watch your expected versus real income.</li>
+                <li class="fa-li fa fa-bolt">Invite other users into your household so everyone can view current balances and spending amounts.</li>
+                <li class="fa-li fa fa-bolt">Teaching your kids about financial responsibility? Don't want someone tampering with your personal budgets? Easily control user access to certain features within Cachin' Cash.</li>
+            </ul>
+            <button type="button" class="btn btn-success btn-lg btn-block">TRY IT OUT!</button>
+        </div>
+    </div>
+</section>
+<!--  Login Section -->
+<section class="col-md-5 full-content-center animated fadeInDownBig">
+    <a href="#fakelink"><img src="assets/img/logo-login.png" class="logo-login img-circle" alt="Logo"></a>
+    <div class="login-wrap">
+        <div class="box-info">
+            <h2 class="text-center"><strong>Login</strong></h2>
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                <h4>Use a local account to log in.</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group login-input">
+                    <i class="fa fa-user overlay"></i>
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control text-input", placeholder = "Username" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group login-input">
+                    <i class="fa fa-key overlay"></i>
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control text-input", placeholder = "Password" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group login-input">
+                    <div class="col-md-offset-2 col-md-10">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(m => m.RememberMe)
+                            @Html.LabelFor(m => m.RememberMe)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn btn-success btn-block"><i class="fa fa-unlock"></i> Login</button>
+                    </div>
+                    <div class="col-sm-6">
+                        <a href=@Url.Action("Register", "Account") class="btn btn-dark btn-block"><i class="fa fa-rocket fa-inverse"></i> Register</a>
+                    </div>
+                </div>
+            }
+                <p class="text-center"><strong>- or -</strong></p>
+                <section id="socialLoginForm">
+                    @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+                </section>
+                <p>
+                    @Html.ActionLink("Forgot your password?", "ForgotPassword")
+                </p>
+
+        </div>
+    </div>
+</section>
+<!-- End Login Page -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

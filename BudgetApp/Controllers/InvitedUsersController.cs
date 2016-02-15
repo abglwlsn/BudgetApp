@@ -14,6 +14,7 @@ using System.Configuration;
 namespace BudgetApp.Controllers
 {
     [RequireHttps]
+    [Authorize]
     public class InvitedUsersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -61,7 +62,7 @@ namespace BudgetApp.Controllers
  
                 invitedUser.HouseholdId = user.HouseholdId.GetValueOrDefault();
                 invitedUser.InviteCode = Membership.GeneratePassword(10, 4);
-                invitedUser.InvitedBy = user.FirstName + user.LastName;
+                invitedUser.InvitedBy = user.FirstName + " " + user.LastName;
 
                 //if (AdminRights==true)
                 //{
@@ -73,7 +74,7 @@ namespace BudgetApp.Controllers
                 var msg = new IdentityMessage();
                 var dt = DateTime.Now.AddDays(7).ToLongDateString();
                 msg.Destination = invitedUser.Email; //ConfigurationManager.AppSettings["ContactEmail"];
-                msg.Body = invitedUser.InvitedBy + "has invited you to join their household on Cachin' Cash! To access Cachin' Cash's extensive tools for financial management, copy the following Invite Code and then visit the Cachin' Cash website by clicking <a href=\"http://awest-cachincash.azurewebsites.net\">here</a>. After registering, enter your Invite Code in the indicated text box to join the household. <br/>This code is only active until" + dt + ", after which point you can request a new code from " + invitedUser.InvitedBy + ".<br/><br/>Invite Code:" + invitedUser.InviteCode;
+                msg.Body = invitedUser.InvitedBy + " " + "has invited you to join their household on Cachin' Cash! To access Cachin' Cash's extensive tools for financial management, copy the following Invite Code and then visit the Cachin' Cash website by clicking <a href=\"http://awest-budget.azurewebsites.net\">here</a>. After registering, enter your Invite Code in the indicated text box to join the household. <br/>This code is only active until" + dt + ", after which point you can request a new code from " + invitedUser.InvitedBy + ".<br/><br/>Invite Code:" + invitedUser.InviteCode;
                 msg.Subject = "Invitation to join Cachin' Cash";
                 es.SendAsync(msg);
 

@@ -7,11 +7,13 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using BudgetApp.HelperExtensions;
 using BudgetApp.Models;
 
 namespace BudgetApp.Controllers
 {
     [RequireHttps]
+    [Authorize]
     public class HouseholdsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -25,9 +27,8 @@ namespace BudgetApp.Controllers
         // GET: Households/Details/5
         public ActionResult Details(int? id)
         {
-            Helper.HouseholdHelper help = new Helper.HouseholdHelper();
             var user = User.Identity.GetUserId();
-            var hh = help.GetHousehold(user);
+            var hh = user.GetHousehold();
 
             if (id == null && hh != null)
             {
@@ -141,7 +142,8 @@ namespace BudgetApp.Controllers
             return View();
         }
 
-        //GET: Households/ChangeAdmin
+        //POST: Households/ChangeAdmin
+        [HttpPost]
         public ActionResult ChangeAdmin(string id)
         {
             if (ModelState.IsValid)
@@ -187,7 +189,7 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Published,AdminUserId")] Household household)
+        public ActionResult Edit([Bind(Include = "Id,Name")] Household household)
         {
             if (ModelState.IsValid)
             {

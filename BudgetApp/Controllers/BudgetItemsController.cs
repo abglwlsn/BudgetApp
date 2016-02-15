@@ -11,6 +11,7 @@ using BudgetApp.Models;
 namespace BudgetApp.Controllers
 {
     [RequireHttps]
+    [Authorize]
     public class BudgetItemsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

@@ -33,6 +33,8 @@ namespace BudgetApp.Controllers
         }
 
         //POST: Home/Contact
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Contact(ContactMessage contact, string returnUrl)
         {
             var es = new EmailService();

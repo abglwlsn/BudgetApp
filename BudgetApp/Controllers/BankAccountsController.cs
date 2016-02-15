@@ -8,10 +8,12 @@ using System.Web;
 using System.Web.Mvc;
 using BudgetApp.Models;
 using Microsoft.AspNet.Identity;
+using BudgetApp.HelperExtensions;
 
 namespace BudgetApp.Controllers
 {
     [RequireHttps]
+    [Authorize]
     public class BankAccountsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -19,7 +21,10 @@ namespace BudgetApp.Controllers
         // GET: BankAccounts
         public ActionResult Index()
         {
-            var bankAccounts = db.BankAccounts.Include(b => b.Household);
+            var id = User.Identity.GetUserId();
+            var hh = id.GetHousehold();
+
+            var bankAccounts = hh.BankAccounts;
             return View(bankAccounts.ToList());
         }
 
@@ -41,7 +46,6 @@ namespace BudgetApp.Controllers
         // GET: BankAccounts/Create
         public ActionResult Create()
         {
-            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name");
             return View();
         }
 
@@ -63,8 +67,6 @@ namespace BudgetApp.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
-            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", bankAccount.HouseholdId);
             return View(bankAccount);
         }
 
@@ -80,7 +82,6 @@ namespace BudgetApp.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", bankAccount.HouseholdId);
             return View(bankAccount);
         }
 

@@ -24,6 +24,17 @@ a {
     color:#cf9c63;
 }
 
+.bg-white {
+    background-color:#fff;
+    border-radius:3px;
+    border:1px solid #b3b3b3;
+}
+
+ul a:hover {
+    color:#1F1E1E;
+    text-decoration:none;
+}
+
 /*-------- WELCOME PAGE --------*/
 
 .full-content-large {

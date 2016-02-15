@@ -43,5 +43,6 @@ namespace BudgetApp.Models
         public DbSet<Household> Households { get; set; }
         public DbSet<InvitedUser> InvitedUsers { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Warning> Warnings { get; set; }
     }
 }

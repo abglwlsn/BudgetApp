@@ -16,14 +16,18 @@ namespace BudgetApp.Models
         [StringLength(25, ErrorMessage = "Budget item names must not exceed 25 characters.")]
         public string Name { get; set; }
         [Required(ErrorMessage = "A budgeted amount is required for each budget item.")]
-        public decimal Amount { get; set; }
+        public decimal AmountLimit { get; set; }
+        public decimal Balance { get; set; }
         [Required]
         [Display(Name="Budget Resets After: ")]
+        public bool Type { get; set; }
+        public int WarnAtId { get; set; }
         public int DurationId { get; set; }
         public int CreatorId { get; set; }
 
         public virtual Category Category { get; set; }
         public virtual Household Household { get; set; }
+        public virtual Warning WarnAt { get; set; }
         public virtual Duration Duration { get; set; }
         public virtual ApplicationUser Creator { get; set; }
     }

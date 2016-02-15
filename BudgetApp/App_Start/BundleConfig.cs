@@ -24,8 +24,7 @@ namespace BudgetApp
                         "~/Site Template/js/ickeck.min.js",
                         "~/Site Template/js/jquery.snippet.js",
                         "~/Site Template/js/jquery.easyWizard.js",
-                        "~/Site Template/js/scripts.js",
-                        "~/Site Template/js/lanceng.js"
+                        "~/Site Template/js/scripts.js"
                         ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(

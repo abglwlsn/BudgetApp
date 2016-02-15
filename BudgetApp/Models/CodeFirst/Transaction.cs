@@ -12,13 +12,15 @@ namespace BudgetApp.Models
         [Required]
         [Display(Name="Account Name")]
         public int BankAccountId { get; set; }
-
+        [Required]
         public int CategoryId { get; set; }
         public int? BudgetItemId { get; set; }
-        public int? UserId { get; set; }
+        public string UserId { get; set; }
         [Required]
         [Display(Name = "Transaction Date")]
         public DateTimeOffset Transacted { get; set; }
+        [Display(Name = "Transaction Entered")]
+        public DateTimeOffset Entered { get; set; }
         [Required]
         public decimal Amount { get; set; }
         public string Description { get; set; }

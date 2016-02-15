@@ -10,17 +10,53 @@ else
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
-
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
-
-<address>
-    <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+<section class="row full-content-large animated fadeInDownBig bg-white">
+    <div class="login-wrap">
+        <div class="row">
+            <div class="col-sm-12 animated slideInRight">
+                <h2 id="contact" class="module-title text-center">Get in Touch</h2>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="box-info">
+                <h4>Abigail West</h4>
+                <ul class="list-unstyled">
+                    <li><abbr title="Mail"><span class="icon icon-Mail"></span></abbr> 396 Turnpike Rd</li>
+                    <li><abbr><span class="icon icon-Mail" style="visibility:hidden"></span></abbr> Brevard, NC 28712</li>
+                </ul>
+                <ul class="list-unstyled">
+                    <li><abbr title="Phone"><span class="icon icon-Phone2"></span></abbr> (919) 548-0761</li>
+                    <li><abbr title="Email"><span class="icon icon-EmptyBox"></span></abbr><a href="mailto:abigailwwest@gmail.com"> abigailwwest@gmail.com</a></li>
+                </ul>
+                <ul class="list-unstyled">
+                    <li><a href="http://www.github.com/abigailwest" class="fa fa-fw fa-github fa-2x"></a><a href="http://www.linkedin.com/abigailwwest" class="fa fa-fw fa-linkedin fa-2x"></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-7 box-info">
+            @* FORM *@
+            <form id="contact-form" novalidate="" action="@Url.Action("Contact", "Home")" method="post">
+                @Html.AntiForgeryToken()
+                <div class="form-group login-input">
+                    <i class="fa fa-user overlay"></i>
+                    <input type="text" id="cname" class="form-control text-input" name="Name" placeholder="Your Name" required="" data-validation-required-message="Please enter your name.">
+                    <p class="help-block text-danger"></p>
+                </div>
+                <div class="form-group login-input">
+                    <i class="fa fa-envelope overlay"></i>
+                    <input type="email" id="cemail" name="Email" class="form-control text-input" placeholder="Your E-mail" required="" data-validation-required-message="Please enter your email address.">
+                    <p class="help-block text-danger"></p>
+                </div>
+                <div class="form-group login-input">
+                    <i class="fa fa-pencil overlay"></i>
+                    <textarea class="form-control text-input" id="cmessage" name="Message" rows="7" placeholder="Type your message here" required="" data-validation-required-message="Please enter your message."></textarea>
+                    <p class="help-block text-danger"></p>
+                </div>
+                <div class="text-center">
+                    <button type="submit" name="submit" class="btn btn-block btn-round btn-dark">Submit</button>
+                </div>
+            </form>
+            <p>@ViewBag.result</p>
+        </div>
+    </div>
+</section>

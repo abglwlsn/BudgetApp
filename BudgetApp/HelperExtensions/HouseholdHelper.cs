@@ -6,14 +6,14 @@ using System.Web;
 using System.Web.Mvc;
 using System.Net;
 
-namespace BudgetApp.Helper
+namespace BudgetApp.HelperExtensions
 {
-    public class HouseholdHelper
+    public static class HouseholdHelpers
     {
         //To use helpers, first instantiate in the desired controller. Then, use helper!
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private static ApplicationDbContext db = new ApplicationDbContext();
 
-        public Household GetHousehold(string userId)
+        public static Household GetHousehold(this string userId)
         {
             var user = db.Users.Find(userId);
             if(user== null || user.HouseholdId == null)

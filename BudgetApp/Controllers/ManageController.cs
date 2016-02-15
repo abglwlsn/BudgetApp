@@ -72,7 +72,7 @@ namespace BudgetApp.Controllers
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Email = user.Email,
+                //Email = user.Email,
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
@@ -85,34 +85,36 @@ namespace BudgetApp.Controllers
         //GET: /Manage/Edit
         public ActionResult Edit()
         {
+            ViewBag.ErrorMessage = TempData["ErrorMessage"];
             return View();
         }
 
         //POST: /Manage/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="FirstName,LastName,Email")]IndexViewModel model)
+        public ActionResult Edit([Bind(Include="FirstName,LastName")]IndexViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var userId = User.Identity.GetUserId();
                 var user = db.Users.Find(userId);
 
-                if (db.Users.Any(m=>m.Email==user.Email))
-                {
-                    ViewBag.ErrorMessage = "This email already exists. The same email cannot be applied to two different households.";
-                    return View();
-                }
-                else
-                {
+                //How to do this without catching on an edit?
+                //if (db.Users.Any(m=>m.Email==user.Email))
+                //{
+                //    TempData["ErrorMessage"] = "This email already exists. The same email cannot be applied to two different households.";
+                //    return RedirectToAction("Index");
+                //}
+                //else
+                //{
                     user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
-                    user.Email = model.Email;
+                    //user.Email = model.Email;
 
                     db.SaveChanges();
 
-                    return View();
-                }
+                    return RedirectToAction("Index");
+                //}
 
             }
 

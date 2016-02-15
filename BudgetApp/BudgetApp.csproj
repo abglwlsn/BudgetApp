@@ -227,12 +227,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helper\HouseholdHelper.cs" />
+    <Compile Include="HelperExtensions\HouseholdHelper.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CodeFirst\BankAccount.cs" />
     <Compile Include="Models\CodeFirst\BudgetItem.cs" />
     <Compile Include="Models\CodeFirst\Category.cs" />
+    <Compile Include="Models\CodeFirst\CategoryStandard.cs" />
     <Compile Include="Models\CodeFirst\Duration.cs" />
     <Compile Include="Models\CodeFirst\Household.cs" />
     <Compile Include="Models\CodeFirst\InvitedUser.cs" />
@@ -240,6 +241,7 @@
     <Compile Include="Models\ContactMessage.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\CodeFirst\Warning.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -261,6 +263,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="private.config" />
+    <None Include="Properties\PublishProfiles\awest-budget.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
