@@ -232,6 +232,7 @@
     <Compile Include="HelperExtensions\TransactionHelper.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AuthorizeHouseholdRequired.cs" />
     <Compile Include="Models\CodeFirst\BankAccount.cs" />
     <Compile Include="Models\CodeFirst\BudgetItem.cs" />
     <Compile Include="Models\CodeFirst\Category.cs" />
@@ -359,10 +360,10 @@
     <Content Include="Views\BudgetItems\Details.cshtml" />
     <Content Include="Views\BudgetItems\Edit.cshtml" />
     <Content Include="Views\BudgetItems\Index.cshtml" />
-    <Content Include="Views\BankAccounts\Create.cshtml" />
-    <Content Include="Views\BankAccounts\Delete.cshtml" />
+    <Content Include="Views\BankAccounts\_Create.cshtml" />
+    <Content Include="Views\BankAccounts\_Delete.cshtml" />
     <Content Include="Views\BankAccounts\Details.cshtml" />
-    <Content Include="Views\BankAccounts\Edit.cshtml" />
+    <Content Include="Views\BankAccounts\_Edit.cshtml" />
     <Content Include="Views\BankAccounts\Index.cshtml" />
     <Content Include="Views\Households\Create.cshtml" />
     <Content Include="Views\Households\Delete.cshtml" />
@@ -389,6 +390,7 @@
     <Content Include="Views\BudgetItems\Manage.cshtml" />
     <Content Include="Views\Shared\_AnonLayout.cshtml" />
     <Content Include="Views\Shared\Info.cshtml" />
+    <Content Include="Views\Transactions\_Transactions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

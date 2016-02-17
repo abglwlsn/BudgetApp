@@ -16,6 +16,7 @@ namespace BudgetApp.Controllers
 {
     [RequireHttps]
     [Authorize]
+    [AuthorizeHouseholdRequired]
     public class InvitedUsersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -66,7 +67,8 @@ namespace BudgetApp.Controllers
                 invitedUser.InviteCode = Membership.GeneratePassword(10, 4);
                 invitedUser.InvitedBy = user.FirstName + " " + user.LastName;
 
-                //if (AdminRights==true)
+                db.InvitedUsers.Add(invitedUser);
+                db.SaveChanges();                //if (AdminRights==true)
                 //{
                 //    give Admin rights
                 //}
@@ -76,8 +78,6 @@ namespace BudgetApp.Controllers
                 var msg = invitedUser.CreateJoinMessage();
                 es.SendAsync(msg);
 
-                db.InvitedUsers.Add(invitedUser);
-                db.SaveChanges();
                 return RedirectToAction("Details", "Households", (new { id = user.HouseholdId }));
             }
 

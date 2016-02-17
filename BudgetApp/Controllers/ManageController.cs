@@ -72,7 +72,6 @@ namespace BudgetApp.Controllers
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                //Email = user.Email,
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
@@ -92,30 +91,19 @@ namespace BudgetApp.Controllers
         //POST: /Manage/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="FirstName,LastName")]IndexViewModel model)
+        public ActionResult Edit([Bind(Include="FirstName,LastName, Email")]IndexViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var userId = User.Identity.GetUserId();
                 var user = db.Users.Find(userId);
 
-                //How to do this without catching on an edit?
-                //if (db.Users.Any(m=>m.Email==user.Email))
-                //{
-                //    TempData["ErrorMessage"] = "This email already exists. The same email cannot be applied to two different households.";
-                //    return RedirectToAction("Index");
-                //}
-                //else
-                //{
-                    user.FirstName = model.FirstName;
-                    user.LastName = model.LastName;
-                    //user.Email = model.Email;
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
 
-                    db.SaveChanges();
+                db.SaveChanges();
 
-                    return RedirectToAction("Index");
-                //}
-
+                return RedirectToAction("Index");
             }
 
             return RedirectToAction("Index");

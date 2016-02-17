@@ -23,16 +23,14 @@
     <h4>Edit Your Profile</h4>
     @using (Html.BeginForm("Edit", "Manage")) {
         @Html.AntiForgeryToken();
+        @Html.HiddenFor(model=>model.Email)
         <p class="text-danger">@ViewBag.ErrorMessage</p>
     <dl>
         <dt>@Html.DisplayNameFor(model => model.FirstName) </dt>
         <dd>@Html.EditorFor(model => model.FirstName)</dd>
         <dt>@Html.DisplayNameFor(model => model.LastName)</dt>
         <dd>@Html.EditorFor(model => model.LastName)</dd>
-        <dt>@Html.DisplayNameFor(model => model.Email)</dt>
-        @*<dd>@Html.EditorFor(model => model.Email)</dd>*@
     </dl>
-        @*<p class="text-danger">Changing your email will also change your UserName.</p>*@
         <button type="submit" class="btn btn-dark" formmethod="post" formaction="Edit">Save Changes</button>
         }
     <dl>

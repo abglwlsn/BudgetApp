@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using BudgetApp.HelperExtensions;
 using BudgetApp.Models;
+using System.Threading.Tasks;
 
 namespace BudgetApp.Controllers
 {
@@ -30,7 +31,7 @@ namespace BudgetApp.Controllers
         public ActionResult Details(int? id)
         {
             var hId = Convert.ToInt32(User.Identity.GetHouseholdId());
-            var hh = db.Households.FirstOrDefault(h => h.Id == hId);
+            var hh = db.Households.Find(hId);
 
             if (id == null && hh != null )
             {
@@ -59,7 +60,7 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include="Id, HouseholdName, InviteCode")]Household household)
+        public async Task<ActionResult> Create([Bind(Include="Id, Name")]Household household)
         {
             var id = User.Identity.GetUserId();
             var user = db.Users.FirstOrDefault(u=>u.Id.Equals(id));
@@ -83,6 +84,8 @@ namespace BudgetApp.Controllers
                 user.HouseholdId = household.Id;
                 db.SaveChanges();
 
+                await ControllerContext.HttpContext.RefreshAuthentication(user);
+
                 return RedirectToAction("Details", "Households", new { id = household.Id });
             }
             return View();
@@ -91,7 +94,7 @@ namespace BudgetApp.Controllers
         //POST: Households/Join
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Join(string InviteCode)
+        public async Task<ActionResult> Join(string InviteCode)
         {
             if (ModelState.IsValid)
             {
@@ -112,6 +115,8 @@ namespace BudgetApp.Controllers
                         db.InvitedUsers.Remove(Iuser);
                         db.SaveChanges();
 
+                        await ControllerContext.HttpContext.RefreshAuthentication(user);
+
                         return RedirectToAction("Details", "Households", new { id = user.HouseholdId });
                     }
                     else
@@ -126,7 +131,7 @@ namespace BudgetApp.Controllers
         }
 
         //GET: Households/LeaveHousehold
-        public ActionResult LeaveHousehold(string id)
+        public async Task<ActionResult> LeaveHousehold(string id)
         {
             if (ModelState.IsValid)
             {
@@ -135,6 +140,8 @@ namespace BudgetApp.Controllers
 
                 user.HouseholdId = null;
                 db.SaveChanges();
+
+                await ControllerContext.HttpContext.RefreshAuthentication(user);
 
                 if (currentUser.Id==user.Id)
                 {

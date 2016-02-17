@@ -14,6 +14,7 @@ namespace BudgetApp.Controllers
 {
     [RequireHttps]
     [Authorize]
+    [AuthorizeHouseholdRequired]
     public class TransactionsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -21,8 +22,17 @@ namespace BudgetApp.Controllers
         // GET: Transactions
         public ActionResult Index()
         {
-            var transactions = db.Transactions.Include(t => t.BankAccount).Include(t => t.BudgetItem).Include(t => t.Category);
-            return View(transactions.OrderByDescending(d=>d.Transacted).ToList());
+            var id = User.Identity.GetUserId();
+            var hh = id.GetHousehold();
+            var accounts = hh.BankAccounts;
+            return View(accounts.OrderByDescending(a=>a.Name).ToList());
+        }
+
+        //GET: Transactions Partial
+        public PartialViewResult View(int? id)
+        {
+            BankAccount account = db.BankAccounts.Find(id);
+            return PartialView("_Transactions");
         }
 
         // GET: Transactions/Details/5
@@ -75,11 +85,12 @@ namespace BudgetApp.Controllers
                 }
 
                 //balance calculations
-                account.Balance = transaction.GetAccountBalance(id);
+                account.Balance = transaction.GetAccountBalance();
                 if (transaction.BudgetItem != null)
                 {
-                    budget.Balance = transaction.GetBudgetBalance(id);
+                    budget.Balance = transaction.GetBudgetBalance();
                 }
+
                 db.SaveChanges();
 
                 //check budget warnings
@@ -119,7 +130,7 @@ namespace BudgetApp.Controllers
                 return HttpNotFound();
             }
 
-            TempData["OriginalAmount"] = transaction.Amount;
+            //TempData["OriginalAmount"] = transaction.Amount; - use .AsNoTracking() in Post instead
 
             ViewBag.BankAccountId = new SelectList(hh.BankAccounts, "Id", "Name", transaction.BankAccountId);
             ViewBag.BudgetItemId = new SelectList(hh.BudgetItems, "Id", "Name", transaction.BudgetItemId);
@@ -140,10 +151,11 @@ namespace BudgetApp.Controllers
 
             if (ModelState.IsValid)
             {
-                //var userId = User.Identity.GetUserId();
-                var account = db.BankAccounts.FirstOrDefault(a => a.Id.Equals(transaction.BankAccountId));
-                var budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(transaction.BudgetItemId));
-                var original = (decimal)TempData["OriginalAmount"];
+                //var original = (decimal)TempData["OriginalAmount"]; - not best practice
+                var original = db.Transactions.AsNoTracking().FirstOrDefault(t => t.Id == transaction.Id); 
+                var account = db.BankAccounts.FirstOrDefault(a => a.Id.Equals(original.BankAccountId));
+                var budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(original.BudgetItemId));
+
 
                 //set category
                 if (transaction.BudgetItemId != null)
@@ -152,9 +164,14 @@ namespace BudgetApp.Controllers
                 }
 
                 //balance calculations
-                account.Balance = transaction.GetAccountBalance(id, original);
-                budget.Balance = transaction.GetBudgetBalance(id, original);
-
+                account.Balance = transaction.RevertAccountBalance(original);
+                budget.Balance = transaction.RevertBudgetBalance(original);
+                
+                account = db.BankAccounts.FirstOrDefault(a=>a.Id.Equals(transaction.BankAccountId));
+                budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(transaction.BudgetItemId));
+                account.Balance = transaction.GetNewAccountBalance();
+                budget.Balance = transaction.GetNewBudgetBalance();
+                
                 //finish up
                 transaction.UserId = id;
 
@@ -197,8 +214,8 @@ namespace BudgetApp.Controllers
             var budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(transaction.BudgetItemId));
 
             //balance calculations
-            account.Balance = transaction.GetAccountBalanceOnDelete(userId);
-            budget.Balance = transaction.GetBudgetBalanceOnDelete(userId);
+            account.Balance = transaction.GetAccountBalanceOnDelete();
+            budget.Balance = transaction.GetBudgetBalanceOnDelete();
 
             db.Transactions.Remove(transaction);
             db.SaveChanges();

@@ -14,6 +14,7 @@ namespace BudgetApp.Controllers
 {
     [RequireHttps]
     [Authorize]
+    [AuthorizeHouseholdRequired]
     public class BudgetItemsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

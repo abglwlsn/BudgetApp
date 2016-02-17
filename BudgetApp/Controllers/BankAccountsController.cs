@@ -14,6 +14,7 @@ namespace BudgetApp.Controllers
 {
     [RequireHttps]
     [Authorize]
+    [AuthorizeHouseholdRequired]
     public class BankAccountsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -24,18 +25,19 @@ namespace BudgetApp.Controllers
             var id = User.Identity.GetUserId();
             Household hh = id.GetHousehold();
 
-            IEnumerable<BankAccount> bankAccounts = hh.BankAccounts;
+            IEnumerable<BankAccount> bankAccounts = db.BankAccounts.Where(b=>b.HouseholdId == hh.Id);
             return View(bankAccounts.ToList());
         }
 
         // GET: BankAccounts/Details/5
         public ActionResult Details(int? id)
         {
+            BankAccount bankAccount = db.BankAccounts.Find(id);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BankAccount bankAccount = db.BankAccounts.Find(id);
             if (bankAccount == null)
             {
                 return HttpNotFound();
@@ -44,9 +46,9 @@ namespace BudgetApp.Controllers
         }
 
         // GET: BankAccounts/Create
-        public ActionResult Create()
+        public PartialViewResult _Create()
         {
-            return View();
+            return PartialView();
         }
 
         // POST: BankAccounts/Create
@@ -54,7 +56,7 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,HouseholdId,Name,Balance")] BankAccount bankAccount)
+        public ActionResult Create([Bind(Include = "Id,Name,Balance")] BankAccount bankAccount)
         {
             if (ModelState.IsValid)
             {
@@ -64,22 +66,14 @@ namespace BudgetApp.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(bankAccount);
+            return RedirectToAction("Index");
         }
 
-        // GET: BankAccounts/Edit/5
-        public ActionResult Edit(int? id)
+        // GET: BankAccounts/_Edit/5
+        public PartialViewResult _Edit(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             BankAccount bankAccount = db.BankAccounts.Find(id);
-            if (bankAccount == null)
-            {
-                return HttpNotFound();
-            }
-            return View(bankAccount);
+            return PartialView(bankAccount);
         }
 
         // POST: BankAccounts/Edit/5
@@ -87,7 +81,7 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,HouseholdId,Name,Balance")] BankAccount bankAccount)
+        public ActionResult Edit([Bind(Include = "Id,Name")] BankAccount bankAccount)
         {
             if (ModelState.IsValid)
             {
@@ -99,19 +93,11 @@ namespace BudgetApp.Controllers
             return View(bankAccount);
         }
 
-        // GET: BankAccounts/Delete/5
-        public ActionResult Delete(int? id)
+        // GET: BankAccounts/_Delete/5
+        public PartialViewResult _Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             BankAccount bankAccount = db.BankAccounts.Find(id);
-            if (bankAccount == null)
-            {
-                return HttpNotFound();
-            }
-            return View(bankAccount);
+            return PartialView(bankAccount);
         }
 
         // POST: BankAccounts/Delete/5

@@ -1,8 +1,11 @@
-﻿using System;
+﻿using BudgetApp.Models;
+using System;
 using System.Collections.Generic;
+using Microsoft.AspNet.Identity.Owin;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace BudgetApp.HelperExtensions
@@ -19,14 +22,21 @@ namespace BudgetApp.HelperExtensions
                 return null;
         }
 
-        public static bool IsUserInHousehold(this IIdentity user)
+        public static bool IsInHousehold(this IIdentity user)
         {
             var ClaimUser = (ClaimsIdentity)user;
-            var Claim = ClaimUser.Claims.FirstOrDefault(c => c.Type == "HouseholdId");
-            if (Claim.Value != null)
+            var hId = ClaimUser.Claims.FirstOrDefault(c => c.Type == "HouseholdId");
+            if (hId.Value != null)
                 return true;
             else
                 return false;
+            // OR return (hId != null && !string.IsNullOrWhiteSpace(hId.Value))
+        }
+
+        public static async Task RefreshAuthentication(this HttpContextBase context, ApplicationUser user)
+        {
+            context.GetOwinContext().Authentication.SignOut();
+            await context.GetOwinContext().Get<ApplicationSignInManager>().SignInAsync(user, isPersistent: false, rememberBrowser: false);
         }
     }
 }
