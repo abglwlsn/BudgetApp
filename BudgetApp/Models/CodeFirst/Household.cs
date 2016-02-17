@@ -15,6 +15,7 @@ namespace BudgetApp.Models
             this.BudgetItems = new HashSet<BudgetItem>();
             this.InvitedUsers = new HashSet<InvitedUser>();
             this.Transactions = new HashSet<Transaction>();
+            this.Categories = new HashSet<Category>();
         }
 
         public int Id { get; set; }
@@ -25,5 +26,6 @@ namespace BudgetApp.Models
         public virtual ICollection<BudgetItem> BudgetItems { get; set; }
         public virtual ICollection<InvitedUser> InvitedUsers { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; }
+        public virtual ICollection<Category> Categories { get; set; }
     }
 }

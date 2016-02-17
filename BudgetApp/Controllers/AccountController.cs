@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BudgetApp.Models;
+using BudgetApp.HelperExtensions;
 
 namespace BudgetApp.Controllers
 {

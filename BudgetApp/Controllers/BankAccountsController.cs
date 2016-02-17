@@ -22,9 +22,9 @@ namespace BudgetApp.Controllers
         public ActionResult Index()
         {
             var id = User.Identity.GetUserId();
-            var hh = id.GetHousehold();
+            Household hh = id.GetHousehold();
 
-            var bankAccounts = hh.BankAccounts;
+            IEnumerable<BankAccount> bankAccounts = hh.BankAccounts;
             return View(bankAccounts.ToList());
         }
 
@@ -56,12 +56,9 @@ namespace BudgetApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,HouseholdId,Name,Balance")] BankAccount bankAccount)
         {
-            var id = User.Identity.GetUserId();
-            var user = db.Users.FirstOrDefault(u => u.Id.Equals(id));
-
             if (ModelState.IsValid)
             {
-                bankAccount.HouseholdId = user.Household.Id;
+                bankAccount.HouseholdId = Convert.ToInt32(User.Identity.GetHouseholdId());
 
                 db.BankAccounts.Add(bankAccount);
                 db.SaveChanges();
@@ -98,7 +95,7 @@ namespace BudgetApp.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", bankAccount.HouseholdId);
+
             return View(bankAccount);
         }
 

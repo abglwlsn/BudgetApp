@@ -21,7 +21,7 @@ namespace BudgetApp.Controllers
         // GET: Transactions
         public ActionResult Index()
         {
-            var transactions = db.Transactions.Include(t => t.BankAccount).Include(t => t.BudgetItem).Include(t => t.Category).Include("Universals");
+            var transactions = db.Transactions.Include(t => t.BankAccount).Include(t => t.BudgetItem).Include(t => t.Category);
             return View(transactions.OrderByDescending(d=>d.Transacted).ToList());
         }
 
@@ -43,9 +43,12 @@ namespace BudgetApp.Controllers
         // GET: Transactions/Create
         public ActionResult Create()
         {
-            ViewBag.BankAccountId = new SelectList(db.BankAccounts, "Id", "Name");
-            ViewBag.BudgetItemId = new SelectList(db.BudgetItems, "Id", "Name");
-            ViewBag.CategoryId = new SelectList(db.Categories.Include("Universals"), "Id", "Name");
+            var userId = User.Identity.GetUserId();
+            var hh = userId.GetHousehold();
+
+            ViewBag.BankAccountId = new SelectList(hh.BankAccounts, "Id", "Name");
+            ViewBag.BudgetItemId = new SelectList(hh.BudgetItems, "Id", "Name");
+            ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name");
 
             return View();
         }
@@ -57,13 +60,13 @@ namespace BudgetApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,BankAccountId,CategoryId,BudgetItemId,UserId,Transacted,Entered,Amount,Description,Type,Reconciled")] Transaction transaction)
         {
+            var id = User.Identity.GetUserId();
+            var hh = id.GetHousehold();
+
             if (ModelState.IsValid)
             {
-                var id = User.Identity.GetUserId();
-                var user = db.Users.FirstOrDefault(u=>u.Id.Equals(id));
                 var account = db.BankAccounts.FirstOrDefault(a => a.Id.Equals(transaction.BankAccountId));
                 var budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(transaction.BudgetItemId));
-                //var warning = db.Durations. FirstOrDefault(w => w.WarnAtId == transaction.BudgetItem.WarnAtId);
                 
                 //set category
                 if (transaction.BudgetItemId!= null)
@@ -72,53 +75,40 @@ namespace BudgetApp.Controllers
                 }
 
                 //balance calculations
-                if (transaction.Type== true)
+                account.Balance = transaction.GetAccountBalance(id);
+                if (transaction.BudgetItem != null)
                 {
-                    account.Balance = account.Balance + transaction.Amount;
-
-                    if (budget.Type == true)
-                    {
-                        budget.Balance = budget.Balance + transaction.Amount;
-                    }
-                    else
-                    {
-                        budget.Balance = budget.Balance - transaction.Amount;
-                    }
-                    db.SaveChanges();
+                    budget.Balance = transaction.GetBudgetBalance(id);
                 }
-                else
-                {
-                    account.Balance = account.Balance - transaction.Amount;
-
-                    if (budget.Type == true)
-                    {
-                        budget.Balance = budget.Balance - transaction.Amount;
-                    }
-                    else
-                    {
-                        budget.Balance = budget.Balance + transaction.Amount;
-                    }
-                    db.SaveChanges();
-                }
+                db.SaveChanges();
 
                 //check budget warnings
                 //if (budget.AmountLimit - budget.Balance <= )
 
                 //finish up
                 transaction.Entered = DateTimeOffset.Now;
-                transaction.UserId = user.Id;
+                transaction.UserId = id;
 
                 db.Entry(transaction).State = EntityState.Modified;
                 db.Transactions.Add(transaction);
                 db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
+
+            ViewBag.BankAccountId = new SelectList(hh.BankAccounts, "Id", "Name");
+            ViewBag.BudgetItemId = new SelectList(hh.BudgetItems, "Id", "Name");
+            ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name");
+
             return View(transaction);
         }
 
         // GET: Transactions/Edit/5
         public ActionResult Edit(int? id)
         {
+            var userId = User.Identity.GetUserId();
+            var hh = userId.GetHousehold();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -131,9 +121,10 @@ namespace BudgetApp.Controllers
 
             TempData["OriginalAmount"] = transaction.Amount;
 
-            ViewBag.BankAccountId = new SelectList(db.BankAccounts, "Id", "Name", transaction.BankAccountId);
-            ViewBag.BudgetItemId = new SelectList(db.BudgetItems, "Id", "Name", transaction.BudgetItemId);
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", transaction.CategoryId);
+            ViewBag.BankAccountId = new SelectList(hh.BankAccounts, "Id", "Name", transaction.BankAccountId);
+            ViewBag.BudgetItemId = new SelectList(hh.BudgetItems, "Id", "Name", transaction.BudgetItemId);
+            ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name", transaction.CategoryId);
+
             return View(transaction);
         }
 
@@ -144,13 +135,15 @@ namespace BudgetApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,BankAccountId,CategoryId,BudgetItemId,UserId,Transacted,Amount,Description,Type,Reconciled")] Transaction transaction)
         {
+            var id = User.Identity.GetUserId();
+            var hh = id.GetHousehold();
+
             if (ModelState.IsValid)
             {
-                var original = (decimal)TempData["OriginalAmount"];
-                var id = User.Identity.GetUserId();
-                var user = db.Users.FirstOrDefault(u => u.Id.Equals(id));
+                //var userId = User.Identity.GetUserId();
                 var account = db.BankAccounts.FirstOrDefault(a => a.Id.Equals(transaction.BankAccountId));
                 var budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(transaction.BudgetItemId));
+                var original = (decimal)TempData["OriginalAmount"];
 
                 //set category
                 if (transaction.BudgetItemId != null)
@@ -159,42 +152,20 @@ namespace BudgetApp.Controllers
                 }
 
                 //balance calculations
-                if (transaction.Type == true)
-                {
-                    account.Balance = account.Balance - original + transaction.Amount;
-
-                    if (budget.Type == true)
-                    {
-                        budget.Balance = budget.Balance - original + transaction.Amount;
-                    }
-                    else
-                    {
-                        budget.Balance = budget.Balance + original - transaction.Amount;
-                    }
-                    db.SaveChanges();
-                }
-                else
-                {
-                    account.Balance = account.Balance + original - transaction.Amount;
-
-                    if (budget.Type == true)
-                    {
-                        budget.Balance = budget.Balance + original - transaction.Amount;
-                    }
-                    else
-                    {
-                        budget.Balance = budget.Balance - original + transaction.Amount;
-                    }
-                    db.SaveChanges();
-                }
+                account.Balance = transaction.GetAccountBalance(id, original);
+                budget.Balance = transaction.GetBudgetBalance(id, original);
 
                 //finish up
-                transaction.UserId = user.Id;
+                transaction.UserId = id;
 
                 db.Entry(transaction).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+
+            ViewBag.BankAccountId = new SelectList(db.BankAccounts, "Id", "Name", transaction.BankAccountId);
+            ViewBag.BudgetItemId = new SelectList(db.BudgetItems, "Id", "Name", transaction.BudgetItemId);
+            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", transaction.CategoryId);
 
             return View(transaction);
         }
@@ -222,40 +193,12 @@ namespace BudgetApp.Controllers
             Transaction transaction = db.Transactions.Find(id);
 
             var userId = User.Identity.GetUserId();
-
-            var user = db.Users.FirstOrDefault(u => u.Id.Equals(userId));
             var account = db.BankAccounts.FirstOrDefault(a => a.Id.Equals(transaction.BankAccountId));
             var budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(transaction.BudgetItemId));
 
             //balance calculations
-            if (transaction.Type == true)
-            {
-                account.Balance = account.Balance + transaction.Amount;
-
-                if (budget.Type == true)
-                {
-                    budget.Balance = budget.Balance  - transaction.Amount;
-                }
-                else
-                {
-                    budget.Balance = budget.Balance + transaction.Amount;
-                }
-                db.SaveChanges();
-            }
-            else
-            {
-                account.Balance = account.Balance +  transaction.Amount;
-
-                if (budget.Type == true)
-                {
-                    budget.Balance = budget.Balance + transaction.Amount;
-                }
-                else
-                {
-                    budget.Balance = budget.Balance - transaction.Amount;
-                }
-                db.SaveChanges();
-            }
+            account.Balance = transaction.GetAccountBalanceOnDelete(userId);
+            budget.Balance = transaction.GetBudgetBalanceOnDelete(userId);
 
             db.Transactions.Remove(transaction);
             db.SaveChanges();

@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BudgetApp.Models;
+using BudgetApp.HelperExtensions;
+using Microsoft.AspNet.Identity;
 
 namespace BudgetApp.Controllers
 {
@@ -19,7 +21,8 @@ namespace BudgetApp.Controllers
         // GET: BudgetItems
         public ActionResult Index()
         {
-            var budgetItems = db.BudgetItems.Include(b => b.Category).Include(b => b.Duration).Include(b => b.Household);
+            var hId = User.Identity.GetHouseholdId();
+            var budgetItems = db.BudgetItems.Where(h => h.HouseholdId.Equals(hId));
             return View(budgetItems.ToList());
         }
 
@@ -30,7 +33,7 @@ namespace BudgetApp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            BudgetItem budgetItem = db.BudgetItems.Find(id);
+            BudgetItem budgetItem = db.BudgetItems.Include("Transactions").FirstOrDefault(b=>b.Id == id);
             if (budgetItem == null)
             {
                 return HttpNotFound();
@@ -43,7 +46,7 @@ namespace BudgetApp.Controllers
         {
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name");
             ViewBag.DurationId = new SelectList(db.Durations, "Id", "Length");
-            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name");
+
             return View();
         }
 
@@ -52,10 +55,14 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,CategoryId,HouseholdId,Name,Amount,DurationId")] BudgetItem budgetItem)
+        public ActionResult Create([Bind(Include = "Id,CategoryId,HouseholdId,Name,AmountLimit,Balance,Type,WarnAtId,CreatorId,DurationId,AllowEdits")] BudgetItem budgetItem)
         {
             if (ModelState.IsValid)
             {
+                budgetItem.HouseholdId = Convert.ToInt32(User.Identity.GetHouseholdId());
+                budgetItem.Balance = 0;
+                budgetItem.CreatorId = User.Identity.GetUserId();
+
                 db.BudgetItems.Add(budgetItem);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -63,7 +70,7 @@ namespace BudgetApp.Controllers
 
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", budgetItem.CategoryId);
             ViewBag.DurationId = new SelectList(db.Durations, "Id", "Length", budgetItem.DurationId);
-            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", budgetItem.HouseholdId);
+
             return View(budgetItem);
         }
 
@@ -74,14 +81,18 @@ namespace BudgetApp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             BudgetItem budgetItem = db.BudgetItems.Find(id);
+
             if (budgetItem == null)
             {
                 return HttpNotFound();
             }
+
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", budgetItem.CategoryId);
             ViewBag.DurationId = new SelectList(db.Durations, "Id", "Length", budgetItem.DurationId);
             ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", budgetItem.HouseholdId);
+
             return View(budgetItem);
         }
 
@@ -90,17 +101,19 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,CategoryId,HouseholdId,Name,Amount,DurationId")] BudgetItem budgetItem)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(budgetItem).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+        public ActionResult Edit([Bind(Include = "Id,CategoryId,Name,AmountLimit,DurationId,Type,WarnAtId,AllowEdits")] BudgetItem budgetItem)
+        { 
+                if (ModelState.IsValid)
+                {
+                    db.Entry(budgetItem).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", budgetItem.CategoryId);
             ViewBag.DurationId = new SelectList(db.Durations, "Id", "Length", budgetItem.DurationId);
             ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", budgetItem.HouseholdId);
+
             return View(budgetItem);
         }
 

@@ -21,16 +21,18 @@ namespace BudgetApp.Controllers
         // GET: Households
         public ActionResult Index()
         {
-            return View(db.Households.ToList());
+            var hId = User.Identity.GetHouseholdId();
+            return View(hId);
+            //return View(db.Households.ToList());
         }
 
         // GET: Households/Details/5
         public ActionResult Details(int? id)
         {
-            var user = User.Identity.GetUserId();
-            var hh = user.GetHousehold();
+            var hId = Convert.ToInt32(User.Identity.GetHouseholdId());
+            var hh = db.Households.FirstOrDefault(h => h.Id == hId);
 
-            if (id == null && hh != null)
+            if (id == null && hh != null )
             {
                 id = hh.Id;
             }
@@ -38,7 +40,6 @@ namespace BudgetApp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
             if (hh == null)
             {
                 return HttpNotFound();
@@ -74,6 +75,10 @@ namespace BudgetApp.Controllers
                 db.Households.Add(household);
                 db.SaveChanges();
 
+                //add standard categories to category table
+                var categories = db.CategoryStandards.ToList();
+                db.Categories.AddRange(categories.AddStandardCategories(household));
+
                 user.AdminRights = true;
                 user.HouseholdId = household.Id;
                 db.SaveChanges();
@@ -103,6 +108,7 @@ namespace BudgetApp.Controllers
                         user.AdminRights = Iuser.AdminRights;
                         db.SaveChanges();
 
+                        TempData["ErrorMessage"] = "";
                         db.InvitedUsers.Remove(Iuser);
                         db.SaveChanges();
 

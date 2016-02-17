@@ -19,7 +19,10 @@ namespace BudgetApp.Models
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
-            // Add custom user claims here
+            // Add custom user claims here (whatever is in the cookie)
+            userIdentity.AddClaim(new Claim("HouseholdId", HouseholdId.ToString()));
+            // first parameter is string name for claim
+            //second parameter is desired value (must be part of the ApplicationUser)
             return userIdentity;
         }
     }
@@ -39,6 +42,7 @@ namespace BudgetApp.Models
         public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<BudgetItem> BudgetItems { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<CategoryStandard> CategoryStandards { get; set; }
         public DbSet<Duration> Durations { get; set; }
         public DbSet<Household> Households { get; set; }
         public DbSet<InvitedUser> InvitedUsers { get; set; }

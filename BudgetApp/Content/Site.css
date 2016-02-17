@@ -103,6 +103,11 @@ h1 span {
     padding:5px;
 }
 
+#category {
+    display:none;
+}
+
+
 /* ----------- IMAGES ----------*/
 
 img {
