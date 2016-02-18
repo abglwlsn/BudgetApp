@@ -4,7 +4,6 @@
     ViewBag.Title = "Index";
 }
 
-
 <div class="row">
     <div class="col-md-7">
         <div class="box-info">
@@ -26,13 +25,13 @@
                     {
                         <tr>
                             <td>@account.Name</td>
-                            <td class="text-success">@account.Balance</td>
+                            <td class="balance text-succ">@account.Balance</td>
                             @*render partial view of transactions on click*@
                             <td>
-                                <button class="viewAcctTrans btn btn-sm btn-primary" data-id="@account.Id" type="button">View Recent Transactions</button>
+                                <button class="viewAcctTrans btn btn-sm btn-primary" data-id="@account.Id" type="button">Recent Transactions</button>
                                 @*@if (User.IsInRole("Admin"))
                                     {*@
-                                <button class="editAcct btn btn-sm btn-danger" data-id="@account.Id" type="button">Edit</button>
+                                <button class="editAcct btn btn-sm btn-primary" data-id="@account.Id" type="button">Edit</button>
                                 <button class="deleteAcct btn btn-sm btn-danger" data-id="@account.Id" type="button">Delete</button>
                             </td>
                             @*}*@

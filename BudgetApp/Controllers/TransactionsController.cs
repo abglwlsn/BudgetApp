@@ -22,10 +22,11 @@ namespace BudgetApp.Controllers
         // GET: Transactions
         public ActionResult Index()
         {
-            var id = User.Identity.GetUserId();
-            var hh = id.GetHousehold();
+            //var id = User.Identity.GetUserId();
+            //var user = db.Users.Find(id);
+            var hh = db.Households.Find(Convert.ToInt32(User.Identity.GetHouseholdId())); 
             var accounts = hh.BankAccounts;
-            return View(accounts.OrderByDescending(a=>a.Name).ToList());
+            return View(accounts.OrderBy(a=>a.Name).ToList());
         }
 
         //GET: Transactions Partial
@@ -165,13 +166,16 @@ namespace BudgetApp.Controllers
 
                 //balance calculations
                 account.Balance = transaction.RevertAccountBalance(original);
-                budget.Balance = transaction.RevertBudgetBalance(original);
-                
-                account = db.BankAccounts.FirstOrDefault(a=>a.Id.Equals(transaction.BankAccountId));
-                budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(transaction.BudgetItemId));
+                account = db.BankAccounts.FirstOrDefault(a => a.Id.Equals(transaction.BankAccountId));
                 account.Balance = transaction.GetNewAccountBalance();
-                budget.Balance = transaction.GetNewBudgetBalance();
-                
+
+                if (budget != null)
+                {
+                    budget.Balance = transaction.RevertBudgetBalance(original);
+                    budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(transaction.BudgetItemId));
+                    budget.Balance = transaction.GetNewBudgetBalance();
+                }
+
                 //finish up
                 transaction.UserId = id;
 
@@ -215,7 +219,8 @@ namespace BudgetApp.Controllers
 
             //balance calculations
             account.Balance = transaction.GetAccountBalanceOnDelete();
-            budget.Balance = transaction.GetBudgetBalanceOnDelete();
+            if (budget != null)
+            { budget.Balance = transaction.GetBudgetBalanceOnDelete(); }
 
             db.Transactions.Remove(transaction);
             db.SaveChanges();

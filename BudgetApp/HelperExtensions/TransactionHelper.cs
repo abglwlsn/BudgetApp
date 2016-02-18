@@ -97,6 +97,7 @@ namespace BudgetApp.HelperExtensions
                     budget.Balance += transaction.Amount;
                 }
             }
+            
             return budget.Balance;
         }
 
@@ -104,7 +105,7 @@ namespace BudgetApp.HelperExtensions
         {
             var budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(transaction.BudgetItemId));
 
-            if (transaction.Type == true)
+            if (transaction.Type == true )
             {
                 if (budget.Type == true)
                 {
@@ -115,7 +116,7 @@ namespace BudgetApp.HelperExtensions
                     budget.Balance -= transaction.Amount;
                 }
             }
-            else
+            else 
             {
                 if (budget.Type == true)
                 {

@@ -72,6 +72,9 @@ namespace BudgetApp.Controllers
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                Email = user.Email,
+                AdminRights = user.AdminRights,
+                BudgetItems = user.Household.BudgetItems.Where(m => m.CreatorId == userId),
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),

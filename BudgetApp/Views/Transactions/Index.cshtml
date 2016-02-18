@@ -11,8 +11,8 @@
 </p>
 @foreach (var account in Model)
 {
-    <div class="box-info">
-        <h2>@account.Name</h2>
+    <div class="box-info shadow">
+        <h2><strong>@account.Name</strong> <i class="fa fa-angle-right"></i> Balance: <span class="balance text-succ">$ @account.Balance</span></h2>
         <table class="data-table">
             <thead>
                 <tr>
@@ -23,8 +23,6 @@
                     <th>Budget</th>
                     <th>Description</th>
                     <th>Reconciled?</th>
-                    <th>Entered by</th>
-                    <th>On</th>
                     <th></th>
                 </tr>
             </thead>
@@ -32,20 +30,18 @@
                 @foreach (var trans in account.Transactions)
                 {
                     <tr>
-                        <td>@trans.Transacted</td>
+                        <td>@trans.Transacted.DateTime.ToShortDateString()</td>
                         <td>@trans.Amount</td>
                         <td>@if (trans.Type == true)
                         { <i class="fa fa-plus"></i> }
                         else { <i class="fa fa-minus"></i>}
                         </td>
-                        <td>@trans.Category</td>
+                        <td>@trans.Category.Name</td>
                         <td>@trans.BudgetItem</td>
                         <td>@trans.Description</td>
                         <td>@if (trans.Reconciled == true)
                         { <i class="fa fa-check"></i>  }
                         </td>
-                        <td>@trans.User.FirstName + @trans.User.LastName</td>
-                        <td>@trans.Entered.DateTime</td>
                         <td>
                             @Html.ActionLink("Edit", "Edit", new { id = trans.Id }) |
                             @Html.ActionLink("Details", "Details", new { id = trans.Id }) |

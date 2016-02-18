@@ -28,22 +28,14 @@ namespace BudgetApp.Controllers
         }
 
         // GET: Households/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details()
         {
             var hId = Convert.ToInt32(User.Identity.GetHouseholdId());
             var hh = db.Households.Find(hId);
 
-            if (id == null && hh != null )
-            {
-                id = hh.Id;
-            }
-            else if (id == null && hh == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             if (hh == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Create");
             }
             return View(hh);
         }
@@ -130,7 +122,10 @@ namespace BudgetApp.Controllers
             return RedirectToAction("Create");
         }
 
-        //GET: Households/LeaveHousehold
+        //POST: Households/LeaveHousehold
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeHouseholdRequired]
         public async Task<ActionResult> LeaveHousehold(string id)
         {
             if (ModelState.IsValid)
@@ -141,15 +136,16 @@ namespace BudgetApp.Controllers
                 user.HouseholdId = null;
                 db.SaveChanges();
 
-                await ControllerContext.HttpContext.RefreshAuthentication(user);
+                
 
                 if (currentUser.Id==user.Id)
                 {
-                    return RedirectToAction("Login", "Account", null);
+                    await ControllerContext.HttpContext.RefreshAuthentication(currentUser);
+                    return RedirectToAction("Create", "Households");
                 }
                 else
                 {
-                    return RedirectToAction("Details", "Household", new { id = currentUser.HouseholdId });
+                    return RedirectToAction("Details", "Households", new { id = currentUser.HouseholdId });
                 }
             }
             return View();
@@ -157,12 +153,14 @@ namespace BudgetApp.Controllers
 
         //POST: Households/ChangeAdmin
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeHouseholdRequired]
         public ActionResult ChangeAdmin(string id)
         {
             if (ModelState.IsValid)
             {
                 ApplicationUser user = db.Users.Find(id);
-                ApplicationUser currentUser = db.Users.Find(User.Identity.IsAuthenticated);
+                ApplicationUser currentUser = db.Users.Find(User.Identity.GetUserId());
                 if (user != currentUser)
                 {
                   if (user.AdminRights == true)
@@ -175,7 +173,7 @@ namespace BudgetApp.Controllers
                   }
 
                   db.SaveChanges();
-                  return RedirectToAction("Details", "Household", new { id = user.HouseholdId });
+                  return RedirectToAction("Details", "Households", new { id = user.HouseholdId });
                 }
             }
             return View();
@@ -183,6 +181,7 @@ namespace BudgetApp.Controllers
 
 
         // GET: Households/Edit/5
+        [AuthorizeHouseholdRequired]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -202,6 +201,7 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeHouseholdRequired]
         public ActionResult Edit([Bind(Include = "Id,Name")] Household household)
         {
             if (ModelState.IsValid)
@@ -213,31 +213,33 @@ namespace BudgetApp.Controllers
             return View(household);
         }
 
-        // GET: Households/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Household household = db.Households.Find(id);
-            if (household == null)
-            {
-                return HttpNotFound();
-            }
-            return View(household);
-        }
+        //// GET: Households/Delete/5
+        //[AuthorizeHouseholdRequired]
+        //public ActionResult Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Household household = db.Households.Find(id);
+        //    if (household == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(household);
+        //}
 
-        // POST: Households/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Household household = db.Households.Find(id);
-            db.Households.Remove(household);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        //// POST: Households/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //[AuthorizeHouseholdRequired]
+        //public ActionResult DeleteConfirmed(int id)
+        //{
+        //    Household household = db.Households.Find(id);
+        //    db.Households.Remove(household);
+        //    db.SaveChanges();
+        //    return RedirectToAction("Index");
+        //}
 
         protected override void Dispose(bool disposing)
         {

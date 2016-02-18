@@ -13,6 +13,10 @@ namespace BudgetApp.Models
         public string LastName { get; set; }
         [EmailAddress]
         public string Email { get; set; }
+        [Display(Name = "Admin Rights?")]
+        public bool AdminRights { get; set; }
+        [Display(Name = "Budgets")]
+        public IEnumerable<BudgetItem> BudgetItems { get; set; }
         public bool HasPassword { get; set; }
         public IList<UserLoginInfo> Logins { get; set; }
         public string PhoneNumber { get; set; }

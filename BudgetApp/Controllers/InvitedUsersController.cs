@@ -21,28 +21,6 @@ namespace BudgetApp.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: InvitedUsers
-        public ActionResult Index()
-        {
-            var invitedUsers = db.InvitedUsers.Include(i => i.Household);
-            return View(invitedUsers.ToList());
-        }
-
-        // GET: InvitedUsers/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            InvitedUser invitedUser = db.InvitedUsers.Find(id);
-            if (invitedUser == null)
-            {
-                return HttpNotFound();
-            }
-            return View(invitedUser);
-        }
-
         // GET: InvitedUsers/Create
         public ActionResult Create()
         {
@@ -81,30 +59,14 @@ namespace BudgetApp.Controllers
                 return RedirectToAction("Details", "Households", (new { id = user.HouseholdId }));
             }
 
-            //ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", invitedUser.HouseholdId);
             return View(invitedUser);
         }
         
 
-        // GET: InvitedUsers/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            InvitedUser invitedUser = db.InvitedUsers.Find(id);
-            if (invitedUser == null)
-            {
-                return HttpNotFound();
-            }
-            return View(invitedUser);
-        }
-
         // POST: InvitedUsers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int id)
         {
             InvitedUser invitedUser = db.InvitedUsers.Find(id);
             db.InvitedUsers.Remove(invitedUser);

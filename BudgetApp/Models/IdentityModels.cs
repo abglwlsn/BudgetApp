@@ -43,7 +43,6 @@ namespace BudgetApp.Models
         public DbSet<BudgetItem> BudgetItems { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<CategoryStandard> CategoryStandards { get; set; }
-        public DbSet<Duration> Durations { get; set; }
         public DbSet<Household> Households { get; set; }
         public DbSet<InvitedUser> InvitedUsers { get; set; }
         public DbSet<Transaction> Transactions { get; set; }

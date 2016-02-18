@@ -16,7 +16,7 @@ namespace BudgetApp.Models
         public int Id { get; set; }
         public int HouseholdId { get; set; }
         [Required(ErrorMessage = "An account name is required.")]
-        [Display(Name="Account Name")]
+        [Display(Name="Account")]
         public string Name { get; set; }
         public decimal Balance { get; set; }
 

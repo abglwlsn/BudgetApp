@@ -1,4 +1,10 @@
 ﻿
+/*text-danger: #a94442
+    brighter red: 	#d31b17
+    text-success: #3c763d
+    brighter green: 	#12a114
+*/
+
 .nav-pad {
     padding:0 25px;
 }
@@ -35,6 +41,12 @@ ul a:hover {
     text-decoration:none;
 }
 
+.shadow {
+    -moz-box-shadow:1px 1px 3px 3px #ccc;
+    -webkit-box-shadow:1px 1px 3px 3px #ccc;
+    box-shadow:1px 1px 3px 3px #ccc;
+}
+
 /*-------- WELCOME PAGE --------*/
 
 .full-content-large {
@@ -61,10 +73,10 @@ ul a:hover {
 }
 
 h1 span {
-    text-shadow: -1px 1px 1px #fff;
+    text-shadow: -1px 1px #fff;
 }
 
-/* ----------- FONTS -----------*/
+/* ------ FONTS AND TEXT ------*/
 
 .text-title {
     font-family: 'Source Sans Pro', sans-serif;
@@ -78,11 +90,42 @@ h1 span {
     font-size:1.2em;
 }
 
+.text-succ {
+    color:#12a114;
+}
+
+.text-dang {
+    color:#d31b17;
+}
+
 .subtitle {
     font-size:1.25em;
     font-style:italic;
     text-align:right;
     color:#cccccc;
+}
+
+.fa-plus {
+    color:#12a114;
+}
+
+.fa-minus {
+    color:#d31b17;
+}
+
+dt {
+    float:left;
+    clear:left;
+    width:40%;
+    text-align:right;
+    font-size:1.25em;
+    line-height:1.4em;
+}
+
+dd {
+    margin-left:45%;
+    font-size:1.15em;
+    line-height:1.5em;
 }
 
 /* --- FORMS AND VERIFICATION --*/
@@ -108,6 +151,13 @@ h1 span {
 }
 
 
+
+/* -------- DATA TABLE ---------*/
+
+table.dataTable tbody td {
+    padding:6px 3px;
+    text-align:center;
+}
 
 /* ----------- IMAGES ----------*/
 

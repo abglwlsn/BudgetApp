@@ -46,7 +46,7 @@ namespace BudgetApp.Controllers
         public ActionResult Create()
         {
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name");
-            ViewBag.DurationId = new SelectList(db.Durations, "Id", "Length");
+            ViewBag.WarningId = new SelectList(db.Warnings, "Id", "WarningLevel");
 
             return View();
         }
@@ -56,7 +56,7 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,CategoryId,HouseholdId,Name,AmountLimit,Balance,Type,WarnAtId,CreatorId,DurationId,AllowEdits")] BudgetItem budgetItem)
+        public ActionResult Create([Bind(Include = "Id,CategoryId,HouseholdId,Name,AmountLimit,Balance,Type,WarnAtId,CreatorId,AllowEdits")] BudgetItem budgetItem)
         {
             if (ModelState.IsValid)
             {
@@ -70,13 +70,13 @@ namespace BudgetApp.Controllers
             }
 
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", budgetItem.CategoryId);
-            ViewBag.DurationId = new SelectList(db.Durations, "Id", "Length", budgetItem.DurationId);
+            ViewBag.WarningId = new SelectList(db.Warnings, "Id", "WarningLevel");
 
             return View(budgetItem);
         }
 
         // GET: BudgetItems/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit([Bind(Include = "Id,CategoryId,Name,AmountLimit,Type,WarnAtId,CreatorId,AllowEdits")]int? id)
         {
             if (id == null)
             {
@@ -91,7 +91,6 @@ namespace BudgetApp.Controllers
             }
 
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", budgetItem.CategoryId);
-            ViewBag.DurationId = new SelectList(db.Durations, "Id", "Length", budgetItem.DurationId);
             ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", budgetItem.HouseholdId);
 
             return View(budgetItem);
@@ -102,7 +101,7 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,CategoryId,Name,AmountLimit,DurationId,Type,WarnAtId,AllowEdits")] BudgetItem budgetItem)
+        public ActionResult Edit([Bind(Include = "Id,CategoryId,Name,AmountLimit,Type,WarnAtId,AllowEdits")] BudgetItem budgetItem)
         { 
                 if (ModelState.IsValid)
                 {
@@ -112,7 +111,6 @@ namespace BudgetApp.Controllers
                 }
 
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", budgetItem.CategoryId);
-            ViewBag.DurationId = new SelectList(db.Durations, "Id", "Length", budgetItem.DurationId);
             ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", budgetItem.HouseholdId);
 
             return View(budgetItem);

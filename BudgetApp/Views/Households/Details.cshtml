@@ -2,7 +2,7 @@
 @using Microsoft.AspNet.Identity;
 @{
     ViewBag.Title = "Details";
-    var currUserId = User.Identity.GetUserId();
+    var currentUserId = User.Identity.GetUserId();
 }
 
 
@@ -22,32 +22,41 @@
             <p class="col-md-3">@user.Email</p>
             <p class="col-md-1">@user.AdminRights</p>
             @foreach (var budget in Model.BudgetItems)
-                {
+            {
                 <p class="col-md-4">
                     <b>@budget.Name</b><br />
                     @budget.Balance<br />
-                    @budget.AmountLimit<br />
-                    @budget.Duration
+                    @budget.AmountLimit
                 </p>
             }
         </div>
 
-        if (User.IsInRole("Admin"))
+        //if (User.IsInRole("Admin"))
+        //{
+
+        using (Html.BeginForm("ChangeAdmin", "Households", new { id = user.Id }))
         {
-            if (user.AdminRights == true)
+            @Html.AntiForgeryToken()
+            if (currentUserId != user.Id)
             {
-                <a href=@Url.Action("ChangeAdmin", "Household", new { id = user.Id }) class="btn btn-dark">Remove Admin Rights</a>
+                <button type="submit" class="btn btn-success btn-xs">Remove Admin Rights</button>
             }
             else
             {
-                <a href=@Url.Action("ChangeAdmin", "Household", new { id = user.Id }) class="btn btn-dark">Give Admin Rights</a>
+                <button type="submit" class="btn btn-success btn-xs">Give Admin Rights</button>
             }
-            if (user.Id != currUserId)
+        }
+        using (Html.BeginForm("LeaveHousehold", "Households", new { id = user.Id }))
+        {
+            if (user.Id != currentUserId)
             {
-                <a href=@Url.Action("LeaveHousehold", "Households", new { id = user.Id }) class="btn btn-dark">Expel User</a>
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger btn-xs">Expel User</button>
             }
         }
     }
+
+    @*}*@
 </section>
 <section class="invitedUsers">
     <h4>Invited Users</h4>
@@ -63,22 +72,26 @@
             <p class="col-md-3">@user.Email</p>
             <p class="col-md-1">@user.AdminRights</p>
         </div>
-    }
-    <a href=@Url.Action("Create", "InvitedUsers", null) class="btn btn-dark">Invite New User</a>
+        using (Html.BeginForm("Delete", "InvitedUsers"))
+        { 
+            <button type="submit" class="btn btn-danger btn-xs">Rescind Invite</button>}
+        }
+    <a href=@Url.Action("Create", "InvitedUsers") class="btn btn-success">Invite New User</a>
 </section>
 
 
 
 
 
- <div class="verify-contain">
-     <button type="button" id="leave" class="btn btn-dark">Leave Household</button>
-     <div id="verify">
-         <p class="text-danger">Are you sure you want to leave this household? You will lose all access to the information contained within. If you are the last member, the household will be deleted.</p>
-         @{  
-         <a href=@Url.Action("LeaveHousehold", "Households", new { id = currUserId }) }) class="btn btn-danger">Yes, leave household</a>
-             }
-     </div>
- </div>
+<div class="verify-contain">
+    <button type="button" id="leave" class="btn btn-danger">Leave Household</button>
+    <div id="verify">
+        <p class="text-danger">Are you sure you want to leave this household? You will lose all access to the information contained within. If you are the last member, the household will be deleted.</p>
+        @using (Html.BeginForm("LeaveHousehold", "Households", new {id = currentUserId }))
+        {
+            <button type="submit" class="btn btn-danger">Yes, leave household</button>
+        }
+    </div>
+</div>
 
 

@@ -12,7 +12,7 @@
         $('#verify').show("slow");
     }
 
-    //transaction booleans
+    //action booleans
     $('#typeBool').change(function () {
         if ($(this).is(':checked')) {
             $('#type').text('Income');
@@ -30,6 +30,20 @@
         if (!$(this).is(':checked')) {
             $('#category').hide("slow");
             $('.budget-item').prop('disabled', false)
+        }
+    })
+
+    $('#ckbtn-type').change(function () {
+        if ($(this).is(':checked')) {
+            $(this).removeClass("text-danger").addClass("text-success");
+            $('#ck-text').text('Expected Income');
+            $('#amt-editor').attr("placeholder", "Enter expected income amount");
+        }
+        if (!$(this).is(':checked')) {
+            $(this).removeClass("text-success").addClass("text-danger");
+            $('#ck-text').text('Goal Spending Limit');
+            $('#amt-editor').attr("placeholder", "Enter goal spending limit amount");
+
         }
     })
 
@@ -54,16 +68,16 @@
         $('.transactions').load('/Transactions/_View/' + $(this).data('id'));
     })
 
-    $('.viewTrans').click(function () {
-        $('.transactions').load('/Transactions/_ViewPartial');
-    })
-
     //colors
-    if ($('.balance') < 0) {
-        $('.balance').removeclass("text-success").addclass("text-danger");
-    }
-    else {
-        $('.baance').removeclass("text-danger").addclass("text-success");
-    }
-
+    $('.balance').each(function (i) {
+        var content = parseInt($(this).text().replace('$', ''), 10);
+        var balance = parseInt(content, 10);
+        if (balance <= 0)
+        {
+            $(this).removeClass("text-succ").addClass("text-dang");
+        }
+        else {
+            $(this).removeClass("text-dang").addClass("text-succ");
+        }
+    });
 });

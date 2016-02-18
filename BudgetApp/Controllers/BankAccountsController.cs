@@ -61,9 +61,24 @@ namespace BudgetApp.Controllers
             if (ModelState.IsValid)
             {
                 bankAccount.HouseholdId = Convert.ToInt32(User.Identity.GetHouseholdId());
-
                 db.BankAccounts.Add(bankAccount);
                 db.SaveChanges();
+
+                Transaction originalTransaction = new Transaction()
+                {
+                    BankAccountId = bankAccount.Id,
+                    UserId = User.Identity.GetUserId(),
+                    Category = db.Categories.FirstOrDefault((m=>m.Name == "Miscellaneous")),
+                    Transacted = DateTimeOffset.Now,
+                    Entered = DateTimeOffset.Now,
+                    Amount = bankAccount.Balance,
+                    Description = "starting balance",
+                    Type = true,
+                    Reconciled = true
+                };
+                bankAccount.Transactions.Add(originalTransaction);
+                db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Index");

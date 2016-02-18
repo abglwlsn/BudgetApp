@@ -25,13 +25,7 @@ namespace BudgetApp.Migrations
                 roleManager.Create(new IdentityRole { Name = "Admin" });
             }
 
-            context.Durations.AddOrUpdate(x => x.Id,
-                new Duration() {Length = "Monthly" },
-                new Duration() {Length = "Quarterly" },
-                new Duration() {Length = "Annually" }
-                );
-
-            context.Warnings.AddOrUpdate(x => x.Id,
+                context.Warnings.AddOrUpdate(x => x.WarningLevel,
                 new Warning() {WarningLevel = 50 },
                 new Warning() {WarningLevel = 100 },
                 new Warning() {WarningLevel = 200 },
@@ -43,7 +37,7 @@ namespace BudgetApp.Migrations
                 new Warning() {WarningLevel = 5000 }
                 );
 
-            context.CategoryStandards.AddOrUpdate(x => x.Id,
+            context.CategoryStandards.AddOrUpdate(x => x.Name,
                 new CategoryStandard() {Name = "Household" },
                 new CategoryStandard() {Name = "Food" },
                 new CategoryStandard() {Name = "Health/Medical" },
@@ -57,7 +51,8 @@ namespace BudgetApp.Migrations
                 new CategoryStandard() {Name = "Pet" },
                 new CategoryStandard() {Name = "Travel" },
                 new CategoryStandard() {Name = "Hobbies/Leisure" },
-                new CategoryStandard() {Name = "Gifts/Charity" }
+                new CategoryStandard() {Name = "Gifts/Charity" },
+                new CategoryStandard() {Name = "Miscellaneous" }
                 );
 
 
