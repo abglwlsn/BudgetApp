@@ -1,9 +1,11 @@
 ﻿@model BudgetApp.Models.BudgetItem
 
-
-<div class="box-info">
+@{
+    Layout = null;
+}
+<div class="box-info shadow">
     <h2><strong>Edit</strong> Budget Item</h2>
-    @using (Html.BeginForm("Create", "BudgetItems"))
+    @using (Html.BeginForm("Edit", "BudgetItems"))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Id)
@@ -23,13 +25,6 @@
                 <div id="ckbtn-type">
                     <input type="checkbox" name="Type" value="0" class="btn btn-danger"><span id="ck-text">Goal Spending Limit</span>
                 </div>
-                @*<div class="col-md-10">
-                        <div class="checkbox">
-                            @Html.EditorFor(model => model.Type, new { htmlAttributes = new { @id = "typeBool" } })
-                            @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
-                        </div>
-                        <div id="typeBool"></div>
-                    </div>*@
             </div>
             <div class="form-group login-input">
                 @Html.EditorFor(model => model.AmountLimit, new { htmlAttributes = new { @class = "form-control text-input", id = "amt-editor" } })
@@ -38,8 +33,8 @@
             <div class="form-group login-input">
                 <label class="col-md-2">Warn when within:</label>
                 <div class="col-md-10">
-                    @Html.DropDownList("WarnAtId", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.WarnAtId, "", new { @class = "text-danger" })
+                    @Html.DropDownList("WarningId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.WarningId, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group login-input">
@@ -54,8 +49,11 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Create" class="btn btn-success" />
+                    <a href=@Url.Action("Index", "BudgetItems") class="cancel btn btn-primary">Cancel</a>
+                    @*<button type="button" id ="cancelEditBudget" class="cancel btn btn-primary">Cancel</button>*@
                 </div>
             </div>
+            
     }
 </div>
 

@@ -38,7 +38,7 @@ namespace BudgetApp.Controllers
             if (ModelState.IsValid)
             {
                 var id = User.Identity.GetUserId();
-                var user = db.Users.FirstOrDefault(u => u.Id.Equals(id));
+                var user = db.Users.FirstOrDefault(u => u.Id == id);
                 var hId = Convert.ToInt32(User.Identity.GetHouseholdId());
  
                 invitedUser.HouseholdId = hId;

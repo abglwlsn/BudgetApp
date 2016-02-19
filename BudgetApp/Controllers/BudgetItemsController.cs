@@ -22,9 +22,9 @@ namespace BudgetApp.Controllers
         // GET: BudgetItems
         public ActionResult Index()
         {
-            var hId = User.Identity.GetHouseholdId();
-            var budgetItems = db.BudgetItems.Where(h => h.HouseholdId.Equals(hId));
-            return View(budgetItems.ToList());
+            var hId = Convert.ToInt32(User.Identity.GetHouseholdId());
+            var hh = db.Households.FirstOrDefault(h => h.Id == hId);
+            return View(hh);
         }
 
         // GET: BudgetItems/Details/5
@@ -43,12 +43,12 @@ namespace BudgetApp.Controllers
         }
 
         // GET: BudgetItems/Create
-        public ActionResult Create()
+        public PartialViewResult _Create()
         {
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name");
             ViewBag.WarningId = new SelectList(db.Warnings, "Id", "WarningLevel");
 
-            return View();
+            return PartialView();
         }
 
         // POST: BudgetItems/Create
@@ -56,7 +56,7 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,CategoryId,HouseholdId,Name,AmountLimit,Balance,Type,WarnAtId,CreatorId,AllowEdits")] BudgetItem budgetItem)
+        public ActionResult Create([Bind(Include = "Id,Name,CategoryId,AmountLimit,Balance,Type,WarningId,CreatorId,AllowEdits")] BudgetItem budgetItem)
         {
             if (ModelState.IsValid)
             {
@@ -69,31 +69,26 @@ namespace BudgetApp.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", budgetItem.CategoryId);
-            ViewBag.WarningId = new SelectList(db.Warnings, "Id", "WarningLevel");
+            var userId = User.Identity.GetUserId();
+            var hh = userId.GetHousehold();
 
-            return View(budgetItem);
+            ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name");
+            ViewBag.WarningId = new SelectList(db.Warnings, "Id", "WarningLevel");
+            return RedirectToAction("Index");
         }
 
         // GET: BudgetItems/Edit/5
-        public ActionResult Edit([Bind(Include = "Id,CategoryId,Name,AmountLimit,Type,WarnAtId,CreatorId,AllowEdits")]int? id)
+        public PartialViewResult _Edit(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            
 
             BudgetItem budgetItem = db.BudgetItems.Find(id);
 
-            if (budgetItem == null)
-            {
-                return HttpNotFound();
-            }
+           
 
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", budgetItem.CategoryId);
-            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", budgetItem.HouseholdId);
-
-            return View(budgetItem);
+            ViewBag.WarningId = new SelectList(db.Warnings, "Id", "WarningLevel");
+            return PartialView(budgetItem);
         }
 
         // POST: BudgetItems/Edit/5
@@ -101,7 +96,7 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,CategoryId,Name,AmountLimit,Type,WarnAtId,AllowEdits")] BudgetItem budgetItem)
+        public ActionResult Edit([Bind(Include = "Id,CategoryId,Name,AmountLimit,Type,WarningId,AllowEdits")] BudgetItem budgetItem)
         { 
                 if (ModelState.IsValid)
                 {
@@ -111,24 +106,17 @@ namespace BudgetApp.Controllers
                 }
 
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", budgetItem.CategoryId);
-            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name", budgetItem.HouseholdId);
-
+            ViewBag.WarningId = new SelectList(db.Warnings, "Id", "WarningLevel");
             return View(budgetItem);
         }
 
         // GET: BudgetItems/Delete/5
-        public ActionResult Delete(int? id)
+        public PartialViewResult _Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+           
             BudgetItem budgetItem = db.BudgetItems.Find(id);
-            if (budgetItem == null)
-            {
-                return HttpNotFound();
-            }
-            return View(budgetItem);
+            
+            return PartialView(budgetItem);
         }
 
         // POST: BudgetItems/Delete/5

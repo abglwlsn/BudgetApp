@@ -76,18 +76,18 @@ namespace BudgetApp.Controllers
 
             if (ModelState.IsValid)
             {
-                var account = db.BankAccounts.FirstOrDefault(a => a.Id.Equals(transaction.BankAccountId));
-                var budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(transaction.BudgetItemId));
+                var account = db.BankAccounts.FirstOrDefault(a => a.Id == transaction.BankAccountId);
+                var budget = db.BudgetItems.FirstOrDefault(b => b.Id == transaction.BudgetItemId);
                 
                 //set category
                 if (transaction.BudgetItemId!= null)
                 {
-                    transaction.CategoryId = transaction.BudgetItem.CategoryId;
+                    transaction.CategoryId = budget.CategoryId;
                 }
 
                 //balance calculations
                 account.Balance = transaction.GetAccountBalance();
-                if (transaction.BudgetItem != null)
+                if (transaction.BudgetItemId != null)
                 {
                     budget.Balance = transaction.GetBudgetBalance();
                 }
@@ -154,8 +154,8 @@ namespace BudgetApp.Controllers
             {
                 //var original = (decimal)TempData["OriginalAmount"]; - not best practice
                 var original = db.Transactions.AsNoTracking().FirstOrDefault(t => t.Id == transaction.Id); 
-                var account = db.BankAccounts.FirstOrDefault(a => a.Id.Equals(original.BankAccountId));
-                var budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(original.BudgetItemId));
+                var account = db.BankAccounts.FirstOrDefault(a => a.Id == original.BankAccountId);
+                var budget = db.BudgetItems.FirstOrDefault(b => b.Id == original.BudgetItemId);
 
 
                 //set category
@@ -166,13 +166,13 @@ namespace BudgetApp.Controllers
 
                 //balance calculations
                 account.Balance = transaction.RevertAccountBalance(original);
-                account = db.BankAccounts.FirstOrDefault(a => a.Id.Equals(transaction.BankAccountId));
+                account = db.BankAccounts.FirstOrDefault(a => a.Id == transaction.BankAccountId);
                 account.Balance = transaction.GetNewAccountBalance();
 
                 if (budget != null)
                 {
                     budget.Balance = transaction.RevertBudgetBalance(original);
-                    budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(transaction.BudgetItemId));
+                    budget = db.BudgetItems.FirstOrDefault(b => b.Id == transaction.BudgetItemId);
                     budget.Balance = transaction.GetNewBudgetBalance();
                 }
 
@@ -214,8 +214,8 @@ namespace BudgetApp.Controllers
             Transaction transaction = db.Transactions.Find(id);
 
             var userId = User.Identity.GetUserId();
-            var account = db.BankAccounts.FirstOrDefault(a => a.Id.Equals(transaction.BankAccountId));
-            var budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(transaction.BudgetItemId));
+            var account = db.BankAccounts.FirstOrDefault(a => a.Id == transaction.BankAccountId);
+            var budget = db.BudgetItems.FirstOrDefault(b => b.Id == transaction.BudgetItemId);
 
             //balance calculations
             account.Balance = transaction.GetAccountBalanceOnDelete();

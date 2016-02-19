@@ -25,16 +25,14 @@ namespace BudgetApp.Migrations
                 roleManager.Create(new IdentityRole { Name = "Admin" });
             }
 
-                context.Warnings.AddOrUpdate(x => x.WarningLevel,
-                new Warning() {WarningLevel = 50 },
-                new Warning() {WarningLevel = 100 },
-                new Warning() {WarningLevel = 200 },
-                new Warning() {WarningLevel = 300 },
-                new Warning() {WarningLevel = 500 },
-                new Warning() {WarningLevel = 750 },
-                new Warning() {WarningLevel = 1000 },
-                new Warning() {WarningLevel = 2000 },
-                new Warning() {WarningLevel = 5000 }
+            context.Warnings.AddOrUpdate(x => x.WarningLevel,
+                new Warning() {WarningLevel = "None" },
+                new Warning() {WarningLevel = "50" },
+                new Warning() {WarningLevel = "100" },
+                new Warning() {WarningLevel = "250" },
+                new Warning() {WarningLevel = "500" },
+                new Warning() {WarningLevel = "750" },
+                new Warning() {WarningLevel = "1000" }
                 );
 
             context.CategoryStandards.AddOrUpdate(x => x.Name,

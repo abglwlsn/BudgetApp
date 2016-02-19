@@ -20,7 +20,7 @@
         if (!$(this).is(':checked')) {
             $('#type').text('Expense');
         }
-    })
+    });
 
     $('#budgetBool').change(function () {
         if ($(this).is(':checked')) {
@@ -31,21 +31,36 @@
             $('#category').hide("slow");
             $('.budget-item').prop('disabled', false)
         }
-    })
+    });
 
-    $('#ckbtn-type').change(function () {
-        if ($(this).is(':checked')) {
-            $(this).removeClass("text-danger").addClass("text-success");
+    //$('#ckbtn-ck').change(function () {
+    $('#ckbtn').click(function () {
+        if ($('#ckbtn-ck').is(':checked')) {
+            $('#ckbtn-ck').prop('checked', false).prop('value', false);
+            $('#ckbtn').removeClass('btn-success').addClass('btn-danger');
+            $('#ck-text').text('Spending Limit');
+            $('#amt-editor').attr("placeholder", "Enter goal spending limit amount");
+        }
+        else {
+            $('#ckbtn-ck').prop('checked', true).prop('value', true);
+            $('#ckbtn').removeClass('btn-danger').addClass('btn-success');
             $('#ck-text').text('Expected Income');
             $('#amt-editor').attr("placeholder", "Enter expected income amount");
         }
-        if (!$(this).is(':checked')) {
-            $(this).removeClass("text-success").addClass("text-danger");
-            $('#ck-text').text('Goal Spending Limit');
-            $('#amt-editor').attr("placeholder", "Enter goal spending limit amount");
+    });
 
+    $('#allowbtn').click(function () {
+        if (!$('#allowbtn-ck').is(':checked')) {
+            $('#allowbtn-ck').prop('checked', true);
+            $('#allowbtn').removeClass('btn-danger').addClass('btn-success');
+            $('#allow-text').text('Anyone Can Edit');
         }
-    })
+        else {
+            $('#allowbtn-ck').prop('checked', false);
+            $('#allowbtn').removeClass('btn-success').addClass('btn-danger');
+            $('#allow-text').text('Only I Can Edit');
+        }
+    });
 
     //partial views handling
     $('.editAcct').click(function () {
@@ -54,6 +69,10 @@
 
     $('.deleteAcct').click(function () {
         $('#editView').load('/BankAccounts/_Delete/' + $(this).data('id'));
+    });
+
+    $('.cancel').click(function () {
+        $('#editView').load('/BankAccounts/_Create/');
     })
 
     $('.editBudg').click(function () {
@@ -62,11 +81,19 @@
 
     $('.deleteBudg').click(function () {
         $('#editView').load('/BudgetItems/_Delete/' + $(this).data('id'));
-    })
+    });
 
-    $('.viewAcctTrans').click(function () {
-        $('.transactions').load('/Transactions/_View/' + $(this).data('id'));
-    })
+    //$('#cancelEditBudget').click(function () {
+    //    $('#editView').load('/BudgetItems/_Create');
+    //})
+
+    //$('body').on("click", "#cancelEditBudget", function () {
+    //    $('#editView').load('/BudgetItems/_Create');
+    //})
+
+    //$('.viewAcctTrans').click(function () {
+    //    $('.transactions').load('/Transactions/_View/' + $(this).data('id'));
+    //});
 
     //colors
     $('.balance').each(function (i) {
@@ -80,4 +107,5 @@
             $(this).removeClass("text-dang").addClass("text-succ");
         }
     });
+
 });

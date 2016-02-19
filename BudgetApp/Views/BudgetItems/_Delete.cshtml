@@ -1,17 +1,21 @@
 ﻿@model BudgetApp.Models.BudgetItem
-
-<div class="box-info">
-    <h2><strong class="text-danger">Delete</strong> BudgetItem</h2>
+@{
+    Layout = null;
+}
+<div class="box-info shadow">
+    <h2><strong class="text-danger">Delete</strong> Budget Item</h2>
     <dl>
         <dt>@Html.DisplayNameFor(model => model.Name):</dt>
         <dd>@Html.DisplayFor(model => model.Name)</dd>
         <dt>@Html.DisplayNameFor(model => model.Type):</dt>
-        <dd>@Html.DisplayFor(model => model.Type)</dd><dt>@Html.DisplayNameFor(model => model.Category):</dt>
-        <dd>@Html.Raw(Model.Category)</dd>
+        @if (Model.Type == true){<dd>Income</dd>}
+            else {<dd>Expense</dd>}
+        <dt>@Html.DisplayNameFor(model => model.Category):</dt>
+        <dd>@Html.Raw(Model.Category.Name)</dd>
         <dt>@Html.DisplayNameFor(model => model.AmountLimit):</dt>
-        <dd>@Html.DisplayFor(model => model.AmountLimit)</dd>
+        <dd>$@Html.DisplayFor(model => model.AmountLimit)</dd>
         <dt>@Html.DisplayNameFor(model => model.Balance):</dt>
-        <dd>@Html.DisplayFor(model => model.Balance)</dd>
+        <dd>$@Html.DisplayFor(model => model.Balance)</dd>
         <dt>Includes:</dt>
         <dd>@Model.Transactions.Count() Transactions</dd>
     </dl>
@@ -24,6 +28,8 @@
         @Html.AntiForgeryToken()
         <div class="form-actions no-color">
             <input type="submit" value="Delete" class="btn btn-danger pull-right" />
+            <a href=@Url.Action("Index", "BudgetItems") class="cancel btn btn-primary">Cancel</a>
+            @*<button type="button" id ="cancelEditBudget" class="cancel btn btn-primary">Cancel</button>*@
         </div>
     }
 </div>

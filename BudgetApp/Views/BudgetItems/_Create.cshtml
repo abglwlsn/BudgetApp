@@ -1,59 +1,50 @@
 ﻿@model BudgetApp.Models.BudgetItem
 
-    <div class="box-info">
+    <div class="box-info shadow">
         <h2><strong>Add</strong> Budget Item</h2>
         @using (Html.BeginForm("Create", "BudgetItems"))
         {
             @Html.AntiForgeryToken()
-            @Html.HiddenFor(m=>m.Id)
-            @Html.HiddenFor(m=>m.HouseholdId)
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group login-input">
-                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control text-input", @placeholder="Enter Budget Name" } })
+            <div class="col-md-12">
+                <div class="form-group login-input">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control text-input", @placeholder = "Enter Budget Name" } })
                     @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
-            <div class="form-group">
-                <label class="col-md-2">Select Category</label>
-                <div class="col-md-10">
-                    @Html.DropDownList("CategoryId", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
                 </div>
-            </div>
-            <div class="form-group">
-                <div id="ckbtn-type">
-                        <input type="checkbox" name="Type" value="0" class="btn btn-danger"><span id="ck-text">Goal Spending Limit</span>
+                <div class="form-group">
+                    <label>Category</label>
+                        @Html.DropDownList("CategoryId", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
                 </div>
-                @*<div class="col-md-10">
-                    <div class="checkbox">
-                        @Html.EditorFor(model => model.Type, new { htmlAttributes = new { @id = "typeBool" } })
-                        @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
-                    </div>
-                    <div id="typeBool"></div>
-                </div>*@
-            </div>
-            <div class="form-group login-input">
-                    @Html.EditorFor(model => model.AmountLimit, new { htmlAttributes = new { @class = "form-control text-input", id = "amt-editor" } })
+                <div class="form-group">
+                    <button type="button" id="ckbtn" class="btn btn-danger form-control"><span id="ck-text">Spending Limit</span></button>
+                    <input id="ckbtn-ck" type="checkbox" name="Type" value="false">
+                </div>
+                <div class="form-group login-input">
+                    @Html.EditorFor(model => model.AmountLimit, new { htmlAttributes = new { @class = "form-control text-input", id = "amt-editor", placeholder = "Enter goal spending limit amount" } })
                     @Html.ValidationMessageFor(model => model.AmountLimit, "", new { @class = "text-danger" })
-            </div>
-            <div class="form-group login-input">
-                <label class="col-md-2">Warn when within:</label>
-                <div class="col-md-10">
-                    @Html.DropDownList("WarnAtId", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.WarnAtId, "", new { @class = "text-danger" })
                 </div>
-            </div>
-            <div class="form-group login-input">
-                @Html.LabelFor(model => model.AllowEdits, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    <div class="checkbox">
-                        @Html.EditorFor(model => model.AllowEdits)
-                        @Html.ValidationMessageFor(model => model.AllowEdits, "", new { @class = "text-danger" })
-                    </div>
+                <div class="form-group login-input">
+                    <label>Warn when within:</label>
+                        @Html.DropDownList("WarningId", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.WarningId, "", new { @class = "text-danger" })
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-success" />
+                <div class="form-group">
+                    <button type="button" id="allowbtn" class="btn btn-success form-control"><span id="allow-text">Anyone Can Edit</span></button>
+                    <input id="allowbtn-ck" type="checkbox" name="AllowEdits" value="true" checked>
+                </div>
+
+
+
+                @*<div class="form-group login-input">
+                    @Html.LabelFor(model => model.AllowEdits, htmlAttributes: new { @class = "control-label" })
+                        <div class="checkbox">
+                            @Html.EditorFor(model => model.AllowEdits)
+                            @Html.ValidationMessageFor(model => model.AllowEdits, "", new { @class = "text-danger" })
+                        </div>
+                </div>*@
+                <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary pull-right" />
                 </div>
             </div>
         }

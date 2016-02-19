@@ -28,7 +28,7 @@ namespace BudgetApp.HelperExtensions
 
         public static IdentityMessage CreateJoinMessage(this InvitedUser user )
         {
-            var invitedUser = db.InvitedUsers.FirstOrDefault(u => u.Id.Equals(user.Id));
+            var invitedUser = db.InvitedUsers.FirstOrDefault(u => u.Id == user.Id);
             var msg = new IdentityMessage();
             var dt = DateTime.Now.AddDays(7).ToLongDateString();
             msg.Destination = invitedUser.Email; //ConfigurationManager.AppSettings["ContactEmail"];

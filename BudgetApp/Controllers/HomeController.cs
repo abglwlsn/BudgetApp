@@ -1,4 +1,5 @@
-﻿using BudgetApp.Models;
+﻿using BudgetApp.HelperExtensions;
+using BudgetApp.Models;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,9 @@ namespace BudgetApp.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            var userId = User.Identity.GetUserId();
+            var hh = userId.GetHousehold();
+            return View(hh);
         }
 
         public ActionResult About()

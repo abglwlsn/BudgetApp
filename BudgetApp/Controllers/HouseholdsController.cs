@@ -55,7 +55,7 @@ namespace BudgetApp.Controllers
         public async Task<ActionResult> Create([Bind(Include="Id, Name")]Household household)
         {
             var id = User.Identity.GetUserId();
-            var user = db.Users.FirstOrDefault(u=>u.Id.Equals(id));
+            var user = db.Users.FirstOrDefault(u=>u.Id == id);
             
             if (ModelState.IsValid)
             {
@@ -93,11 +93,11 @@ namespace BudgetApp.Controllers
                 if (InviteCode != null)
                 {
                     var email = User.Identity.GetUserName();
-                    var Iuser = db.InvitedUsers.FirstOrDefault(u => u.InviteCode.Equals(InviteCode) && u.Email.Equals(email));
+                    var Iuser = db.InvitedUsers.FirstOrDefault(u => u.InviteCode == InviteCode && u.Email == email);
 
                     if (Iuser != null)
                     {
-                        var user = db.Users.FirstOrDefault(u => u.Email.Equals(Iuser.Email));
+                        var user = db.Users.FirstOrDefault(u => u.Email == Iuser.Email);
 
                         user.HouseholdId = Iuser.HouseholdId;
                         user.AdminRights = Iuser.AdminRights;

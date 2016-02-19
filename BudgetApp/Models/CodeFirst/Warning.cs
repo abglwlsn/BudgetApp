@@ -8,6 +8,6 @@ namespace BudgetApp.Models
     public class Warning
     {
         public int Id { get; set; }
-        public decimal WarningLevel { get; set; }
+        public string WarningLevel { get; set; }
     }
 }

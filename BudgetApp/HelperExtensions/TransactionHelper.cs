@@ -12,7 +12,7 @@ namespace BudgetApp.HelperExtensions
 
         public static decimal GetAccountBalance(this Transaction transaction)
         {            
-            var account = db.BankAccounts.FirstOrDefault(a => a.Id.Equals(transaction.BankAccountId));
+            var account = db.BankAccounts.FirstOrDefault(a => a.Id == transaction.BankAccountId);
 
             if (transaction.Type == true)
             {
@@ -28,7 +28,7 @@ namespace BudgetApp.HelperExtensions
 
         public static decimal RevertAccountBalance(this Transaction transaction, Transaction original)
         {
-            var account = db.BankAccounts.FirstOrDefault(a => a.Id.Equals(original.BankAccountId));
+            var account = db.BankAccounts.FirstOrDefault(a => a.Id == original.BankAccountId);
 
             if (transaction.Type == true)
             {
@@ -42,7 +42,7 @@ namespace BudgetApp.HelperExtensions
         }
         public static decimal GetNewAccountBalance(this Transaction transaction)
         {
-            var account = db.BankAccounts.FirstOrDefault(a => a.Id.Equals(transaction.BankAccountId));
+            var account = db.BankAccounts.FirstOrDefault(a => a.Id == transaction.BankAccountId);
 
             if (transaction.Type == true)
             {
@@ -57,7 +57,7 @@ namespace BudgetApp.HelperExtensions
 
         public static decimal GetAccountBalanceOnDelete(this Transaction transaction)
         {
-            var account = db.BankAccounts.FirstOrDefault(a => a.Id.Equals(transaction.BankAccountId));
+            var account = db.BankAccounts.FirstOrDefault(a => a.Id == transaction.BankAccountId);
 
             if (transaction.Type == true)
             {
@@ -73,7 +73,7 @@ namespace BudgetApp.HelperExtensions
 
         public static decimal GetBudgetBalance(this Transaction transaction)
         {
-            var budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(transaction.BudgetItemId));
+            var budget = db.BudgetItems.FirstOrDefault(b => b.Id == transaction.BudgetItemId);
 
             if (transaction.Type == true)
             {
@@ -103,7 +103,7 @@ namespace BudgetApp.HelperExtensions
 
         public static decimal GetNewBudgetBalance(this Transaction transaction)
         {
-            var budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(transaction.BudgetItemId));
+            var budget = db.BudgetItems.FirstOrDefault(b => b.Id == transaction.BudgetItemId);
 
             if (transaction.Type == true )
             {
@@ -132,7 +132,7 @@ namespace BudgetApp.HelperExtensions
 
         public static decimal RevertBudgetBalance(this Transaction transaction, Transaction original)
         {
-            var budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(original.BudgetItemId));
+            var budget = db.BudgetItems.FirstOrDefault(b => b.Id == original.BudgetItemId);
 
             if (transaction.Type == true)
             {
@@ -161,8 +161,8 @@ namespace BudgetApp.HelperExtensions
 
         public static decimal GetBudgetBalanceOnDelete(this Transaction transaction)
         {
-            var account = db.BankAccounts.FirstOrDefault(a => a.Id.Equals(transaction.BankAccountId));
-            var budget = db.BudgetItems.FirstOrDefault(b => b.Id.Equals(transaction.BudgetItemId));
+            var account = db.BankAccounts.FirstOrDefault(a => a.Id == transaction.BankAccountId);
+            var budget = db.BudgetItems.FirstOrDefault(b => b.Id == transaction.BudgetItemId);
 
             if (transaction.Type == true)
             {
