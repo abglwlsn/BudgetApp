@@ -2,7 +2,6 @@
 @{
     Layout = null;
 }
-<div class="box-info shadow">
     <h2><strong class="text-danger">Delete</strong> Budget Item</h2>
     <dl>
         <dt>@Html.DisplayNameFor(model => model.Name):</dt>
@@ -28,8 +27,7 @@
         @Html.AntiForgeryToken()
         <div class="form-actions no-color">
             <input type="submit" value="Delete" class="btn btn-danger pull-right" />
-            <a href=@Url.Action("Index", "BudgetItems") class="cancel btn btn-primary">Cancel</a>
-            @*<button type="button" id ="cancelEditBudget" class="cancel btn btn-primary">Cancel</button>*@
+            @*<a href=@Url.Action("Index", "BudgetItems") class="cancel btn btn-primary">Cancel</a>*@
+            <button type="button" id ="createBudg" class="btn btn-primary">Cancel</button>
         </div>
     }
-</div>

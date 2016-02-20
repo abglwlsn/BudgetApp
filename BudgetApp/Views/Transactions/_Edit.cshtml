@@ -1,36 +1,29 @@
 ﻿@model BudgetApp.Models.Transaction
 
-@{
-    ViewBag.Title = "Create";
-}
-
-<h2>Enter New Transaction</h2>
-
-
-@using (Html.BeginForm())
-{
-    <div class="form-horizontal">
+    <h2><strong>Edit</strong> Transaction</h2>
+    <div class="alert alert-info">
+        <p><strong>Wait!</strong>Editing an existing transaction is not recommended. For itegrity of information, create a new reconciliation transaction to reflect refunds and changes.</p>
+        <button class="createTrans btn btn-primary" type="button">Create New Transaction</button>
+    </div>
+    @using (Html.BeginForm("_Edit", "Transactions"))
+    {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            <p class="control-label col-md-2">Account</p>
-            <div class="col-md-10">
-                @Html.DropDownList("BankAccountId", (IEnumerable<SelectListItem>)ViewBag.BankAccountId, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.BankAccountId, "", new { @class = "text-danger" })
-            </div>
+        <div class="form-group login-input">
+            @Html.DropDownList("BankAccountId", (IEnumerable<SelectListItem>)ViewBag.BankAccountId, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.BankAccountId, "", new { @class = "text-anger" })
         </div>
-
         <div class="form-group">
             <p class="control-label col-md-2">Budget</p>
             <div class="col-md-10">
-                @Html.DropDownList("BudgetItemId", (IEnumerable<SelectListItem>)ViewBag.BudgetItemsId, htmlAttributes: new { @class = "form-control budget-item" })
+                @Html.DropDownList("BudgetItemmId", (IEnumerable<SelectListItem>)ViewBag.BudgetItemsId, htmlAttributes: new { @class = "form-control budget-itemm" })
                 @Html.ValidationMessageFor(model => model.BudgetItemId, "", new { @class = "text-danger" })
                 <div class="checkbox">
-                    <input id="budgetBool" type="checkbox" /><p>Not a budget item?</p>
+                    <input id="budgetBool" type="checkbox" />
+                    <p>Not a budget item?</p>
                 </div>
             </div>
         </div>
-        
         <div class="form-group" id="category">
             <p class="control-label col-md-2">Category</p>
             <div class="col-md-10">
@@ -38,21 +31,15 @@
                 @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
             </div>
         </div>
-
         <div class="form-group">
-            <p class="control-label col-md-2">Type</p>
-            <div class="col-md-10">
-                <input id="typeBool" name="Type" type="checkbox" value="true"><p id="type">Expense</p>
-                    @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
-
-            </div>
+            <button type="button" id="typebtn" class="btn btn-danger form-control"><span id="ck-text">Expense</span></button>
+            <input id="typebtn-ck" type="checkbox" name="Type" value="false" />
         </div>
-
         <div class="form-group">
             <div class="col-md-10 col-md-offset-2">
                 @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter transaction amount" } })
                 @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
-                </div>
+            </div>
         </div>
 
         <div class="form-group">
@@ -70,27 +57,16 @@
         </div>
 
         <div class="form-group">
-            <p class="control-label col-md-2">Reconciled?</p>            
+            <p class="control-label col-md-2">Reconciled?</p>
             <div class="col-md-10">
                 <div class="checkbox">
                     @Html.EditorFor(model => model.Reconciled)
                     @Html.ValidationMessageFor(model => model.Reconciled, "", new { @class = "text-danger" })
                 </div>
             </div>
-        </div>
-
+        </div>           
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
+            <input type="submit" value="Save Changes" class="btn btn-primary pull-right" />
         </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+    })
+    }

@@ -4,16 +4,22 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<div class="row">
+    <div class="col-md-5">
+        <h2>Index</h2>
+    </div>
+    <div class="col-md-7 box-info shadow">
+        <div id="editView">
+            @Html.Action("_Create", "Transactions")
+        </div>
+    </div>
+</div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 @foreach (var account in Model)
 {
     <div class="box-info shadow">
         <h2><strong>@account.Name</strong> <i class="fa fa-angle-right"></i> Balance: <span class="balance text-succ">$ @account.Balance</span></h2>
-        <table class="data-table">
+        <table class="data-table compact hover table-striped">
             <thead>
                 <tr>
                     <th>Transaction Date</th>
@@ -32,29 +38,34 @@
                     <tr>
                         <td>@trans.Transacted.DateTime.ToShortDateString()</td>
                         <td>@trans.Amount</td>
-                        <td>@if (trans.Type == true)
+                        <td>
+                            @if (trans.Type == true)
                         { <i class="fa fa-plus"></i> }
                         else { <i class="fa fa-minus"></i>}
-                        </td>
-                        <td>@trans.Category.Name</td>
-                        @if (trans.BudgetItem != null)
-                        {<td>@trans.BudgetItem.Name</td>}
-                        else { <td></td>}
-                        <td>@trans.Description</td>
-                        <td>@if (trans.Reconciled == true)
-                        { <i class="fa fa-check"></i>  }
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="detailsModal" data-id="@trans.Id">Details</button>
-                           <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="editModal" data-id="@trans.Id">Edit</button>
-                            <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="deleteModal" data-id="@trans.Id">Delete</button>
-                        </td>
-                    </tr>
+                    </td>
+                    <td>@trans.Category.Name</td>
+                    @if (trans.BudgetItem != null)
+                    {
+                        <td>@trans.BudgetItem.Name</td>}
+                    else {
+                        <td></td>}
+                    <td>@trans.Description</td>
+                    <td>
+                        @if (trans.Reconciled == true)
+                    { <i class="fa fa-check"></i>  }
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="detailsModal" data-id="@trans.Id">Details</button>
+                    <button id="editTrans" type="button" class="btn btn-primary btn-xs" data-id="@trans.Id"><i class="fa fa-edit"></i></button>
+                    <button id="deleteTrans" type="button" class="btn btn-danger btn-xs" data-id="@trans.Id"><i class="fa fa-trash-o"></i></button>
+                </td>
+            </tr>
                 }
             </tbody>
         </table>
     </div>
 }
+
 
 <!-- DELETE CONFIRM MODAL -->
 
@@ -72,8 +83,8 @@
             <div class="modal-footer">
                 <a href=@Url.Action("Create", "Transactions") class="btn btn-primary">Create Transaction</a>
                 @using (Html.BeginForm("Delete", "Transactions"))
-                    {
-                        <input type="submit" class="btn btn-danger"value="Delete Transaction" />
+                {
+                    <input type="submit" class="btn btn-danger" value="Delete Transaction" />
                 }
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
             </div>

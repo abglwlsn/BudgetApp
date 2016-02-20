@@ -1,0 +1,61 @@
+﻿
+@model BudgetApp.Models.Transaction
+
+<h2><strong>Add</strong> Transaction</h2>
+@using (Html.BeginForm("Create", "Transactions"))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="col-md-4">
+        <div class="form-group">
+                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", @placeholder = "Transaction amount" } })
+                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <button type="button" id="typebtn" class="btn btn-danger form-control"><span id="ck-text">Expense</span></button>
+            <input id="typebtn-ck" type="checkbox" name="Type" value="false" />
+        </div>
+        <div class="form-group">
+            <div class="checkbox col-md-1 m-t-0" style="display:inline-block">
+                <input type="checkbox" class="m-t-0 checkbox" name="Reconciled" data-val-required="The Reconciled field is required." />
+                @*@Html.EditorFor(model => model.Reconciled, new { @class = "reconcile-ck" })*@
+                @Html.ValidationMessageFor(model => model.Reconciled, "", new { @class = "text-danger" })
+            </div>
+            <label class="col-md-11">Reconciled?</label>
+        </div>
+
+    </div>
+    <div class="col-md-4">
+        <div class="form-group login-input">
+            @Html.DropDownList("BankAccountId", (IEnumerable<SelectListItem>)ViewBag.BankAccountId, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.BankAccountId, "", new { @class = "text-anger" })
+        </div>
+        <div class="form-group">
+            <label>Budget</label>
+                @Html.DropDownList("BudgetItemId", (IEnumerable<SelectListItem>)ViewBag.BudgetItemsId, htmlAttributes: new { @class = "form-control budget-itemm" })
+                @Html.ValidationMessageFor(model => model.BudgetItemId, "", new { @class = "text-danger" })
+                <div class="checkbox">
+                    <input id="budgetBool" type="checkbox" />
+                    <p>Not a budget item?</p>
+                </div>
+        </div>
+        <div class="form-group" id="category">
+            <label>Category</label>
+                @Html.DropDownList("CategoryId", (IEnumerable<SelectListItem>)ViewBag.CategoryId, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @placeholder = "Transaction description" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+                <input type="text" name="Transacted" class="datepicker" placeholder="Transaction date" />
+                @Html.ValidationMessageFor(model => model.Transacted, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary pull-right" />
+        </div>
+    </div>
+}

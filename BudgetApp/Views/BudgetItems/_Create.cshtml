@@ -1,6 +1,5 @@
 ﻿@model BudgetApp.Models.BudgetItem
 
-    <div class="box-info shadow">
         <h2><strong>Add</strong> Budget Item</h2>
         @using (Html.BeginForm("Create", "BudgetItems"))
         {
@@ -48,7 +47,3 @@
                 </div>
             </div>
         }
-    </div>
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

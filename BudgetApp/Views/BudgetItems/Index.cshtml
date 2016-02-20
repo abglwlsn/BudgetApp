@@ -10,7 +10,7 @@
     <div class="col-md-8">
         <div class="box-info shadow">
             <h2><strong>All</strong> Budget Items</h2>
-            <table class="data-table">
+            <table class="data-table compact table-striped hover">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -37,8 +37,8 @@
                             <td>$@item.Warning.WarningLevel</td>
                             @if (item.AllowEdits==true || (item.AllowEdits != true && userId == item.CreatorId))
                             {
-                                <td><button class="editBudg btn btn-xs btn-primary" data-id="@item.Id" type="button">Edit</button>
-                                <button class="deleteBudg btn btn-xs btn-danger" data-id="@item.Id" type="button">Delete</button></td>}
+                                <td><button class="editBudg btn btn-sm btn-primary" data-id="@item.Id" type="button"><i class="fa fa-edit"></i></button>
+                                <button class="deleteBudg btn btn-sm btn-danger" data-id="@item.Id" type="button"><i class="fa fa-trash"></i></button></td>}
                             else { <td><i>Locked</i></td>}
 
                             @*}*@
@@ -50,7 +50,7 @@
     </div>
     @*@if(User.IsInRole("Admin"))
         {*@
-    <div class="col-md-4">
+    <div class="col-md-4 box-info shadow">
         <div id="editView">
             @Html.Action("_Create", "BudgetItems")
         </div>

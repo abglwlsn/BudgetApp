@@ -4,7 +4,6 @@
     ViewBag.Title = "Edit";
 }
 
-    <div class="box-info">
     <h2><strong>Edit</strong> Bank Account</h2>
     @using (Html.BeginForm("_Edit", "BankAccounts"))
     {
@@ -23,8 +22,3 @@
             <input type="submit" value="Save" class="btn btn-success pull-right" />
         </div>
     }
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

@@ -365,10 +365,7 @@
     <Content Include="Views\Households\Edit.cshtml" />
     <Content Include="Views\Households\Index.cshtml" />
     <Content Include="Views\InvitedUsers\Create.cshtml" />
-    <Content Include="Views\Transactions\Create.cshtml" />
-    <Content Include="Views\Transactions\Delete.cshtml" />
     <Content Include="Views\Transactions\Details.cshtml" />
-    <Content Include="Views\Transactions\Edit.cshtml" />
     <Content Include="Views\Transactions\Index.cshtml" />
     <Content Include="Site Template\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Site Template\fonts\glyphicons-halflings-regular.ttf" />
@@ -379,11 +376,13 @@
     <Content Include="Site Template\fonts\FontAwesome.otf" />
     <Content Include="Views\Shared\_AnonLayout.cshtml" />
     <Content Include="Views\Shared\Info.cshtml" />
-    <Content Include="Views\Transactions\_Transactions.cshtml" />
     <Content Include="Views\BudgetItems\_Create.cshtml" />
     <Content Include="Views\BudgetItems\_Edit.cshtml" />
     <Content Include="Views\BudgetItems\_Delete.cshtml" />
     <Content Include="Views\BudgetItems\Index.cshtml" />
+    <Content Include="Views\Transactions\_Create.cshtml" />
+    <Content Include="Views\Transactions\_Edit.cshtml" />
+    <Content Include="Views\Transactions\_Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

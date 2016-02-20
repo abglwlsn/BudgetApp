@@ -3,7 +3,6 @@
 @{
     Layout = null;
 }
-<div class="box-info shadow">
     <h2><strong>Edit</strong> Budget Item</h2>
     @using (Html.BeginForm("Edit", "BudgetItems"))
     {
@@ -48,15 +47,11 @@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-success" />
-                    <a href=@Url.Action("Index", "BudgetItems") class="cancel btn btn-primary">Cancel</a>
-                    @*<button type="button" id ="cancelEditBudget" class="cancel btn btn-primary">Cancel</button>*@
+                    <input type="submit" value="Save Changes" class="btn btn-primary" />
+                    @*<a href=@Url.Action("Index", "BudgetItems") class="cancel btn btn-primary">Cancel</a>*@
+                    <button type="button" id ="createBudg" class="btn btn-primary">Cancel</button>
                 </div>
             </div>
             
     }
-</div>
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

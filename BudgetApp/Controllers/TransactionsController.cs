@@ -30,11 +30,11 @@ namespace BudgetApp.Controllers
         }
 
         //GET: Transactions Partial
-        public PartialViewResult View(int? id)
-        {
-            BankAccount account = db.BankAccounts.Find(id);
-            return PartialView("_Transactions");
-        }
+        //public PartialViewResult View(int? id)
+        //{
+        //    BankAccount account = db.BankAccounts.Find(id);
+        //    return PartialView("_Transactions");
+        //}
 
         // GET: Transactions/Details/5
         public ActionResult Details(int? id)
@@ -52,7 +52,7 @@ namespace BudgetApp.Controllers
         }
 
         // GET: Transactions/Create
-        public ActionResult Create()
+        public PartialViewResult _Create()
         {
             var userId = User.Identity.GetUserId();
             var hh = userId.GetHousehold();
@@ -61,7 +61,7 @@ namespace BudgetApp.Controllers
             ViewBag.BudgetItemId = new SelectList(hh.BudgetItems, "Id", "Name");
             ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name");
 
-            return View();
+            return PartialView();
         }
 
         // POST: Transactions/Create
@@ -112,32 +112,23 @@ namespace BudgetApp.Controllers
             ViewBag.BudgetItemId = new SelectList(hh.BudgetItems, "Id", "Name");
             ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name");
 
-            return View(transaction);
+            return RedirectToAction("Index");
         }
 
         // GET: Transactions/Edit/5
-        public ActionResult Edit(int? id)
+        public PartialViewResult _Edit(int? id)
         {
             var userId = User.Identity.GetUserId();
             var hh = userId.GetHousehold();
-
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             Transaction transaction = db.Transactions.Find(id);
-            if (transaction == null)
-            {
-                return HttpNotFound();
-            }
 
-            //TempData["OriginalAmount"] = transaction.Amount; - use .AsNoTracking() in Post instead
+           //TempData["OriginalAmount"] = transaction.Amount; - use .AsNoTracking() in Post instead
 
             ViewBag.BankAccountId = new SelectList(hh.BankAccounts, "Id", "Name", transaction.BankAccountId);
             ViewBag.BudgetItemId = new SelectList(hh.BudgetItems, "Id", "Name", transaction.BudgetItemId);
             ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name", transaction.CategoryId);
 
-            return View(transaction);
+            return PartialView();
         }
 
         // POST: Transactions/Edit/5
@@ -192,18 +183,11 @@ namespace BudgetApp.Controllers
         }
 
         // GET: Transactions/Delete/5
-        public ActionResult Delete(int? id)
+        public PartialViewResult _Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             Transaction transaction = db.Transactions.Find(id);
-            if (transaction == null)
-            {
-                return HttpNotFound();
-            }
-            return View(transaction);
+
+            return PartialView();
         }
 
         // POST: Transactions/Delete/5
@@ -212,7 +196,6 @@ namespace BudgetApp.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Transaction transaction = db.Transactions.Find(id);
-
             var userId = User.Identity.GetUserId();
             var account = db.BankAccounts.FirstOrDefault(a => a.Id == transaction.BankAccountId);
             var budget = db.BudgetItems.FirstOrDefault(b => b.Id == transaction.BudgetItemId);

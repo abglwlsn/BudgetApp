@@ -1,7 +1,12 @@
 ﻿$(document).ready(function () {
 
     //datatables
-    $('.data-table').DataTable();
+    $('.data-table').DataTable({
+        responsive: true,
+        columns: [{
+            responsivePriority: 1, targets: 0
+        }]
+    });
 
     //datepicker
     $('.datepicker').datepicker();
@@ -33,7 +38,6 @@
         }
     });
 
-    //$('#ckbtn-ck').change(function () {
     $('#ckbtn').click(function () {
         if ($('#ckbtn-ck').is(':checked')) {
             $('#ckbtn-ck').prop('checked', false).prop('value', false);
@@ -62,6 +66,19 @@
         }
     });
 
+    $('#typebtn').click(function () {
+        if ($('#typebtn-ck').is(':checked')) {
+            $('#typebtn-ck').prop('checked', false).prop('value', false);
+            $('#typebtn').removeClass('btn-success').addClass('btn-danger');
+            $('#type-text').text('Expense');
+        }
+        else {
+            $('#typebtn-ck').prop('checked', true).prop('value', true);
+            $('#typebtn').removeClass('btn-danger').addClass('btn-success');
+            $('#type-text').text('Income');
+        }
+    });
+
     //partial views handling
     $('.editAcct').click(function () {
         $('#editView').load('/BankAccounts/_Edit/' + $(this).data('id'));
@@ -71,17 +88,34 @@
         $('#editView').load('/BankAccounts/_Delete/' + $(this).data('id'));
     });
 
-    $('.cancel').click(function () {
-        $('#editView').load('/BankAccounts/_Create/');
-    })
-
     $('.editBudg').click(function () {
         $('#editView').load('/BudgetItems/_Edit/' + $(this).data('id'));
     });
 
+    $('#createBudg').click(function () {
+        $('editView').load('/BudgetItems/_Create');
+    })
+
     $('.deleteBudg').click(function () {
         $('#editView').load('/BudgetItems/_Delete/' + $(this).data('id'));
     });
+
+    $('.createTrans').click(function () {
+        $('#editView').load('/Transactions/_Create');
+    })
+
+    $('.editTrans').click(function () {
+        $('#editView').load('/Transactions/_Edit/' + $(this).data('id'));
+    })
+
+    $('.deleteTrans').click(function () {
+        $('#editView').load('/Transactions/_Delete/' +
+            $(this).data('id'));
+    })
+
+    //$('.cancel').click(function () {
+    //    $('#editView').load('/BankAccounts/_Create/');
+    //})
 
     //$('#cancelEditBudget').click(function () {
     //    $('#editView').load('/BudgetItems/_Create');
@@ -91,9 +125,6 @@
     //    $('#editView').load('/BudgetItems/_Create');
     //})
 
-    //$('.viewAcctTrans').click(function () {
-    //    $('.transactions').load('/Transactions/_View/' + $(this).data('id'));
-    //});
 
     //colors
     $('.balance').each(function (i) {

@@ -48,7 +48,9 @@ namespace BudgetApp.Controllers
         // GET: BankAccounts/Create
         public PartialViewResult _Create()
         {
-            return PartialView();
+            var input = TempData["formInput"];
+
+            return PartialView(input);
         }
 
         // POST: BankAccounts/Create
@@ -81,6 +83,9 @@ namespace BudgetApp.Controllers
 
                 return RedirectToAction("Index");
             }
+
+            TempData["formInput"] = bankAccount;
+
             return RedirectToAction("Index");
         }
 
