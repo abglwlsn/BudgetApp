@@ -25,7 +25,7 @@ namespace BudgetApp.Models
         public decimal Amount { get; set; }
         public string Description { get; set; }
         [Required]
-        public bool Type { get; set; }//how to set true to income, false to debit
+        public bool Income { get; set; }//how to set true to income, false to debit
         public bool Reconciled { get; set; }
 
         public virtual BankAccount BankAccount { get; set; }

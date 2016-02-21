@@ -21,9 +21,11 @@
     {
         @Html.HiddenFor(model=>model.Id)
     @Html.AntiForgeryToken()
-    <div class="form-actions no-color">
-        <input type="submit" value="Delete" class="btn btn-danger pull-right" /> 
-    </div>
+        <div class="pull-right form-group">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            @*<a href=@Url.Action("Index", "BankAccounts") class="btn btn-primary">Cancel</a>*@
+            <button type="button" class="cancel btn btn-primary">Cancel</button>
+        </div>
     }
 
 

@@ -75,7 +75,7 @@ namespace BudgetApp.Controllers
                     Entered = DateTimeOffset.Now,
                     Amount = bankAccount.Balance,
                     Description = "starting balance",
-                    Type = true,
+                    Income = true,
                     Reconciled = true
                 };
                 bankAccount.Transactions.Add(originalTransaction);

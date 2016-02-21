@@ -1,11 +1,83 @@
 ﻿$(document).ready(function () {
 
+    //partial views handling
+    //$('#tableAcct').on('click', '#deleteAcct', function () {
+    //    $('#editView').load('/BankAccounts/_Delete/' + $(this).data('id'));
+    //})
+
+    //function AssignPartialViewHandler(divContain, target, controllerName, actionName, hasDataTag)
+    //{
+    //    var fullLoadName = "/" + controllerName + "/" + actionName;
+    //
+    //    if (hasDataTag) {
+    //
+    //        fullLoadName += "/" + $(this).data('id');
+    //    }
+    //
+    //    $(divContain).on('click', target, function (){
+    //        $('#editView').load(fullLoadName);
+    //    })
+    //}
+
+    function AssignPartialViewHandler(divContain, target, controllerName, actionName, hasDataTag) {
+        var fullLoadName = "/" + controllerName + "/" + actionName;
+
+        $(divContain).on('click', target, function () {
+            $('#editView').load(fullLoadName + (hasDataTag ? ('/' + $(this).data('id')) : ""));
+        })
+    }
+
+    AssignPartialViewHandler('#editView', '.cancel', 'BankAccounts', '_Create', false);
+    AssignPartialViewHandler('#tableAcct', '#editAcct', 'BankAccounts', '_Edit', true);
+    GhettoAssignPartialViewHandler('#tableAcct', '#deleteAcct', 'BankAccounts', '_Delete', true);
+
+
+
+
+    //AssignNewEventHandler('createAcct', '_Create', false);
+    //AssignNewEventHandler('cancelAcct', '_Create', false);
+    //AssignNewEventHandler('deleteAcct', '_Delete', true);
+    //AssignNewEventHandler('editAcct', '_Edit', true);
+
+    $('#editView').on('click', '#editBudg', function () {
+        $('#editView').load('/BudgetItems/_Edit/' + $(this).data('id'));
+    })
+
+    $('#editView').on('click', '#deleteBudg', function () {
+        $('#editView').load('/BudgetItems/_Delete/' + $(this).data('id'));
+    })
+
+    $('#editView').on('click', '#createBudg', function () {
+        $('editView').load('/BudgetItems/_Create');
+    })
+
+    $('#editView').on('click', '#cancelBudg', function () {
+        $('#editView').load('/BudgetItems/_Create');
+    })
+
+    $('#editView').on('click', '#editTrans', function () {
+        $('#editView').load('/Transactions/_Edit/' + $(this).data('id'));
+    })
+
+    $('#editView').on('click', '#deleteTrans', function () {
+        $('#editView').load('/Transactions/_Delete/' + $(this).data('id'));
+    })
+
+    $('#editView').on('click', '#createTrans', function () {
+        $('#editView').load('/Transactions/_Create');
+    })
+
+    $('#editView').on('click', '#cancelTrans', function () {
+        $('#editView').load('/Transactions/_Create');
+    })
+
+    //$('#editTrans').click(function () {
+    //    $('#editView').load('/Transactions/_Edit/' + $(this).data('id'));
+    //})
+
     //datatables
     $('.data-table').DataTable({
-        responsive: true,
-        columns: [{
-            responsivePriority: 1, targets: 0
-        }]
+        responsive: true
     });
 
     //datepicker
@@ -78,52 +150,6 @@
             $('#type-text').text('Income');
         }
     });
-
-    //partial views handling
-    $('.editAcct').click(function () {
-        $('#editView').load('/BankAccounts/_Edit/' + $(this).data('id'));
-    });
-
-    $('.deleteAcct').click(function () {
-        $('#editView').load('/BankAccounts/_Delete/' + $(this).data('id'));
-    });
-
-    $('.editBudg').click(function () {
-        $('#editView').load('/BudgetItems/_Edit/' + $(this).data('id'));
-    });
-
-    $('#createBudg').click(function () {
-        $('editView').load('/BudgetItems/_Create');
-    })
-
-    $('.deleteBudg').click(function () {
-        $('#editView').load('/BudgetItems/_Delete/' + $(this).data('id'));
-    });
-
-    $('.createTrans').click(function () {
-        $('#editView').load('/Transactions/_Create');
-    })
-
-    $('.editTrans').click(function () {
-        $('#editView').load('/Transactions/_Edit/' + $(this).data('id'));
-    })
-
-    $('.deleteTrans').click(function () {
-        $('#editView').load('/Transactions/_Delete/' +
-            $(this).data('id'));
-    })
-
-    //$('.cancel').click(function () {
-    //    $('#editView').load('/BankAccounts/_Create/');
-    //})
-
-    //$('#cancelEditBudget').click(function () {
-    //    $('#editView').load('/BudgetItems/_Create');
-    //})
-
-    //$('body').on("click", "#cancelEditBudget", function () {
-    //    $('#editView').load('/BudgetItems/_Create');
-    //})
 
 
     //colors

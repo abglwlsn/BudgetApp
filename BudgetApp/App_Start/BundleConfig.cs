@@ -23,9 +23,7 @@ namespace BudgetApp
                         "~/Site Template/js/bootstrap-datepicker.js",
                         "~/Site Template/js/ickeck.min.js",
                         "~/Site Template/js/jquery.snippet.js",
-                        "~/Site Template/js/jquery.easyWizard.js",
-                        "~/Site Template/js/scripts.js"
-                        ));
+                        "~/Site Template/js/jquery.easyWizard.js"                        ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
