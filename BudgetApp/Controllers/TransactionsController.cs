@@ -22,8 +22,6 @@ namespace BudgetApp.Controllers
         // GET: Transactions
         public ActionResult Index()
         {
-            //var id = User.Identity.GetUserId();
-            //var user = db.Users.Find(id);
             var hh = db.Households.Find(Convert.ToInt32(User.Identity.GetHouseholdId())); 
             var accounts = hh.BankAccounts;
             return View(accounts.OrderBy(a=>a.Name).ToList());
@@ -39,15 +37,11 @@ namespace BudgetApp.Controllers
         // GET: Transactions/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            
             Transaction transaction = db.Transactions.Find(id);
-            if (transaction == null)
-            {
-                return HttpNotFound();
-            }
+            if (transaction == null) return HttpNotFound();
+
             return View(transaction);
         }
 
@@ -79,18 +73,17 @@ namespace BudgetApp.Controllers
                 var account = db.BankAccounts.FirstOrDefault(a => a.Id == transaction.BankAccountId);
                 var budget = db.BudgetItems.FirstOrDefault(b => b.Id == transaction.BudgetItemId);
                 
-                //set category
-                if (transaction.BudgetItemId!= null)
+                if (transaction.Reconciled)
                 {
-                    transaction.CategoryId = budget.CategoryId;
+                    transaction.Reconciled = false;
                 }
+
+                //set category
+                if (transaction.BudgetItemId!= null) transaction.CategoryId = budget.CategoryId;
 
                 //balance calculations
                 account.Balance = transaction.GetAccountBalance();
-                if (transaction.BudgetItemId != null)
-                {
-                    budget.Balance = transaction.GetBudgetBalance();
-                }
+                if (transaction.BudgetItemId != null) budget.Balance = transaction.GetBudgetBalance();
 
                 db.SaveChanges();
 
@@ -150,21 +143,18 @@ namespace BudgetApp.Controllers
 
 
                 //set category
-                if (transaction.BudgetItemId != null)
-                {
-                    transaction.CategoryId = transaction.BudgetItem.CategoryId;
-                }
+                if (transaction.BudgetItemId != null) transaction.CategoryId = transaction.BudgetItem.CategoryId;
 
                 //balance calculations
-                account.Balance = transaction.RevertAccountBalance(original);
+                account.Balance = original.RevertAccountBalance();
                 account = db.BankAccounts.FirstOrDefault(a => a.Id == transaction.BankAccountId);
-                account.Balance = transaction.GetNewAccountBalance();
+                account.Balance = transaction.GetAccountBalance();
 
                 if (budget != null)
                 {
-                    budget.Balance = transaction.RevertBudgetBalance(original);
+                    budget.Balance = original.RevertBudgetBalance();
                     budget = db.BudgetItems.FirstOrDefault(b => b.Id == transaction.BudgetItemId);
-                    budget.Balance = transaction.GetNewBudgetBalance();
+                    budget.Balance = transaction.GetBudgetBalance();
                 }
 
                 //finish up
@@ -201,9 +191,8 @@ namespace BudgetApp.Controllers
             var budget = db.BudgetItems.FirstOrDefault(b => b.Id == transaction.BudgetItemId);
 
             //balance calculations
-            account.Balance = transaction.GetAccountBalanceOnDelete();
-            if (budget != null)
-            { budget.Balance = transaction.GetBudgetBalanceOnDelete(); }
+            account.Balance = transaction.RevertAccountBalance();
+            if (budget != null) budget.Balance = transaction.RevertBudgetBalance(); 
 
             db.Transactions.Remove(transaction);
             db.SaveChanges();

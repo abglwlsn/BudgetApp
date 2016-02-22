@@ -5,10 +5,10 @@
 }
 
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-4">
         <h2>Index</h2>
     </div>
-    <div class="col-md-7 box-info shadow">
+    <div class="col-md-8 box-info shadow">
         <div id="editView">
             @Html.Action("_Create", "Transactions")
         </div>
@@ -19,7 +19,7 @@
 {
     <div class="box-info shadow">
         <h2><strong>@account.Name</strong> <i class="fa fa-angle-right"></i> Balance: <span class="balance text-succ">$ @account.Balance</span></h2>
-        <table class="data-table compact hover table-striped">
+        <table id="tableTrans" class="data-table compact hover table-striped">
             <thead>
                 <tr>
                     <th>Transaction Date</th>
@@ -39,16 +39,14 @@
                         <td>@trans.Transacted.DateTime.ToShortDateString()</td>
                         <td>@trans.Amount</td>
                         <td>
-                            @if (trans.Type == true)
+                            @if (trans.Income == true)
                         { <i class="fa fa-plus"></i> }
                         else { <i class="fa fa-minus"></i>}
                     </td>
                     <td>@trans.Category.Name</td>
                     @if (trans.BudgetItem != null)
-                    {
-                        <td>@trans.BudgetItem.Name</td>}
-                    else {
-                        <td></td>}
+                    {<td>@trans.BudgetItem.Name</td>}
+                    else {<td></td>}
                     <td>@trans.Description</td>
                     <td>
                         @if (trans.Reconciled == true)
@@ -67,7 +65,7 @@
 }
 
 
-<!-- DELETE CONFIRM MODAL -->
+<!-- DELETE CONFIRM MODAL CHANGE TO DETAILS -->
 
 <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog">

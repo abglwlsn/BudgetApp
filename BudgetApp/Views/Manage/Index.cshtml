@@ -35,7 +35,7 @@
             <dt>Name</dt>
             <dd>@budgetItem.Name</dd>
             <dt>Type</dt>
-            @if(budgetItem.Type==true)
+            @if(budgetItem.Income==true)
             { <dd><i class="fa fa-plus"></i></dd>}
             else { <dd><i class="fa fa-minus"></i></dd>}
             <dt>Category</dt>
@@ -54,7 +54,7 @@
         @Html.ActionLink("Edit", "BudgetItems", new { id = budgetItem.Id })
     }
     }
-    @Html.ActionLink("Create New Budget", "Create", "BudgetItems", null, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Create New Budget", "Index", "BudgetItems", null, new { @class = "btn btn-primary" })
 
 
 

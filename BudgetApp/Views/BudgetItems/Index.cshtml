@@ -7,10 +7,10 @@
 }
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-9">
         <div class="box-info shadow">
             <h2><strong>All</strong> Budget Items</h2>
-            <table class="data-table compact table-striped hover">
+            <table id="tableBudg" class="data-table compact table-striped hover">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -19,7 +19,7 @@
                         <th>Goal</th>
                         <th>Category</th>
                         <th>Warn Within</th>
-                        <th>Editing</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,18 +28,21 @@
                         var userId = User.Identity.GetUserId();
                         <tr>
                             <td>@item.Name</td>
-                            @if(item.Type== true)
+                            @if(item.Income == true)
                             { <td><i class="fa fa-plus"></i></td>}
                             else { <td><i class="fa fa-minus"></i></td>}
                             <td>@item.Balance</td>
                             <td>@item.AmountLimit</td>
                             <td>@item.Category.Name</td>
                             <td>$@item.Warning.WarningLevel</td>
+                            <td>
+                            <button id="viewBudgTrans" class="btn btn-sm btn-primary" data-id="@item.Id" type="button"><i class="fa fa-eye"></i></button>
                             @if (item.AllowEdits==true || (item.AllowEdits != true && userId == item.CreatorId))
                             {
-                                <td><button id="editBudg" class="btn btn-sm btn-primary" data-id="@item.Id" type="button"><i class="fa fa-edit"></i></button>
-                                <button id="deleteBudg" class="btn btn-sm btn-danger" data-id="@item.Id" type="button"><i class="fa fa-trash"></i></button></td>}
-                            else { <td><i>Locked</i></td>}
+                                <button id="editBudg" class="btn btn-sm btn-primary" data-id="@item.Id" type="button"><i class="fa fa-edit"></i></button>
+                                <button id="deleteBudg" class="btn btn-sm btn-danger" data-id="@item.Id" type="button"><i class="fa fa-trash"></i></button>}
+                            else { <i>Locked</i>}
+                             </td>
 
                             @*}*@
                         </tr>
@@ -50,16 +53,15 @@
     </div>
     @*@if(User.IsInRole("Admin"))
         {*@
-    <div class="col-md-4 box-info shadow">
+    <div class="col-md-3 box-info shadow">
         <div id="editView">
             @Html.Action("_Create", "BudgetItems")
         </div>
     </div>
     @*}*@
 </div>
-<div class="row">
-    <div class="transactions col-md-10 col-md-offset-1">
-    </div>
+
+<div id="viewTrans">
 </div>
 
 @section Scripts {

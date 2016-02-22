@@ -1,84 +1,39 @@
 ﻿$(document).ready(function () {
 
     //partial views handling
-    //$('#tableAcct').on('click', '#deleteAcct', function () {
-    //    $('#editView').load('/BankAccounts/_Delete/' + $(this).data('id'));
-    //})
-
-    //function AssignPartialViewHandler(divContain, target, controllerName, actionName, hasDataTag)
-    //{
-    //    var fullLoadName = "/" + controllerName + "/" + actionName;
-    //
-    //    if (hasDataTag) {
-    //
-    //        fullLoadName += "/" + $(this).data('id');
-    //    }
-    //
-    //    $(divContain).on('click', target, function (){
-    //        $('#editView').load(fullLoadName);
-    //    })
-    //}
-
     function AssignPartialViewHandler(divContain, target, controllerName, actionName, hasDataTag) {
-        var fullLoadName = "/" + controllerName + "/" + actionName;
+        var loadUrl = "/" + controllerName + "/" + actionName;
 
         $(divContain).on('click', target, function () {
-            $('#editView').load(fullLoadName + (hasDataTag ? ('/' + $(this).data('id')) : ""));
+            $('#editView').load(loadUrl + (hasDataTag ? ('/' + $(this).data('id')) : ""));
         })
     }
 
-    AssignPartialViewHandler('#editView', '.cancel', 'BankAccounts', '_Create', false);
+    AssignPartialViewHandler('#editView', '.cancel-acct', 'BankAccounts', '_Create', false);
     AssignPartialViewHandler('#tableAcct', '#editAcct', 'BankAccounts', '_Edit', true);
-    GhettoAssignPartialViewHandler('#tableAcct', '#deleteAcct', 'BankAccounts', '_Delete', true);
+    AssignPartialViewHandler('#tableAcct', '#deleteAcct', 'BankAccounts', '_Delete', true);
+    AssignPartialViewHandler('#editView', '.cancel-budg', 'BudgetItems', '_Create', false);
+    AssignPartialViewHandler('#tableBudg', '#editBudg', 'BudgetItems', '_Edit', true);
+    AssignPartialViewHandler('#tableBudg', '#deleteBudg', 'BudgetItems', '_Delete', true)
+    AssignPartialViewHandler('#viewTrans', '#viewBudgTrans', 'BudgetItems', '_Transactions', true);
+    AssignPartialViewHandler('#editView', '.cancel-trans', 'Transactions', '_Create', false);
+    AssignPartialViewHandler('#tableTrans', '#editTrans', 'Transactions', '_Edit', true);
+    AssignPartialViewHandler('#tableTrans', '#deleteTrans', 'Transactions', '_Delete', true);
+    AssignPartialViewHandler('#editView', '#editCat', 'Categories', '_Edit', true);
+    AssignPartialViewHandler('#editView', '#deleteCat', 'Categories', '_Delete', true);
 
-
-
-
-    //AssignNewEventHandler('createAcct', '_Create', false);
-    //AssignNewEventHandler('cancelAcct', '_Create', false);
-    //AssignNewEventHandler('deleteAcct', '_Delete', true);
-    //AssignNewEventHandler('editAcct', '_Edit', true);
-
-    $('#editView').on('click', '#editBudg', function () {
-        $('#editView').load('/BudgetItems/_Edit/' + $(this).data('id'));
-    })
-
-    $('#editView').on('click', '#deleteBudg', function () {
-        $('#editView').load('/BudgetItems/_Delete/' + $(this).data('id'));
-    })
-
-    $('#editView').on('click', '#createBudg', function () {
-        $('editView').load('/BudgetItems/_Create');
-    })
-
-    $('#editView').on('click', '#cancelBudg', function () {
-        $('#editView').load('/BudgetItems/_Create');
-    })
-
-    $('#editView').on('click', '#editTrans', function () {
-        $('#editView').load('/Transactions/_Edit/' + $(this).data('id'));
-    })
-
-    $('#editView').on('click', '#deleteTrans', function () {
-        $('#editView').load('/Transactions/_Delete/' + $(this).data('id'));
-    })
-
-    $('#editView').on('click', '#createTrans', function () {
-        $('#editView').load('/Transactions/_Create');
-    })
-
-    $('#editView').on('click', '#cancelTrans', function () {
-        $('#editView').load('/Transactions/_Create');
-    })
+    //$('#editView').on('click', '#cancelTrans', function () {
+    //    $('#editView').load('/Transactions/_Create');
+    //})
 
     //$('#editTrans').click(function () {
     //    $('#editView').load('/Transactions/_Edit/' + $(this).data('id'));
     //})
 
     //datatables
-    $('.data-table').DataTable({
-        responsive: true
-    });
+    //$('.data-table').DataTable(
+    //   responsive: true
+    //);
 
     //datepicker
     $('.datepicker').datepicker();
@@ -90,27 +45,49 @@
     }
 
     //action booleans
-    $('#typeBool').change(function () {
-        if ($(this).is(':checked')) {
-            $('#type').text('Income');
-        }
-        if (!$(this).is(':checked')) {
-            $('#type').text('Expense');
-        }
-    });
+    //$('#incomeBool').change(function () {
+    //    if ($(this).is(':checked')) {
+    //        $('#type').text('Income');
+    //    }
+    //    if (!$(this).is(':checked')) {
+    //        $('#type').text('Expense');
+    //    }
+    //});
 
-    $('#budgetBool').change(function () {
+    $('#editView').on('change', '#budgetBool', function () {
         if ($(this).is(':checked')) {
-            $('#category').show("slow");
-            $('.budget-item').prop('disabled', true)
+            $('#category').show('slow');
+            $('.budget-item').prop('disabled', true).hide('slow');
         }
         if (!$(this).is(':checked')) {
             $('#category').hide("slow");
-            $('.budget-item').prop('disabled', false)
+            $('.budget-item').prop('disabled', false).show('slow');
         }
     });
 
-    $('#ckbtn').click(function () {
+    //TogglePrettyCheckbox('#ckbtn-ck', '#ckbtn', '#ck-text', 'Spending Limit', 'Expected Income', true, '#amt-editor', "Enter goal spending limit amount", "Enter expected income amount")
+    //TogglePrettyCheckbox('#allowbtn-ck', '#allowbtn', '#allow-text', 'Only I can Edit', 'Anyone Can Edit', false, null, null, null)
+    //TogglePrettyCheckbox('#typebtn-ck', '#typebtn', '#type-text', 'Expense', 'Income', false, null, null, null)
+
+    //function TogglePrettyCheckbox(checkbox, button, textElement, newText1, newText0, changeEditor, editor, editorText1, editorText0) {
+
+    //    $('#editView').on('click', button, function () {
+    //        if ($(checkbox).is(':checked')) {
+    //            $(button).prop('checked', false).prop('value', false);
+    //            $(button).removeClass('.btn-success').addClass('.btn-danger');
+    //            $(textElement).text(newText1);
+    //            changeEditor ? $(editor).attr("placeholder", editorText1) : "";
+    //        }
+    //        else {
+    //            $(checkbox).prop('checked', true).prop('value', true);
+    //            $(button).removeClass('.btn-danger').addClass('.btn-success');
+    //            $(textElement).text(newText0);
+    //            changeEditor ? $(editor).attr("placeholder", editorText0) : "";
+    //        }
+    //    })
+    //};
+
+    $('#editView').on('click', '#ckbtn', function () {
         if ($('#ckbtn-ck').is(':checked')) {
             $('#ckbtn-ck').prop('checked', false).prop('value', false);
             $('#ckbtn').removeClass('btn-success').addClass('btn-danger');
@@ -125,20 +102,20 @@
         }
     });
 
-    $('#allowbtn').click(function () {
-        if (!$('#allowbtn-ck').is(':checked')) {
-            $('#allowbtn-ck').prop('checked', true);
-            $('#allowbtn').removeClass('btn-danger').addClass('btn-success');
-            $('#allow-text').text('Anyone Can Edit');
-        }
-        else {
-            $('#allowbtn-ck').prop('checked', false);
-            $('#allowbtn').removeClass('btn-success').addClass('btn-danger');
-            $('#allow-text').text('Only I Can Edit');
-        }
-    });
+    $('#editView').on('click', '#allowbtn', function () {
+            if (!$('#allowbtn-ck').is(':checked')) {
+                $('#allowbtn-ck').prop('checked', true);
+                $('#allowbtn').removeClass('btn-danger').addClass('btn-success');
+                $('#allow-text').text('Anyone Can Edit');
+            }
+            else {
+                $('#allowbtn-ck').prop('checked', false);
+                $('#allowbtn').removeClass('btn-success').addClass('btn-danger');
+                $('#allow-text').text('Only I Can Edit');
+            }
+        });
 
-    $('#typebtn').click(function () {
+    $('#editView').on('click', '#typebtn', function () {
         if ($('#typebtn-ck').is(':checked')) {
             $('#typebtn-ck').prop('checked', false).prop('value', false);
             $('#typebtn').removeClass('btn-success').addClass('btn-danger');

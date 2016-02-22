@@ -1,4 +1,10 @@
 ﻿
+/*text-danger: #a94442
+    brighter red: 	#d31b17
+    text-success: #3c763d
+    brighter green: 	#12a114
+*/
+
 .nav-pad {
     padding:0 25px;
 }
@@ -30,6 +36,17 @@ a {
     border:1px solid #b3b3b3;
 }
 
+ul a:hover {
+    color:#1F1E1E;
+    text-decoration:none;
+}
+
+.shadow {
+    -moz-box-shadow:1px 1px 3px 3px #ccc;
+    -webkit-box-shadow:1px 1px 3px 3px #ccc;
+    box-shadow:1px 1px 3px 3px #ccc;
+}
+
 /*-------- WELCOME PAGE --------*/
 
 .full-content-large {
@@ -56,10 +73,10 @@ a {
 }
 
 h1 span {
-    text-shadow: -1px 1px 1px #fff;
+    text-shadow: -1px 1px #fff;
 }
 
-/* ----------- FONTS -----------*/
+/* ------ FONTS AND TEXT ------*/
 
 .text-title {
     font-family: 'Source Sans Pro', sans-serif;
@@ -73,12 +90,60 @@ h1 span {
     font-size:1.2em;
 }
 
+.text-succ {
+    color:#12a114;
+}
+
+.text-dang {
+    color:#d31b17;
+}
+
 .subtitle {
     font-size:1.25em;
     font-style:italic;
     text-align:right;
     color:#cccccc;
 }
+
+.fa-plus {
+    color:#12a114;
+}
+
+.fa-minus {
+    color:#d31b17;
+}
+
+dt {
+    float:left;
+    clear:left;
+    width:40%;
+    text-align:right;
+    font-size:1.25em;
+    line-height:1.4em;
+}
+
+dd {
+    margin-left:45%;
+    font-size:1.15em;
+    line-height:1.5em;
+}
+#categories dt {
+    font-size:1em;
+    font-weight:600;
+}
+
+.progress-title {
+    font-size:1em;
+    font-weight:bold;
+    width:40%;
+    overflow:hidden;
+}
+
+
+.progress-group .label {
+    width:30%;
+}
+
 
 /* --- FORMS AND VERIFICATION --*/
 
@@ -98,7 +163,39 @@ h1 span {
     padding:5px;
 }
 
-/* ----------- IMAGES ----------*/
+#category, 
+#ckbtn-ck, 
+#allowbtn-ck, 
+#typebtn-ck {
+    display:none;
+}
+
+label {
+    display:inline;
+}
+
+.m-t-0 {
+    margin-top:0!important;
+    margin-left:0px!important;
+}
+
+
+/* -------- DATA TABLE ---------*/
+
+table.dataTable tbody td {
+    padding:6px 3px;
+    text-align:center;
+}
+
+table {
+    width:100%;
+}
+
+table.dataTable tbody td .description {
+    text-align:left;
+}
+
+/* ----------- IMAGES AND GRAPHS----------*/
 
 img {
 	max-width: 100%;
@@ -107,6 +204,10 @@ img {
 
 .logo-pad {
     padding-top:5px!important;
+}
+
+.progress-group {
+    padding:5px 0;
 }
 
 /*------------ BUTTONS ---------*/
@@ -128,6 +229,7 @@ img {
     right:7px;
     bottom:7px;
 }
+
 
 /*-------------------------DEFAULTS ----------------------*/
 body {

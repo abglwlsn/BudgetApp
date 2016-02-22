@@ -8,6 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
     <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/dt/dt-1.10.11,b-1.1.2,b-colvis-1.1.2,r-2.0.2/datatables.min.css" />
     <link href="~/Content/Site.css" rel="stylesheet" />
 
 </head>
@@ -47,15 +48,15 @@
                     <div id="sidebar-menu">
                         <ul>
                             <li><a href=@Url.Action("Index", "Home")><i class="fa fa-bar-chart"></i> Dashboard</a></li>
-                            <li><a href=@Url.Action("Create", "Transactions")><i class="fa fa-fw fa-plus"></i> Add Transaction</a></li>
-                            <li><a href=@Url.Action("Index", "Transactions")><i class="fa fa-fw fa-exchange"></i>Transaction History</a></li>
-                            <li><a href=@Url.Action("Index", "BudgetItems")><i class="fa fa-fw fa-bolt"></i>View Budgets</a></li>
+                            <li><a href=@Url.Action("Index", "Transactions")><i class="fa fa-fw fa-plus"></i> Add Transaction</a></li>
+                            <li><a href=@Url.Action("Index", "Transactions")><i class="fa fa-fw fa-exchange"></i>Accounts History</a></li>
+                            <li><a href=@Url.Action("Index", "BudgetItems")><i class="fa fa-fw fa-usd"></i>View Budgets</a></li>
                             <li>
                                 <a href="#fakelink"><i class="fa fa-cogs"></i><i class="fa fa-fw fa-angle-double-down i-right"></i> Manage</a>
                                 <ul>
                                     <li><a href=@Url.Action("Details", "Households")><i class="fa fa-fw fa-angle-right"></i> Household</a></li>
                                     <li><a href=@Url.Action("Index", "Categories")><i class="fa fa-fw fa-angle-right"></i> Categories </a></li>
-                                    <li><a href=@Url.Action("Manage", "BudgetItems")><i class="fa fa-fw fa-angle-right"></i> Budgets</a></li>
+                                    <li><a href=@Url.Action("Index", "BudgetItems")><i class="fa fa-fw fa-angle-right"></i> Budgets</a></li>
                                     <li><a href=@Url.Action("Index", "Manage")><i class="fa fa-fw fa-angle-right"></i> Profile</a></li>
                                     @*@if (User.IsInRole("Admin"))
                                     {*@
@@ -127,7 +128,9 @@
     </div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <script type="text/javascript" src="https://cdn.datatables.net/t/dt/dt-1.10.11,b-1.1.2,b-colvis-1.1.2,r-2.0.2/datatables.min.js"></script>
     <script src="~/Site Template/js/lanceng.js"></script>
+    <script src="~/Scripts/Site.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

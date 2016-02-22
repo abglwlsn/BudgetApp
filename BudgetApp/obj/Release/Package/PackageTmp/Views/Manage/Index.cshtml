@@ -16,23 +16,59 @@
         <dt>@Html.DisplayNameFor(model=>model.LastName)</dt>
         <dd>@Html.DisplayFor(model=>model.LastName)</dd>
         <dt>@Html.DisplayNameFor(model=>model.Email)</dt>
-        <dd>@Html.DisplayFor(model=>model.Email)</dd>
+        <dd>@Html.Raw(Model.Email)</dd>
+        <dt>@Html.DisplayNameFor(model=>model.AdminRights)</dt>
+        <dd>
+            @if (Model.AdminRights == true)
+            { <i class="fa fa-check"></i>}
+            else { <i class="fa fa-times"></i>}
+        </dd>
+    </dl>
 
+    <h4>Your Budgets</h4>
+    @if(Model.BudgetItems.Count() == 0 )
+    { <p>You have no current budgets.</p>}
+    else { 
+    foreach(var budgetItem in Model.BudgetItems)
+    {
+        <dl>
+            <dt>Name</dt>
+            <dd>@budgetItem.Name</dd>
+            <dt>Type</dt>
+            @if(budgetItem.Income==true)
+            { <dd><i class="fa fa-plus"></i></dd>}
+            else { <dd><i class="fa fa-minus"></i></dd>}
+            <dt>Category</dt>
+            <dd>@Html.Raw(budgetItem.Category)</dd>
+            <dt>Goal Amount</dt>
+            <dd>@budgetItem.AmountLimit</dd>
+            <dt>Balance</dt>
+            <dd>@budgetItem.Balance</dd>
+            <dt>Editing</dt>
+            @if (budgetItem.AllowEdits == true)
+            {<dd>Anyone</dd>}
+            else { <dd>Only you</dd>}
+            <dt># of Transactions</dt>
+            <dd>@budgetItem.Transactions.Count()</dd>
         </dl>
+        @Html.ActionLink("Edit", "BudgetItems", new { id = budgetItem.Id })
+    }
+    }
+    @Html.ActionLink("Create New Budget", "Index", "BudgetItems", null, new { @class = "btn btn-primary" })
+
+
 
     <h4>Edit Your Profile</h4>
     @using (Html.BeginForm("Edit", "Manage")) {
         @Html.AntiForgeryToken();
+        @Html.HiddenFor(model=>model.Email)
         <p class="text-danger">@ViewBag.ErrorMessage</p>
     <dl>
         <dt>@Html.DisplayNameFor(model => model.FirstName) </dt>
         <dd>@Html.EditorFor(model => model.FirstName)</dd>
         <dt>@Html.DisplayNameFor(model => model.LastName)</dt>
         <dd>@Html.EditorFor(model => model.LastName)</dd>
-        <dt>@Html.DisplayNameFor(model => model.Email)</dt>
-        @*<dd>@Html.EditorFor(model => model.Email)</dd>*@
     </dl>
-        @*<p class="text-danger">Changing your email will also change your UserName.</p>*@
         <button type="submit" class="btn btn-dark" formmethod="post" formaction="Edit">Save Changes</button>
         }
     <dl>
@@ -54,33 +90,6 @@
             @Model.Logins.Count [
             @Html.ActionLink("Manage", "ManageLogins") ]
         </dd>
-
-
-        @*
-            Phone Numbers can used as a second factor of verification in a two-factor authentication system.
-
-             See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                for details on setting up this ASP.NET application to support two-factor authentication using SMS.
-
-             Uncomment the following block after you have set up two-factor authentication
-        *@
-        @*
-            <dt>Phone Number:</dt>
-            <dd>
-                @(Model.PhoneNumber ?? "None") [
-                @if (Model.PhoneNumber != null)
-                {
-                    @Html.ActionLink("Change", "AddPhoneNumber")
-                    @: &nbsp;|&nbsp;
-                    @Html.ActionLink("Remove", "RemovePhoneNumber")
-                }
-                else
-                {
-                    @Html.ActionLink("Add", "AddPhoneNumber")
-                }
-                ]
-            </dd>
-        *@
         <dt>Two-Factor Authentication:</dt>
         <dd>
             <p>

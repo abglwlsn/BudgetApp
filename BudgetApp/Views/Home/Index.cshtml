@@ -44,12 +44,12 @@
                 <div class="progress-group">
                     <p class="progress-title pull-left">@budget.Name</p>
                     <p class="pull-left">Current: $@budget.Balance</p>
-                    @if (budget.Type == true)
+                    @if (budget.Income == true)
                 {<p class="pull-right">Goal: $@budget.AmountLimit</p>}
                 else {<p class="pull-right">Limit: $@budget.AmountLimit</p>}
                     <div class="clearfix"></div>
                     <div class="progress progress-striped active">
-                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="@budget.Balance" aria-valuemin="0" aria-valuemax="100" value=@percent>
+                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="@percent" aria-valuemin="0" aria-valuemax="100" value=@percent>
                             <span class="sr-only">@difference</span>
                         </div>
                     </div>
@@ -61,7 +61,40 @@
 
 <div class="row">
     <div class="box-info shadow">
-        <h2>Recent Transactions</h2>
-        transactions partial
+        <h2><strong>Unreconciled</strong> Transactions</h2>
+        <table class="data-table compact hover table-striped">
+            <thead>
+                <tr>
+                    <th>Account</th>
+                    <th>Transacted</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Description</th>
+                    <th>Entered By</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var account in Model.BankAccounts)
+                {
+                    foreach (var transaction in account.Transactions)
+                    {
+                        if (transaction.Reconciled != true)
+                        {
+                        <tr>
+                            <td>@transaction.BankAccount.Name</td>
+                            <td>@transaction.Transacted.DateTime.ToShortDateString()</td>
+                            @if (transaction.Income)
+                            {
+                                <td><i class="fa fa-plus"></i></td>}
+                            else {
+                                <td><i class="fa fa-minus"></i></td>}
+                            <td>@transaction.Amount</td>
+                            <td>@transaction.Description</td>
+                        </tr>
+                            }
+                        }
+                    }
+            </tbody>
+        </table>
     </div>
 </div>

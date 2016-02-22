@@ -127,6 +127,10 @@ dd {
     font-size:1.15em;
     line-height:1.5em;
 }
+#categories dt {
+    font-size:1em;
+    font-weight:600;
+}
 
 .progress-title {
     font-size:1em;
@@ -185,6 +189,10 @@ table.dataTable tbody td {
 
 table {
     width:100%;
+}
+
+table.dataTable tbody td .description {
+    text-align:left;
 }
 
 /* ----------- IMAGES AND GRAPHS----------*/

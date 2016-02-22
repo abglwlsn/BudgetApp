@@ -25,7 +25,7 @@ namespace BudgetApp.Models
         public decimal AmountLimit { get; set; }
         public decimal Balance { get; set; }
         [Required]
-        public bool Type { get; set; }
+        public bool Income { get; set; }
         public int? WarningId { get; set; }
         public string CreatorId { get; set; }
         [Display(Name="Allow Others to Edit?")]

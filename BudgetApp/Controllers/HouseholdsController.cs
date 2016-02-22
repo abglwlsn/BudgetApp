@@ -176,7 +176,7 @@ namespace BudgetApp.Controllers
                   return RedirectToAction("Details", "Households", new { id = user.HouseholdId });
                 }
             }
-            return View();
+            return RedirectToAction("Details", "Households");
         }
 
 

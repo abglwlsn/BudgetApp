@@ -96,7 +96,7 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,CategoryId,Name,AmountLimit,Type,WarningId,AllowEdits")] BudgetItem budgetItem)
+        public ActionResult Edit([Bind(Include = "Id,CategoryId,HouseholdId,CreatorId,Name,AmountLimit,Type,WarningId,AllowEdits")] BudgetItem budgetItem)
         { 
                 if (ModelState.IsValid)
                 {
@@ -128,6 +128,13 @@ namespace BudgetApp.Controllers
             db.BudgetItems.Remove(budgetItem);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        //GET: BudgetItems/_Transactions/5
+        public PartialViewResult _Transactions(int? id)
+        {
+            BudgetItem budgetItem = db.BudgetItems.Find(id);
+            return PartialView(budgetItem);
         }
 
         protected override void Dispose(bool disposing)
