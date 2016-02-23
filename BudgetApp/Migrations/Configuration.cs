@@ -25,6 +25,11 @@ namespace BudgetApp.Migrations
                 roleManager.Create(new IdentityRole { Name = "Admin" });
             }
 
+            if(!context.Roles.Any(r=>r.Name == "SuperUser"))
+            {
+                roleManager.Create(new IdentityRole { Name = "SuperUser" });
+            }
+
             context.Warnings.AddOrUpdate(x => x.WarningLevel,
                 new Warning() {WarningLevel = "None" },
                 new Warning() {WarningLevel = "50" },

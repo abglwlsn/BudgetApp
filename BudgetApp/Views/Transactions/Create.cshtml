@@ -1,0 +1,77 @@
+﻿@model BudgetApp.Models.Transaction
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@model BudgetApp.Models.Transaction
+
+<div class="col-md-10 col-md-offset-1">
+    <div class="box-info shadow">
+        <h2><strong>Add</strong> Transaction</h2>
+        @using (Html.BeginForm("Create", "Transactions"))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="col-md-4">
+                <label>Account</label>
+                <div class="form-group login-input">
+                    @Html.DropDownList("BankAccountId", (IEnumerable<SelectListItem>)ViewBag.BankAccountId, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.BankAccountId, "", new { @class = "text-anger" })
+                </div>
+                <div class="form-group">
+                    @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", @placeholder = "Transaction amount" } })
+                    @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @*<button type="button" id="typebtn" class="btn btn-danger form-control"><span id="type-text">Expense</span></button>*@
+                    <div id="typebtn">
+                        @*<input id="typebtn-ck" type="checkbox" name="Income" class="btn btn-danger"/><span id="type-text">Expense</span>*@
+                        <p>@Html.RadioButtonFor(m => m.Income, false) Expense</p>
+                        <p>@Html.RadioButtonFor(m => m.Income, true) Income</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Budget</label>
+                    @Html.DropDownList("BudgetItemId", (IEnumerable<SelectListItem>)ViewBag.BudgetItemsId, htmlAttributes: new { @class = "form-control budget-item" })
+                    @Html.ValidationMessageFor(model => model.BudgetItemId, "", new { @class = "text-danger" })
+                    <div class="checkbox">
+                        <input id="budgetBool" type="checkbox" class="m-t-0" />
+                        <p>Not a budget item?</p>
+                    </div>
+                </div>
+                <div class="form-group" id="category">
+                    <label>Category</label>
+                    @Html.DropDownList("CategoryId", (IEnumerable<SelectListItem>)ViewBag.CategoryId, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <div class="checkbox m-t-0" style="display:inline-block">
+                        @Html.EditorFor(model => model.Reconciled, new { htmlAttributes = new { @class = "m-t-0 checkbox" } })
+                        @*<input type="checkbox" class="m-t-0 checkbox" name="Reconciled" data-val-required="The Reconciled field is required." />*@
+                        @*@Html.EditorFor(model => model.Reconciled, new { @class = "reconcile-ck" })*@
+                        @Html.ValidationMessageFor(model => model.Reconciled, "", new { @class = "text-danger" })
+                        <label> Reconciled?</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @placeholder = "Transaction description" } })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <input type="text" name="Transacted" class="datepicker" placeholder="Transaction date" />
+                    @Html.ValidationMessageFor(model => model.Transacted, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary pull-right" />
+                </div>
+            </div>
+        }
+    </div>
+</div>

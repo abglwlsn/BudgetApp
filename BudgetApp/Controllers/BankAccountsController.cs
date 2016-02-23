@@ -65,12 +65,15 @@ namespace BudgetApp.Controllers
                 bankAccount.HouseholdId = Convert.ToInt32(User.Identity.GetHouseholdId());
                 db.BankAccounts.Add(bankAccount);
                 db.SaveChanges();
+                var hId = User.Identity.GetHouseholdId();
+                var hh = db.Households.Find(hId);
+
 
                 Transaction originalTransaction = new Transaction()
                 {
                     BankAccountId = bankAccount.Id,
                     UserId = User.Identity.GetUserId(),
-                    Category = db.Categories.FirstOrDefault((m=>m.Name == "Miscellaneous")),
+                    Category = hh.Categories.FirstOrDefault((m=>m.Name == "Miscellaneous")),
                     Transacted = DateTimeOffset.Now,
                     Entered = DateTimeOffset.Now,
                     Amount = bankAccount.Balance,

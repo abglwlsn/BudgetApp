@@ -31,9 +31,9 @@
     //})
 
     //datatables
-    //$('.data-table').DataTable(
+    $('.data-table').DataTable(
     //   responsive: true
-    //);
+    );
 
     //datepicker
     $('.datepicker').datepicker();
@@ -87,46 +87,46 @@
     //    })
     //};
 
-    $('#editView').on('click', '#ckbtn', function () {
-        if ($('#ckbtn-ck').is(':checked')) {
-            $('#ckbtn-ck').prop('checked', false).prop('value', false);
-            $('#ckbtn').removeClass('btn-success').addClass('btn-danger');
-            $('#ck-text').text('Spending Limit');
-            $('#amt-editor').attr("placeholder", "Enter goal spending limit amount");
-        }
-        else {
-            $('#ckbtn-ck').prop('checked', true).prop('value', true);
-            $('#ckbtn').removeClass('btn-danger').addClass('btn-success');
-            $('#ck-text').text('Expected Income');
-            $('#amt-editor').attr("placeholder", "Enter expected income amount");
-        }
-    });
+    //$('#editView').on('click', '#ckbtn', function () {
+    //    if ($('#ckbtn-ck').is(':checked')) {
+    //        $('#ckbtn-ck').prop('checked', false).prop('value', false);
+    //        $('#ckbtn').removeClass('btn-success').addClass('btn-danger');
+    //        $('#ck-text').text('Spending Limit');
+    //        $('#amt-editor').attr("placeholder", "Enter goal spending limit amount");
+    //    }
+    //    else {
+    //        $('#ckbtn-ck').prop('checked', true).prop('value', true);
+    //        $('#ckbtn').removeClass('btn-danger').addClass('btn-success');
+    //        $('#ck-text').text('Expected Income');
+    //        $('#amt-editor').attr("placeholder", "Enter expected income amount");
+    //    }
+    //});
 
-    $('#editView').on('click', '#allowbtn', function () {
-            if (!$('#allowbtn-ck').is(':checked')) {
-                $('#allowbtn-ck').prop('checked', true);
-                $('#allowbtn').removeClass('btn-danger').addClass('btn-success');
-                $('#allow-text').text('Anyone Can Edit');
-            }
-            else {
-                $('#allowbtn-ck').prop('checked', false);
-                $('#allowbtn').removeClass('btn-success').addClass('btn-danger');
-                $('#allow-text').text('Only I Can Edit');
-            }
-        });
+    //$('#editView').on('click', '#allowbtn', function () {
+    //        if (!$('#allowbtn-ck').is(':checked')) {
+    //            $('#allowbtn-ck').prop('checked', true);
+    //            $('#allowbtn').removeClass('btn-danger').addClass('btn-success');
+    //            $('#allow-text').text('Anyone Can Edit');
+    //        }
+    //        else {
+    //            $('#allowbtn-ck').prop('checked', false);
+    //            $('#allowbtn').removeClass('btn-success').addClass('btn-danger');
+    //            $('#allow-text').text('Only I Can Edit');
+    //        }
+    //    });
 
-    $('#editView').on('click', '#typebtn', function () {
-        if ($('#typebtn-ck').is(':checked')) {
-            $('#typebtn-ck').prop('checked', false).prop('value', false);
-            $('#typebtn').removeClass('btn-success').addClass('btn-danger');
-            $('#type-text').text('Expense');
-        }
-        else {
-            $('#typebtn-ck').prop('checked', true).prop('value', true);
-            $('#typebtn').removeClass('btn-danger').addClass('btn-success');
-            $('#type-text').text('Income');
-        }
-    });
+    //$('#editView').on('click', '#typebtn', function () {
+    //    if ($('#typebtn-ck').is(':checked')) {
+    //        $('#typebtn-ck').prop('checked', false).prop('value', false);
+    //        $('#typebtn').removeClass('btn-success').addClass('btn-danger');
+    //        $('#type-text').text('Expense');
+    //    }
+    //    else {
+    //        $('#typebtn-ck').prop('checked', true).prop('value', true);
+    //        $('#typebtn').removeClass('btn-danger').addClass('btn-success');
+    //        $('#type-text').text('Income');
+    //    }
+    //});
 
 
     //colors

@@ -23,8 +23,12 @@
                     @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                <button type="button" id="typebtn" class="btn btn-danger form-control"><span id="type-text">Expense</span></button>
-                <input id="typebtn-ck" type="checkbox" name="Type" value="false" />
+                @*<button type="button" id="typebtn" class="btn btn-danger form-control"><span id="type-text">Expense</span></button>*@
+                <div id="typebtn">
+                    @*<input id="typebtn-ck" type="checkbox" name="Income" value="0" class="btn btn-danger"/><span id="ck-text">Expense</span>*@
+                    <p>@Html.RadioButtonFor(m => m.Income, false) Expense</p>
+                    <p>@Html.RadioButtonFor(m => m.Income, true) Income</p>
+                </div>
             </div>
         </div>
         <div class="col-md-4">

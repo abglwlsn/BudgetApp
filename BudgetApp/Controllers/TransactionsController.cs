@@ -46,7 +46,7 @@ namespace BudgetApp.Controllers
         }
 
         // GET: Transactions/Create
-        public PartialViewResult _Create()
+        public ActionResult Create()
         {
             var userId = User.Identity.GetUserId();
             var hh = userId.GetHousehold();
@@ -55,8 +55,10 @@ namespace BudgetApp.Controllers
             ViewBag.BudgetItemId = new SelectList(hh.BudgetItems, "Id", "Name");
             ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name");
 
-            return PartialView();
+            return View();
         }
+
+
 
         // POST: Transactions/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -121,7 +123,7 @@ namespace BudgetApp.Controllers
             ViewBag.BudgetItemId = new SelectList(hh.BudgetItems, "Id", "Name", transaction.BudgetItemId);
             ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name", transaction.CategoryId);
 
-            return PartialView();
+            return PartialView(transaction);
         }
 
         // POST: Transactions/Edit/5
@@ -129,13 +131,14 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,BankAccountId,CategoryId,BudgetItemId,UserId,Transacted,Amount,Description,Type,Reconciled")] Transaction transaction)
+        public ActionResult Edit([Bind(Include = "Id,BankAccountId,CategoryId,BudgetItemId,UserId,Transacted,Amount,Description,Type,Reconciled")] Transaction transaction, bool IsIncome)
         {
             var id = User.Identity.GetUserId();
             var hh = id.GetHousehold();
 
             if (ModelState.IsValid)
             {
+                transaction.Income = IsIncome;
                 //var original = (decimal)TempData["OriginalAmount"]; - not best practice
                 var original = db.Transactions.AsNoTracking().FirstOrDefault(t => t.Id == transaction.Id); 
                 var account = db.BankAccounts.FirstOrDefault(a => a.Id == original.BankAccountId);
@@ -169,7 +172,7 @@ namespace BudgetApp.Controllers
             ViewBag.BudgetItemId = new SelectList(db.BudgetItems, "Id", "Name", transaction.BudgetItemId);
             ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", transaction.CategoryId);
 
-            return View(transaction);
+            return RedirectToAction("Index");
         }
 
         // GET: Transactions/Delete/5
@@ -177,7 +180,7 @@ namespace BudgetApp.Controllers
         {
             Transaction transaction = db.Transactions.Find(id);
 
-            return PartialView();
+            return PartialView(transaction);
         }
 
         // POST: Transactions/Delete/5

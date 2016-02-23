@@ -230,6 +230,7 @@
     </Compile>
     <Compile Include="HelperExtensions\HouseholdHelper.cs" />
     <Compile Include="HelperExtensions\IdentityHelper.cs" />
+    <Compile Include="HelperExtensions\RoleHelper.cs" />
     <Compile Include="HelperExtensions\TransactionHelper.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -361,7 +362,6 @@
     <Content Include="Views\BankAccounts\_Edit.cshtml" />
     <Content Include="Views\BankAccounts\Index.cshtml" />
     <Content Include="Views\Households\Create.cshtml" />
-    <Content Include="Views\Households\Delete.cshtml" />
     <Content Include="Views\Households\Details.cshtml" />
     <Content Include="Views\Households\Edit.cshtml" />
     <Content Include="Views\Households\Index.cshtml" />
@@ -387,6 +387,8 @@
     <Content Include="Views\BudgetItems\_Transactions.cshtml" />
     <Content Include="Views\Categories\_Edit.cshtml" />
     <Content Include="Views\Categories\_Delete.cshtml" />
+    <Content Include="Views\Categories\_CreateCat.cshtml" />
+    <Content Include="Views\Transactions\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

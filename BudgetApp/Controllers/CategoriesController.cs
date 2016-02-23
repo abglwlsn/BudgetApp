@@ -17,6 +17,14 @@ namespace BudgetApp.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        // GET: Categories/Delete/5
+        public PartialViewResult _CreateCat()
+        {
+            var userId = User.Identity.GetUserId();
+            var hh = userId.GetHousehold();
+            return PartialView(hh.Categories);
+        }
+
         //POST: Categories/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -50,6 +58,15 @@ namespace BudgetApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                var original = db.Categories.AsNoTracking().FirstOrDefault(c => c.Id == category.Id);
+
+                if (category.Name != original.Name)
+                {
+                    var transactions = db.Transactions.Where(t => t.Category.Name == original.Name);
+                    foreach (var trans in transactions)
+                    { trans.Category.Name = category.Name; }
+                }              
+
                 db.Entry(category).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Details", "Households");
@@ -72,9 +89,16 @@ namespace BudgetApp.Controllers
         public ActionResult Delete(int id)
         {
             Category category = db.Categories.Find(id);
+            var transactions = db.Transactions.Where(t => t.CategoryId == id);
+            var misc = db.Categories.FirstOrDefault(c => c.Name == "Miscellaneous").Id;
+
+            foreach (var transaction in transactions) transaction.CategoryId = misc;
+
             db.Categories.Remove(category);
             db.SaveChanges();
             return RedirectToAction("Details", "Households");
         }
+
+
     }
 }

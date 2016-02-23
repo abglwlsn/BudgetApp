@@ -163,10 +163,10 @@ dd {
     padding:5px;
 }
 
-#category, 
+#category/*, 
 #ckbtn-ck, 
 #allowbtn-ck, 
-#typebtn-ck {
+#typebtn-ck*/ {
     display:none;
 }
 
@@ -191,9 +191,9 @@ table {
     width:100%;
 }
 
-table.dataTable tbody td .description {
+/*table.dataTable tbody td .description {
     text-align:left;
-}
+}*/
 
 /* ----------- IMAGES AND GRAPHS----------*/
 

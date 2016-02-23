@@ -21,6 +21,12 @@
     AssignPartialViewHandler('#tableTrans', '#deleteTrans', 'Transactions', '_Delete', true);
     AssignPartialViewHandler('#editView', '#editCat', 'Categories', '_Edit', true);
     AssignPartialViewHandler('#editView', '#deleteCat', 'Categories', '_Delete', true);
+    
+    //function AssignRemovePartialViewHandler(divContain, target, ) {
+    //    $(divContain.on('click', target, function() {
+
+    //    }))
+    //}
 
     //$('#editView').on('click', '#cancelTrans', function () {
     //    $('#editView').load('/Transactions/_Create');
@@ -31,9 +37,9 @@
     //})
 
     //datatables
-    //$('.data-table').DataTable(
+    $('.data-table').DataTable(
     //   responsive: true
-    //);
+    );
 
     //datepicker
     $('.datepicker').datepicker();
@@ -64,7 +70,16 @@
             $('.budget-item').prop('disabled', false).show('slow');
         }
     });
-
+    $('body').on('click', '#IncBtn', function () {
+        if ($(this).is(':checked')) {
+            $(this).val(true);
+           
+        }
+        if (!$(this).is(':checked')) {
+            $(this).val(false);
+           
+        }
+    });
     //TogglePrettyCheckbox('#ckbtn-ck', '#ckbtn', '#ck-text', 'Spending Limit', 'Expected Income', true, '#amt-editor', "Enter goal spending limit amount", "Enter expected income amount")
     //TogglePrettyCheckbox('#allowbtn-ck', '#allowbtn', '#allow-text', 'Only I can Edit', 'Anyone Can Edit', false, null, null, null)
     //TogglePrettyCheckbox('#typebtn-ck', '#typebtn', '#type-text', 'Expense', 'Income', false, null, null, null)
@@ -87,46 +102,46 @@
     //    })
     //};
 
-    $('#editView').on('click', '#ckbtn', function () {
-        if ($('#ckbtn-ck').is(':checked')) {
-            $('#ckbtn-ck').prop('checked', false).prop('value', false);
-            $('#ckbtn').removeClass('btn-success').addClass('btn-danger');
-            $('#ck-text').text('Spending Limit');
-            $('#amt-editor').attr("placeholder", "Enter goal spending limit amount");
-        }
-        else {
-            $('#ckbtn-ck').prop('checked', true).prop('value', true);
-            $('#ckbtn').removeClass('btn-danger').addClass('btn-success');
-            $('#ck-text').text('Expected Income');
-            $('#amt-editor').attr("placeholder", "Enter expected income amount");
-        }
-    });
+    //$('#editView').on('click', '#ckbtn', function () {
+    //    if ($('#ckbtn-ck').is(':checked')) {
+    //        $('#ckbtn-ck').prop('checked', false).prop('value', false);
+    //        $('#ckbtn').removeClass('btn-success').addClass('btn-danger');
+    //        $('#ck-text').text('Spending Limit');
+    //        $('#amt-editor').attr("placeholder", "Enter goal spending limit amount");
+    //    }
+    //    else {
+    //        $('#ckbtn-ck').prop('checked', true).prop('value', true);
+    //        $('#ckbtn').removeClass('btn-danger').addClass('btn-success');
+    //        $('#ck-text').text('Expected Income');
+    //        $('#amt-editor').attr("placeholder", "Enter expected income amount");
+    //    }
+    //});
 
-    $('#editView').on('click', '#allowbtn', function () {
-            if (!$('#allowbtn-ck').is(':checked')) {
-                $('#allowbtn-ck').prop('checked', true);
-                $('#allowbtn').removeClass('btn-danger').addClass('btn-success');
-                $('#allow-text').text('Anyone Can Edit');
-            }
-            else {
-                $('#allowbtn-ck').prop('checked', false);
-                $('#allowbtn').removeClass('btn-success').addClass('btn-danger');
-                $('#allow-text').text('Only I Can Edit');
-            }
-        });
+    //$('#editView').on('click', '#allowbtn', function () {
+    //        if (!$('#allowbtn-ck').is(':checked')) {
+    //            $('#allowbtn-ck').prop('checked', true);
+    //            $('#allowbtn').removeClass('btn-danger').addClass('btn-success');
+    //            $('#allow-text').text('Anyone Can Edit');
+    //        }
+    //        else {
+    //            $('#allowbtn-ck').prop('checked', false);
+    //            $('#allowbtn').removeClass('btn-success').addClass('btn-danger');
+    //            $('#allow-text').text('Only I Can Edit');
+    //        }
+    //    });
 
-    $('#editView').on('click', '#typebtn', function () {
-        if ($('#typebtn-ck').is(':checked')) {
-            $('#typebtn-ck').prop('checked', false).prop('value', false);
-            $('#typebtn').removeClass('btn-success').addClass('btn-danger');
-            $('#type-text').text('Expense');
-        }
-        else {
-            $('#typebtn-ck').prop('checked', true).prop('value', true);
-            $('#typebtn').removeClass('btn-danger').addClass('btn-success');
-            $('#type-text').text('Income');
-        }
-    });
+    //$('#editView').on('click', '#typebtn', function () {
+    //    if ($('#typebtn-ck').is(':checked')) {
+    //        $('#typebtn-ck').prop('checked', false).prop('value', false);
+    //        $('#typebtn').removeClass('btn-success').addClass('btn-danger');
+    //        $('#type-text').text('Expense');
+    //    }
+    //    else {
+    //        $('#typebtn-ck').prop('checked', true).prop('value', true);
+    //        $('#typebtn').removeClass('btn-danger').addClass('btn-success');
+    //        $('#type-text').text('Income');
+    //    }
+    //});
 
 
     //colors

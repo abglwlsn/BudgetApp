@@ -19,6 +19,7 @@ namespace BudgetApp.Models
         [Display(Name="Account")]
         public string Name { get; set; }
         public decimal Balance { get; set; }
+        public decimal ReconciledBalance { get; set; }
 
         public virtual Household Household { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; }

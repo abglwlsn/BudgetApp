@@ -7,11 +7,10 @@
 <div class="row">
     <div class="col-md-4">
         <h2>Index</h2>
+        <a href=@Url.Action("Create", "Transactions") type="button" class="btn btn-primary">Create New Transaction</a>
     </div>
-    <div class="col-md-8 box-info shadow">
-        <div id="editView">
-            @Html.Action("_Create", "Transactions")
-        </div>
+    <div id="editView" class="col-md-8">
+
     </div>
 </div>
 
@@ -53,7 +52,7 @@
                     { <i class="fa fa-check"></i>  }
                 </td>
                 <td>
-                    <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="detailsModal" data-id="@trans.Id">Details</button>
+                    <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="detailsModal" data-id="@trans">Details</button>
                     <button id="editTrans" type="button" class="btn btn-primary btn-xs" data-id="@trans.Id"><i class="fa fa-edit"></i></button>
                     <button id="deleteTrans" type="button" class="btn btn-danger btn-xs" data-id="@trans.Id"><i class="fa fa-trash-o"></i></button>
                 </td>
@@ -63,29 +62,3 @@
         </table>
     </div>
 }
-
-
-<!-- DELETE CONFIRM MODAL CHANGE TO DETAILS -->
-
-<div id="deleteModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Delete Transaction</h4>
-            </div>
-            <div class="modal-body">
-                <p class="text-danger"><strong>Are you sure you want to delete this transaction?</strong></p>
-                <p>All information and records related to this transaction will be permanently deleted.  If you need to correct your account balance, accommodate for a refund, or other modification, consider creating a reconciliation transaction instead.</p>
-            </div>
-            <div class="modal-footer">
-                <a href=@Url.Action("Create", "Transactions") class="btn btn-primary">Create Transaction</a>
-                @using (Html.BeginForm("Delete", "Transactions"))
-                {
-                    <input type="submit" class="btn btn-danger" value="Delete Transaction" />
-                }
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->

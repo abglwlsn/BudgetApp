@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using BudgetApp.HelperExtensions;
 using BudgetApp.Models;
 using System.Threading.Tasks;
+using System.Web.Security;
 
 namespace BudgetApp.Controllers
 {
@@ -54,8 +55,8 @@ namespace BudgetApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include="Id, Name")]Household household)
         {
-            var id = User.Identity.GetUserId();
-            var user = db.Users.FirstOrDefault(u=>u.Id == id);
+            var userId = User.Identity.GetUserId();
+            var user = db.Users.FirstOrDefault(u=>u.Id == userId);
             
             if (ModelState.IsValid)
             {
@@ -65,6 +66,8 @@ namespace BudgetApp.Controllers
                 return View();
                 }
 
+                userId.AddSuperUser();
+                userId.AddUserToAdmin();
                 db.Households.Add(household);
                 db.SaveChanges();
 
@@ -101,7 +104,11 @@ namespace BudgetApp.Controllers
 
                         user.HouseholdId = Iuser.HouseholdId;
                         user.AdminRights = Iuser.AdminRights;
+
                         db.SaveChanges();
+
+                        if (user.AdminRights)
+                            user.Id.AddUserToAdmin(); 
 
                         TempData["ErrorMessage"] = "";
                         db.InvitedUsers.Remove(Iuser);
@@ -131,15 +138,21 @@ namespace BudgetApp.Controllers
             if (ModelState.IsValid)
             {
                 ApplicationUser currentUser = db.Users.Find(User.Identity.GetUserId());
-                ApplicationUser user = db.Users.Find(id);
+                ApplicationUser selectedUser = db.Users.Find(id);
+                var hh = currentUser.Household;
 
-                user.HouseholdId = null;
+                selectedUser.HouseholdId = null;
                 db.SaveChanges();
 
-                
-
-                if (currentUser.Id==user.Id)
+                if (currentUser.Id==selectedUser.Id)
                 {
+                    //delete entire household if Superuser
+                    if(User.IsInRole("SuperUser"))
+                    {
+                        foreach (var user in hh.Users)
+                            user.HouseholdId = null;
+                    }
+
                     await ControllerContext.HttpContext.RefreshAuthentication(currentUser);
                     return RedirectToAction("Create", "Households");
                 }
@@ -161,15 +174,18 @@ namespace BudgetApp.Controllers
             {
                 ApplicationUser user = db.Users.Find(id);
                 ApplicationUser currentUser = db.Users.Find(User.Identity.GetUserId());
+
                 if (user != currentUser)
                 {
                   if (user.AdminRights == true)
                   {
                       user.AdminRights = false;
+                        id.RemoveUserFromAdmin();
                   }
                   else
                   {
                       user.AdminRights = true;
+                        id.AddUserToAdmin();
                   }
 
                   db.SaveChanges();
