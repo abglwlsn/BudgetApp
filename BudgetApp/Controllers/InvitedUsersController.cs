@@ -33,7 +33,7 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,HouseholdId,Name,Email,AdminRights,InviteCode")] InvitedUser invitedUser)
+        public ActionResult Create([Bind(Include = "Id,HouseholdId,Name,Email,AdminRights,InviteCode")] InvitedUser invitedUser, bool HasAdminRights)
         {
             if (ModelState.IsValid)
             {
@@ -44,14 +44,11 @@ namespace BudgetApp.Controllers
                 invitedUser.HouseholdId = hId;
                 invitedUser.InviteCode = Membership.GeneratePassword(10, 4);
                 invitedUser.InvitedBy = user.FirstName + " " + user.LastName;
+                invitedUser.HasAdminRights = HasAdminRights;
 
                 db.InvitedUsers.Add(invitedUser);
-                db.SaveChanges();                //if (AdminRights==true)
-                //{
-                //    give Admin rights
-                //}
+                db.SaveChanges();  
 
-                //How to force delete of entry after certain time period? Or leave entry but generate new code?
                 var es = new EmailService();
                 var msg = invitedUser.CreateJoinMessage();
                 es.SendAsync(msg);
@@ -66,12 +63,12 @@ namespace BudgetApp.Controllers
         // POST: InvitedUsers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id)
         {
             InvitedUser invitedUser = db.InvitedUsers.Find(id);
             db.InvitedUsers.Remove(invitedUser);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Households");
         }
 
         protected override void Dispose(bool disposing)

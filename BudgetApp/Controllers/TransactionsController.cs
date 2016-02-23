@@ -65,7 +65,7 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,BankAccountId,CategoryId,BudgetItemId,UserId,Transacted,Entered,Amount,Description,Type,Reconciled")] Transaction transaction)
+        public ActionResult Create([Bind(Include = "Id,BankAccountId,CategoryId,BudgetItemId,UserId,Transacted,Entered,Amount,Description,Income,Reconciled")] Transaction transaction, bool IsIncome, bool IsReconciled)
         {
             var id = User.Identity.GetUserId();
             var hh = id.GetHousehold();
@@ -74,14 +74,13 @@ namespace BudgetApp.Controllers
             {
                 var account = db.BankAccounts.FirstOrDefault(a => a.Id == transaction.BankAccountId);
                 var budget = db.BudgetItems.FirstOrDefault(b => b.Id == transaction.BudgetItemId);
-                
-                if (transaction.Reconciled)
-                {
-                    transaction.Reconciled = false;
-                }
+
+                transaction.Reconciled = IsReconciled;
+                transaction.Income = IsIncome;
 
                 //set category
-                if (transaction.BudgetItemId!= null) transaction.CategoryId = budget.CategoryId;
+                if (transaction.BudgetItemId != null) transaction.CategoryId = budget.CategoryId;
+                else transaction.CategoryId = hh.Categories.FirstOrDefault(c => c.Name == "Miscellaneous").Id;
 
                 //balance calculations
                 account.Balance = transaction.GetAccountBalance();
@@ -131,7 +130,7 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,BankAccountId,CategoryId,BudgetItemId,UserId,Transacted,Amount,Description,Type,Reconciled")] Transaction transaction, bool IsIncome)
+        public ActionResult Edit([Bind(Include = "Id,BankAccountId,CategoryId,BudgetItemId,UserId,Transacted,Amount,Description,Income,Reconciled")] Transaction transaction, bool IsIncome)
         {
             var id = User.Identity.GetUserId();
             var hh = id.GetHousehold();
@@ -143,10 +142,6 @@ namespace BudgetApp.Controllers
                 var original = db.Transactions.AsNoTracking().FirstOrDefault(t => t.Id == transaction.Id); 
                 var account = db.BankAccounts.FirstOrDefault(a => a.Id == original.BankAccountId);
                 var budget = db.BudgetItems.FirstOrDefault(b => b.Id == original.BudgetItemId);
-
-
-                //set category
-                if (transaction.BudgetItemId != null) transaction.CategoryId = transaction.BudgetItem.CategoryId;
 
                 //balance calculations
                 account.Balance = original.RevertAccountBalance();
@@ -162,6 +157,10 @@ namespace BudgetApp.Controllers
 
                 //finish up
                 transaction.UserId = id;
+                db.SaveChanges();
+
+                //set category
+                if (transaction.BudgetItemId != null) transaction.CategoryId = transaction.BudgetItem.CategoryId;
 
                 db.Entry(transaction).State = EntityState.Modified;
                 db.SaveChanges();

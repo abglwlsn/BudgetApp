@@ -1,41 +1,5 @@
 ﻿$(document).ready(function () {
 
-    //partial views handling
-    function AssignPartialViewHandler(divContain, target, controllerName, actionName, hasDataTag) {
-        var loadUrl = "/" + controllerName + "/" + actionName;
-
-        $(divContain).on('click', target, function () {
-            $('#editView').load(loadUrl + (hasDataTag ? ('/' + $(this).data('id')) : ""));
-        })
-    }
-
-    AssignPartialViewHandler('#editView', '.cancel-acct', 'BankAccounts', '_Create', false);
-    AssignPartialViewHandler('#tableAcct', '#editAcct', 'BankAccounts', '_Edit', true);
-    AssignPartialViewHandler('#tableAcct', '#deleteAcct', 'BankAccounts', '_Delete', true);
-    AssignPartialViewHandler('#editView', '.cancel-budg', 'BudgetItems', '_Create', false);
-    AssignPartialViewHandler('#tableBudg', '#editBudg', 'BudgetItems', '_Edit', true);
-    AssignPartialViewHandler('#tableBudg', '#deleteBudg', 'BudgetItems', '_Delete', true)
-    AssignPartialViewHandler('#viewTrans', '#viewBudgTrans', 'BudgetItems', '_Transactions', true);
-    AssignPartialViewHandler('#editView', '.cancel-trans', 'Transactions', '_Create', false);
-    AssignPartialViewHandler('#tableTrans', '#editTrans', 'Transactions', '_Edit', true);
-    AssignPartialViewHandler('#tableTrans', '#deleteTrans', 'Transactions', '_Delete', true);
-    AssignPartialViewHandler('#editView', '#editCat', 'Categories', '_Edit', true);
-    AssignPartialViewHandler('#editView', '#deleteCat', 'Categories', '_Delete', true);
-    
-    //function AssignRemovePartialViewHandler(divContain, target, ) {
-    //    $(divContain.on('click', target, function() {
-
-    //    }))
-    //}
-
-    //$('#editView').on('click', '#cancelTrans', function () {
-    //    $('#editView').load('/Transactions/_Create');
-    //})
-
-    //$('#editTrans').click(function () {
-    //    $('#editView').load('/Transactions/_Edit/' + $(this).data('id'));
-    //})
-
     //datatables
     $('.data-table').DataTable(
     //   responsive: true
@@ -50,17 +14,13 @@
         $('#verify').show("slow");
     }
 
-    //action booleans
-    //$('#incomeBool').change(function () {
-    //    if ($(this).is(':checked')) {
-    //        $('#type').text('Income');
-    //    }
-    //    if (!$(this).is(':checked')) {
-    //        $('#type').text('Expense');
-    //    }
-    //});
+    //trigger first-visit modal with role information
+    //window.onunload = function () {
+    //    alert('Bye.');
+    //}
 
-    $('#editView').on('change', '#budgetBool', function () {
+    //disable/enable budget and category dropdowns on transaction view
+    $('body').on('change', '#budgetBool', function () {
         if ($(this).is(':checked')) {
             $('#category').show('slow');
             $('.budget-item').prop('disabled', true).hide('slow');
@@ -70,19 +30,22 @@
             $('.budget-item').prop('disabled', false).show('slow');
         }
     });
-    $('body').on('click', '#IncBtn', function () {
-        if ($(this).is(':checked')) {
-            $(this).val(true);
-           
+
+    //colors
+    $('.balance').each(function (i) {
+        var content = parseInt($(this).text().replace('$', ''), 10);
+        var balance = parseInt(content, 10);
+        if (balance <= 0) {
+            $(this).removeClass("text-succ").addClass("text-dang");
         }
-        if (!$(this).is(':checked')) {
-            $(this).val(false);
-           
+        else {
+            $(this).removeClass("text-dang").addClass("text-succ");
         }
     });
+
     //TogglePrettyCheckbox('#ckbtn-ck', '#ckbtn', '#ck-text', 'Spending Limit', 'Expected Income', true, '#amt-editor', "Enter goal spending limit amount", "Enter expected income amount")
     //TogglePrettyCheckbox('#allowbtn-ck', '#allowbtn', '#allow-text', 'Only I can Edit', 'Anyone Can Edit', false, null, null, null)
-    //TogglePrettyCheckbox('#typebtn-ck', '#typebtn', '#type-text', 'Expense', 'Income', false, null, null, null)
+    //TogglePrettyCheckbox('#incomebtn-ck', '#incomebtn', '#type-text', 'Expense', 'Income', false, null, null, null)
 
     //function TogglePrettyCheckbox(checkbox, button, textElement, newText1, newText0, changeEditor, editor, editorText1, editorText0) {
 
@@ -130,31 +93,59 @@
     //        }
     //    });
 
-    //$('#editView').on('click', '#typebtn', function () {
-    //    if ($('#typebtn-ck').is(':checked')) {
-    //        $('#typebtn-ck').prop('checked', false).prop('value', false);
-    //        $('#typebtn').removeClass('btn-success').addClass('btn-danger');
-    //        $('#type-text').text('Expense');
-    //    }
-    //    else {
-    //        $('#typebtn-ck').prop('checked', true).prop('value', true);
-    //        $('#typebtn').removeClass('btn-danger').addClass('btn-success');
-    //        $('#type-text').text('Income');
+   // $('#editView').on('click', '#incomebtn', function () {
+   //     if ($('#incomebtn-ck').is(':checked')) {
+   //         $('#incomebtn-ck').prop('checked', false).prop('value', false);
+            //$('#incomebtn').removeClass('btn-success').addClass('btn-danger');
+            //$('#income-text').text('Expense');
+       //}
+       //else {
+       //    $('#incomebtn-ck').prop('checked', true).prop('value', true);
+            //$('#incomebtn').removeClass('btn-danger').addClass('btn-success');
+            //$('#income-text').text('Income');
     //    }
     //});
 
+    //partial views handling
+    function AssignPartialViewHandler(divContain, divRender, target, controllerName, actionName, hasDataTag) {
+        var loadUrl = "/" + controllerName + "/" + actionName;
 
-    //colors
-    $('.balance').each(function (i) {
-        var content = parseInt($(this).text().replace('$', ''), 10);
-        var balance = parseInt(content, 10);
-        if (balance <= 0)
-        {
-            $(this).removeClass("text-succ").addClass("text-dang");
-        }
-        else {
-            $(this).removeClass("text-dang").addClass("text-succ");
-        }
+        $(divContain).on('click', target, function () {
+            $(divRender).load(loadUrl + (hasDataTag ? ('/' + $(this).data('id')) : ""));
+        })
+    }
+
+    AssignPartialViewHandler('#editView', '#editView', '.cancel-acct', 'BankAccounts', '_Create', false);
+    AssignPartialViewHandler('#tableAcct', '#editView', '.editAcct', 'BankAccounts', '_Edit', true);
+    AssignPartialViewHandler('#tableAcct', '#editView', '.deleteAcct', 'BankAccounts', '_Delete', true);
+    AssignPartialViewHandler('#editView', '#editView', '.cancel-budg', 'BudgetItems', '_Create', false);
+    AssignPartialViewHandler('#tableBudg', '#editView', '.editBudg', 'BudgetItems', '_Edit', true);
+    AssignPartialViewHandler('#tableBudg', '#editView', '.deleteBudg', 'BudgetItems', '_Delete', true)
+    AssignPartialViewHandler('#tableBudg', '#viewTrans', '.viewBudgTrans', 'BudgetItems', '_Transactions', true);
+    AssignPartialViewHandler('#accountsRender', '#editView', '.editTrans', 'Transactions', '_Edit', true);
+    AssignPartialViewHandler('#accountsRender', '#editView', '.deleteTrans', 'Transactions', '_Delete', true);
+    AssignPartialViewHandler('#editView', '#editView', '#editCat', 'Categories', '_Edit', true);
+    AssignPartialViewHandler('#editView', '#editView', '#deleteCat', 'Categories', '_Delete', true);
+
+
+
+    //manually change checkbox values (in partial views)
+    function ManualCheckbox(target) {
+        $('body').on('click', target, function () {
+            if ($(this).is(':checked')) {
+                $(this).val(true);
+
+            }
+            if (!$(this).is(':checked')) {
+                $(this).val(false);
+            }
+        });
+    }
+
+    ManualCheckbox("#incomeCk");
+    ManualCheckbox("#adminCk");
+
+    $('.delete').click(function () {
+        $('#rescindId').val($(this).data('id'));
     });
-
 });

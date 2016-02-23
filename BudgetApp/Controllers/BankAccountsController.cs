@@ -65,7 +65,7 @@ namespace BudgetApp.Controllers
                 bankAccount.HouseholdId = Convert.ToInt32(User.Identity.GetHouseholdId());
                 db.BankAccounts.Add(bankAccount);
                 db.SaveChanges();
-                var hId = User.Identity.GetHouseholdId();
+                var hId = Convert.ToInt32(User.Identity.GetHouseholdId());
                 var hh = db.Households.Find(hId);
 
 
@@ -96,6 +96,8 @@ namespace BudgetApp.Controllers
         public PartialViewResult _Edit(int? id)
         {
             BankAccount bankAccount = db.BankAccounts.Find(id);
+            var input = TempData["formInput"];
+
             return PartialView(bankAccount);
         }
 
@@ -104,16 +106,19 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name")] BankAccount bankAccount)
+        public ActionResult Edit(BankAccount bankAccount)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(bankAccount).State = EntityState.Modified;
+                db.BankAccounts.Attach(bankAccount);
+                db.Entry(bankAccount).Property("Name").IsModified = true;
+                //db.Entry(bankAccount).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            TempData["formInput"] = bankAccount;
 
-            return View(bankAccount);
+            return RedirectToAction("Index");
         }
 
         // GET: BankAccounts/_Delete/5

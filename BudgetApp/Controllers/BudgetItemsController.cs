@@ -56,13 +56,15 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,CategoryId,AmountLimit,Balance,Type,WarningId,CreatorId,AllowEdits")] BudgetItem budgetItem)
+        public ActionResult Create([Bind(Include = "Id,Name,CategoryId,AmountLimit,Balance,Income,WarningId,CreatorId,AllowEdits")] BudgetItem budgetItem, bool IsIncome, bool AllowEdits)
         {
             if (ModelState.IsValid)
             {
                 budgetItem.HouseholdId = Convert.ToInt32(User.Identity.GetHouseholdId());
                 budgetItem.Balance = 0;
                 budgetItem.CreatorId = User.Identity.GetUserId();
+                budgetItem.Income = IsIncome;
+                budgetItem.AllowEdits = AllowEdits;
 
                 db.BudgetItems.Add(budgetItem);
                 db.SaveChanges();
@@ -80,14 +82,12 @@ namespace BudgetApp.Controllers
         // GET: BudgetItems/Edit/5
         public PartialViewResult _Edit(int? id)
         {
-            
-
+            var userId = User.Identity.GetUserId();
+            var hh = userId.GetHousehold();
             BudgetItem budgetItem = db.BudgetItems.Find(id);
 
-           
-
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", budgetItem.CategoryId);
-            ViewBag.WarningId = new SelectList(db.Warnings, "Id", "WarningLevel");
+            ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name", budgetItem.CategoryId);
+            ViewBag.WarningId = new SelectList(db.Warnings, "Id", "WarningLevel", budgetItem.WarningId);
             return PartialView(budgetItem);
         }
 
@@ -96,16 +96,21 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,CategoryId,HouseholdId,CreatorId,Name,AmountLimit,Type,WarningId,AllowEdits")] BudgetItem budgetItem)
-        { 
-                if (ModelState.IsValid)
+        public ActionResult Edit([Bind(Include = "Id,CategoryId,HouseholdId,CreatorId,Name,AmountLimit,Income,WarningId,AllowEdits")] BudgetItem budgetItem, bool IsIncome, bool AllowEdits)
+        {
+            var userId = User.Identity.GetUserId();
+            var hh = userId.GetHousehold();
+
+            if (ModelState.IsValid)
                 {
+                    budgetItem.Income = IsIncome;
+                    budgetItem.AllowEdits = AllowEdits;
                     db.Entry(budgetItem).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
 
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", budgetItem.CategoryId);
+            ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name", budgetItem.CategoryId);
             ViewBag.WarningId = new SelectList(db.Warnings, "Id", "WarningLevel");
             return View(budgetItem);
         }
@@ -125,6 +130,18 @@ namespace BudgetApp.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             BudgetItem budgetItem = db.BudgetItems.Find(id);
+            var userId = User.Identity.GetUserId();
+            var hh = userId.GetHousehold();
+
+            var transactions = db.Transactions.Where(t => t.BudgetItemId == id);
+            var misc = hh.Categories.FirstOrDefault(c => c.Name == "Miscellaneous");
+
+            foreach (var trans in transactions)
+            {
+                trans.BudgetItemId = null;
+                trans.Category.Id = misc.Id;
+            }
+
             db.BudgetItems.Remove(budgetItem);
             db.SaveChanges();
             return RedirectToAction("Index");

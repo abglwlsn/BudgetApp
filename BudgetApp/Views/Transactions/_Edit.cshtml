@@ -3,20 +3,16 @@
 <div class="box-info shadow">
     <h2><strong>Edit</strong> Transaction</h2>
     <div class="row alert alert-info">
-        <div class="col-md-8">
-            <p><strong>Wait!</strong>Editing an existing transaction is not recommended. For itegrity of information, create a new reconciliation transaction to reflect refunds and changes.</p>
-        </div>
-        <div class="col-md-4">
-            <button class="cancel-trans btn btn-primary" type="button">Create New Transaction</button>
-        </div>
+            <p><strong>Wait!</strong> Editing an existing transaction is not recommended. For integrity of information, create a new reconciliation transaction to reflect refunds and changes.</p>
     </div>
     @using (Html.BeginForm("Edit", "Transactions"))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model=>model.Id)
         <div class="col-md-4">
             <div class="form-group login-input">
-                @Html.DropDownList("BankAccountId", (IEnumerable<SelectListItem>)ViewBag.BankAccountId, "Choose Account", htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("BankAccountId", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.BankAccountId, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
@@ -26,28 +22,16 @@
             <div class="form-group">
                 <label>Income?</label>
                 <div class="checkbox">
-                    @Html.CheckBox("IsIncome",new { @checked="checked", id="IncBtn" })
-                    @*@Html.EditorFor(model => model.Income)*@
+                    @Html.CheckBox("IsIncome", new { @checked="checked", id="incomeCk" })
                     @Html.ValidationMessageFor(model => model.Income, "", new { @class = "text-danger" })
+                    <!--Couldn't use EditorFor because the inherent Checkbox JS is disrupted by the dynamic nature of the page. Instead, we passed a second boolean (IsIncome) to the controller and assigned it to the property. Also manually forced a value change of the checkbox in our JS doc.-->
                 </div>
-            </div>
-                @*<button type="button" id="typebtn" class="btn btn-danger form-control"><span id="type-text">Expense</span></button>*@
-                
-                    @*<input id="typebtn-ck" type="checkbox" name="Income" value="0" class="btn btn-danger"/><span id="ck-text">Expense</span>*@
-                    @*@Html.CheckBox("IsIncome", new { value=Model.Income, @checked = "checked"})*@
-                
-                    @*<div class="checkbox">
-                        @Html.EditorFor(model => model.Income)
-                        @Html.ValidationMessageFor(model => model.Income, "", new { @class = "text-danger" })
-                    </div>*@
-                    @*<p>@Html.RadioButtonFor(m => m.Income, true) Income</p>*@
-                
-           
+            </div>                  
         </div>
         <div class="col-md-4">
             <div class="form-group">
                 <label>Budget</label>
-                @Html.DropDownList("BudgetItemId", (IEnumerable<SelectListItem>)ViewBag.BudgetItemId, "Choose Budget", htmlAttributes: new { @class = "form-control budget-item" })
+                @Html.DropDownList("BudgetItemId", null, htmlAttributes: new { @class = "form-control budget-item" })
                 @Html.ValidationMessageFor(model => model.BudgetItemId, "", new { @class = "text-danger" })
                 <div class="checkbox">
                     <input id="budgetBool" type="checkbox" />
@@ -56,7 +40,7 @@
             </div>
             <div class="form-group" id="category">
                 @*<label>Category</label>*@
-                @Html.DropDownList("CategoryId", (IEnumerable<SelectListItem>)ViewBag.CategoryId, "Choose Category", htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("CategoryId", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
@@ -78,9 +62,8 @@
                     @Html.ValidationMessageFor(model => model.Transacted, "", new { @class = "text-danger" })
                 </div>
                 <div class="pull-right form-group">
-                    <input type="submit" value="Save Changes" class="btn btn-primary" />
-                    @*<a href=@Url.Action("Index", "Transactions") class="btn btn-primary">Cancel</a>*@
-                    <button type="button" class="cancel-trans btn btn-primary" autofocus>Cancel</button>
+                    <input type="submit" value="Save Changes" class="btn btn-primary btn-sm" />
+                    <a href=@Url.Action("Index", "Transactions") class="btn btn-primary btn-sm">Cancel</a>
                 </div>
             </div>
     }

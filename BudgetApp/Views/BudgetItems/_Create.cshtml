@@ -11,17 +11,13 @@
                     @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
-                    <label>Category</label>
-                        @Html.DropDownList("CategoryId", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.DropDownList("CategoryId", null, "Choose Category", htmlAttributes: new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
-                    @*<button type="button" id="ckbtn" class="btn btn-danger form-control"><span id="ck-text">Spending Limit</span></button>*@
-                    @*<div id="ckbtn-type">
-                        <input id="ckbtn-ck" type="checkbox" name="Income" value="0" class="btn btn-danger"><span id="ck-text">Spending Limit</span>
-                    </div>*@
-                    <p>@Html.RadioButtonFor(m => m.Income, false) Expense</p>
-                    <p>@Html.RadioButtonFor(m => m.Income, true) Income</p>
+                    @Html.CheckBox("IsIncome", new { @checked = "checked", @id = "incomeCk" })
+                    <label>Goal Income?</label>
+                    @Html.ValidationMessageFor(model => model.Income, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group login-input">
                     @Html.EditorFor(model => model.AmountLimit, new { htmlAttributes = new { @class = "form-control text-input", id = "amt-editor", placeholder = "Enter budget limit" } })
@@ -34,7 +30,8 @@
                 </div>
                 <div class="form-group">
                     @*<button type="button" id="allowbtn" class="btn btn-success form-control"><span id="allow-text">Anyone Can Edit</span></button>*@
-                    <input id="allowbtn-ck" type="checkbox" name="AllowEdits" value="true" checked><span>Allow Others to Edit?</span>
+                    @Html.CheckBox("AllowEdits", new { @checked = "checked", @id = "allowCk" })
+                    <label>Allow Others to Edit?</label>
                 </div>
 
 

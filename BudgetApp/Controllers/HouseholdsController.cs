@@ -34,6 +34,8 @@ namespace BudgetApp.Controllers
             var hId = Convert.ToInt32(User.Identity.GetHouseholdId());
             var hh = db.Households.Find(hId);
 
+            ViewBag.UserId = new SelectList(hh.Users, "Id", "Name");
+
             if (hh == null)
             {
                 return RedirectToAction("Create");
@@ -67,15 +69,17 @@ namespace BudgetApp.Controllers
                 }
 
                 userId.AddSuperUser();
+                user.IsSuperUser = true;
                 userId.AddUserToAdmin();
+                user.HasAdminRights = true;
                 db.Households.Add(household);
                 db.SaveChanges();
 
                 //add standard categories to category table
+                var hh = userId.GetHousehold();
                 var categories = db.CategoryStandards.ToList();
-                db.Categories.AddRange(categories.AddStandardCategories(household));
+                categories.AddStandardCategories(hh);
 
-                user.AdminRights = true;
                 user.HouseholdId = household.Id;
                 db.SaveChanges();
 
@@ -103,11 +107,12 @@ namespace BudgetApp.Controllers
                         var user = db.Users.FirstOrDefault(u => u.Email == Iuser.Email);
 
                         user.HouseholdId = Iuser.HouseholdId;
-                        user.AdminRights = Iuser.AdminRights;
+                        user.HasAdminRights = Iuser.HasAdminRights;
+                        user.IsSuperUser = false;
 
                         db.SaveChanges();
 
-                        if (user.AdminRights)
+                        if (user.HasAdminRights)
                             user.Id.AddUserToAdmin(); 
 
                         TempData["ErrorMessage"] = "";
@@ -164,38 +169,6 @@ namespace BudgetApp.Controllers
             return View();
         }
 
-        //POST: Households/ChangeAdmin
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [AuthorizeHouseholdRequired]
-        public ActionResult ChangeAdmin(string id)
-        {
-            if (ModelState.IsValid)
-            {
-                ApplicationUser user = db.Users.Find(id);
-                ApplicationUser currentUser = db.Users.Find(User.Identity.GetUserId());
-
-                if (user != currentUser)
-                {
-                  if (user.AdminRights == true)
-                  {
-                      user.AdminRights = false;
-                        id.RemoveUserFromAdmin();
-                  }
-                  else
-                  {
-                      user.AdminRights = true;
-                        id.AddUserToAdmin();
-                  }
-
-                  db.SaveChanges();
-                  return RedirectToAction("Details", "Households", new { id = user.HouseholdId });
-                }
-            }
-            return RedirectToAction("Details", "Households");
-        }
-
-
         // GET: Households/Edit/5
         [AuthorizeHouseholdRequired]
         public ActionResult Edit(int? id)
@@ -228,6 +201,41 @@ namespace BudgetApp.Controllers
             }
             return View(household);
         }
+
+        //POST: Households/ChangeAdmin
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeHouseholdRequired]
+        public ActionResult ChangeAdmin(string id)
+        {
+            if (ModelState.IsValid)
+            {
+                ApplicationUser user = db.Users.Find(id);
+                ApplicationUser currentUser = db.Users.Find(User.Identity.GetUserId());
+
+                if (user != currentUser)
+                {
+                    if (user.HasAdminRights == true)
+                    {
+                        user.HasAdminRights = false;
+                        id.RemoveUserFromAdmin();
+                    }
+                    else
+                    {
+                        user.HasAdminRights = true;
+                        id.AddUserToAdmin();
+                    }
+
+                    db.SaveChanges();
+                    return RedirectToAction("Details", "Households", new { id = user.HouseholdId });
+                }
+            }
+            return RedirectToAction("Details", "Households");
+        }
+
+        //POST: Households/ChangeSuperUser
+        [HttpPost]
+        [ValidateAntiForgeryToken]
 
         //// GET: Households/Delete/5
         //[AuthorizeHouseholdRequired]

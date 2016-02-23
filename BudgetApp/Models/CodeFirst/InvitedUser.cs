@@ -18,7 +18,7 @@ namespace BudgetApp.Models
         [Display(Name ="Household Invite Code")]
         public string InviteCode { get; set; }
         public string InvitedBy { get; set; }
-        public bool AdminRights { get; set; }
+        public bool HasAdminRights { get; set; }
 
         public virtual Household Household { get; set; }
     }

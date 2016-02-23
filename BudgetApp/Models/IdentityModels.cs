@@ -11,8 +11,10 @@ namespace BudgetApp.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public bool AdminRights { get; set; }
+        public bool HasAdminRights { get; set; }
+        public bool IsSuperUser { get; set; }
         public int? HouseholdId { get; set; }
+        //public int? SelectedHouseholdId { get; set; }
         public virtual Household Household { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)

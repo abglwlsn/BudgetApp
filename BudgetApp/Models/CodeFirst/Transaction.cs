@@ -12,8 +12,7 @@ namespace BudgetApp.Models
         [Required]
         [Display(Name="Account Name")]
         public int BankAccountId { get; set; }
-        [Required]
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
         public int? BudgetItemId { get; set; }
         public string UserId { get; set; }
         [Required]

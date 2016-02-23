@@ -5,7 +5,7 @@
 }
 
     <h2><strong>Edit</strong> Bank Account</h2>
-    @using (Html.BeginForm("_Edit", "BankAccounts"))
+    @using (Html.BeginForm("Edit", "BankAccounts"))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })

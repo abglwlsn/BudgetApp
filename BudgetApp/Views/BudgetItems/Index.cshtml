@@ -36,11 +36,11 @@
                             <td>@item.Category.Name</td>
                             <td>$@item.Warning.WarningLevel</td>
                             <td>
-                            <button id="viewBudgTrans" class="btn btn-sm btn-primary" data-id="@item.Id" type="button"><i class="fa fa-eye"></i></button>
+                            <button class="viewBudgTrans btn btn-sm btn-primary" data-id="@item.Id" type="button"><i class="fa fa-eye"></i></button>
                             @if (item.AllowEdits==true || (item.AllowEdits != true && userId == item.CreatorId))
                             {
-                                <button id="editBudg" class="btn btn-sm btn-primary" data-id="@item.Id" type="button"><i class="fa fa-edit"></i></button>
-                                <button id="deleteBudg" class="btn btn-sm btn-danger" data-id="@item.Id" type="button"><i class="fa fa-trash"></i></button>}
+                                <button class="editBudg btn btn-sm btn-primary" data-id="@item.Id" type="button"><i class="fa fa-edit"></i></button>
+                                <button class="deleteBudg btn btn-sm btn-danger" data-id="@item.Id" type="button"><i class="fa fa-trash"></i></button>}
                             else { <i>Locked</i>}
                              </td>
 
@@ -53,15 +53,16 @@
     </div>
     @*@if(User.IsInRole("Admin"))
         {*@
-    <div class="col-md-3 box-info shadow">
-        <div id="editView">
+    <div class="col-md-3">
+        <div id="editView" class="box-info shadow">
             @Html.Action("_Create", "BudgetItems")
         </div>
     </div>
     @*}*@
 </div>
-
-<div id="viewTrans">
+<div class="row">
+    <div id="viewTrans">
+    </div>
 </div>
 
 @section Scripts {

@@ -110,11 +110,11 @@ $(document).ready(function(){
 	//DATE PICKER
 	$('.datepicker-input').datepicker();
 	//ICHECK
-	$('input').iCheck({
-	checkboxClass: 'icheckbox_minimal-grey',
-	radioClass: 'iradio_minimal-grey',
-	increaseArea: '20%' // optional
-	});
+	//$('input').iCheck({
+	//checkboxClass: 'icheckbox_minimal-grey',
+	//radioClass: 'iradio_minimal-grey',
+	//increaseArea: '20%' // optional
+	//});
 
 
 	//GALLERY

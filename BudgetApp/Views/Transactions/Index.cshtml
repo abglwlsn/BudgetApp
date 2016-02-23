@@ -14,51 +14,55 @@
     </div>
 </div>
 
-@foreach (var account in Model)
-{
-    <div class="box-info shadow">
-        <h2><strong>@account.Name</strong> <i class="fa fa-angle-right"></i> Balance: <span class="balance text-succ">$ @account.Balance</span></h2>
-        <table id="tableTrans" class="data-table compact hover table-striped">
-            <thead>
-                <tr>
-                    <th>Transaction Date</th>
-                    <th>Amount</th>
-                    <th>Type</th>
-                    <th>Category</th>
-                    <th>Budget</th>
-                    <th>Description</th>
-                    <th>Reconciled?</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var trans in account.Transactions)
-                {
+<div id="accountsRender">
+    @foreach (var account in Model)
+    {
+        <div class="box-info shadow">
+            <h2><strong>@account.Name</strong> <i class="fa fa-angle-right"></i> Balance: <span class="balance text-succ">$ @account.Balance</span></h2>
+            <table id="tableTrans" class="data-table compact hover table-striped">
+                <thead>
                     <tr>
-                        <td>@trans.Transacted.DateTime.ToShortDateString()</td>
-                        <td>@trans.Amount</td>
-                        <td>
-                            @if (trans.Income == true)
-                        { <i class="fa fa-plus"></i> }
-                        else { <i class="fa fa-minus"></i>}
-                    </td>
-                    <td>@trans.Category.Name</td>
-                    @if (trans.BudgetItem != null)
-                    {<td>@trans.BudgetItem.Name</td>}
-                    else {<td></td>}
-                    <td>@trans.Description</td>
-                    <td>
-                        @if (trans.Reconciled == true)
+                        <th>Transaction Date</th>
+                        <th>Amount</th>
+                        <th>Type</th>
+                        <th>Category</th>
+                        <th>Budget</th>
+                        <th>Description</th>
+                        <th>Reconciled?</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var trans in account.Transactions.OrderByDescending(t => t.Transacted))
+                    {
+                        <tr>
+                            <td>@trans.Transacted.DateTime.ToShortDateString()</td>
+                            <td>@trans.Amount</td>
+                            <td>
+                                @if (trans.Income == true)
+                                { <i class="fa fa-plus"></i> }
+                                else { <i class="fa fa-minus"></i>}
+                            </td>
+                            <td>@trans.Category.Name</td>
+                            @if (trans.BudgetItem != null)
+                    {
+                        <td>@trans.BudgetItem.Name</td>}
+                    else {
+                        <td></td>}
+                            <td>@trans.Description</td>
+                            <td>
+                                @if (trans.Reconciled == true)
                     { <i class="fa fa-check"></i>  }
-                </td>
-                <td>
-                    <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="detailsModal" data-id="@trans">Details</button>
-                    <button id="editTrans" type="button" class="btn btn-primary btn-xs" data-id="@trans.Id"><i class="fa fa-edit"></i></button>
-                    <button id="deleteTrans" type="button" class="btn btn-danger btn-xs" data-id="@trans.Id"><i class="fa fa-trash-o"></i></button>
-                </td>
-            </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="detailsModal" data-id="@trans.Id">Details</button>
+                                <button id="" type="button" class="editTrans btn btn-primary btn-xs" data-id="@trans.Id"><i class="fa fa-edit"></i></button>
+                                <button id="" type="button" class="deleteTrans btn btn-danger btn-xs" data-id="@trans.Id"><i class="fa fa-trash-o"></i></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
