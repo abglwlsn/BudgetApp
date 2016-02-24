@@ -4,9 +4,16 @@
 @{
     Layout = "~/Views/Shared/_AnonLayout.cshtml";
 }
-<h2>@ViewBag.Title.</h2>
-<div>
-    <p>
-        Thank you for confirming your email. Please @Html.ActionLink("Click here to log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
-    </p>
-</div>
+
+<div class="row">
+    <div class="col-md-3 full-content-large">
+        <div class="login-wrap">
+            <h2>@ViewBag.Title.</h2>
+            <div>
+                <p>
+                    Thank you for confirming your email. Please @Html.ActionLink("Click here to log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+                </p>
+            </div>
+            </div>
+        </div>
+    </div>

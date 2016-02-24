@@ -45,16 +45,9 @@ namespace BudgetApp.Migrations
                 new CategoryStandard() {Name = "Food" },
                 new CategoryStandard() {Name = "Health/Medical" },
                 new CategoryStandard() {Name = "Transportation" },
-                new CategoryStandard() {Name = "Education" },
                 new CategoryStandard() {Name = "Taxes/Fees" },
-                new CategoryStandard() {Name = "Insurance" },
                 new CategoryStandard() {Name = "Salary" },
-                new CategoryStandard() {Name = "Investments/Interest" },
-                new CategoryStandard() {Name = "Clothing" },
-                new CategoryStandard() {Name = "Pet" },
-                new CategoryStandard() {Name = "Travel" },
                 new CategoryStandard() {Name = "Hobbies/Leisure" },
-                new CategoryStandard() {Name = "Gifts/Charity" },
                 new CategoryStandard() {Name = "Miscellaneous" }
                 );
 

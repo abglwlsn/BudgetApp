@@ -160,6 +160,7 @@ namespace BudgetApp.Controllers
                 db.SaveChanges();
 
                 //set category
+                transaction.BudgetItem = budget;
                 if (transaction.BudgetItemId != null) transaction.CategoryId = transaction.BudgetItem.CategoryId;
 
                 db.Entry(transaction).State = EntityState.Modified;

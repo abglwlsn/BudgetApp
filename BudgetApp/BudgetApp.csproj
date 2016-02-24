@@ -257,6 +257,10 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\hero-sunflower-mobile.jpg" />
+    <Content Include="Images\hero-sunflower.jpg" />
+    <Content Include="Images\icon-c.png" />
+    <Content Include="Images\icon-mvc.png" />
     <Content Include="Images\logo-dark.png" />
     <Content Include="Images\logo-nest.png" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
@@ -333,8 +337,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
@@ -365,7 +367,6 @@
     <Content Include="Views\Households\Details.cshtml" />
     <Content Include="Views\Households\Edit.cshtml" />
     <Content Include="Views\Households\Index.cshtml" />
-    <Content Include="Views\InvitedUsers\Create.cshtml" />
     <Content Include="Views\Transactions\Details.cshtml" />
     <Content Include="Views\Transactions\Index.cshtml" />
     <Content Include="Site Template\fonts\glyphicons-halflings-regular.eot" />
@@ -381,14 +382,13 @@
     <Content Include="Views\BudgetItems\_Edit.cshtml" />
     <Content Include="Views\BudgetItems\_Delete.cshtml" />
     <Content Include="Views\BudgetItems\Index.cshtml" />
-    <Content Include="Views\Transactions\_Create.cshtml" />
     <Content Include="Views\Transactions\_Edit.cshtml" />
     <Content Include="Views\Transactions\_Delete.cshtml" />
     <Content Include="Views\BudgetItems\_Transactions.cshtml" />
     <Content Include="Views\Categories\_Edit.cshtml" />
     <Content Include="Views\Categories\_Delete.cshtml" />
-    <Content Include="Views\Categories\_CreateCat.cshtml" />
     <Content Include="Views\Transactions\Create.cshtml" />
+    <Content Include="Views\InvitedUsers\_Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -22,10 +22,9 @@ namespace BudgetApp.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: InvitedUsers/Create
-        public ActionResult Create()
+        public PartialViewResult _Create()
         {
-            ViewBag.HouseholdId = new SelectList(db.Households, "Id", "Name");
-            return View();
+            return PartialView();
         }
 
         // POST: InvitedUsers/Create

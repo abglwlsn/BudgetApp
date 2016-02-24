@@ -24,6 +24,11 @@ namespace BudgetApp.Controllers
         public ActionResult Index()
         {
             var hId = User.Identity.GetHouseholdId();
+            var userId = User.Identity.GetUserId();
+            var hh = userId.GetHousehold();
+
+            ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name");
+
             return View(hId);
             //return View(db.Households.ToList());
         }
@@ -95,13 +100,20 @@ namespace BudgetApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Join(string InviteCode)
         {
+            var email = User.Identity.GetUserName();
+            var Iuser = db.InvitedUsers.FirstOrDefault(u => u.InviteCode == InviteCode && u.Email == email);
+            var codeValidFrom = DateTime.Now.AddDays(-7);
+
+            if (Iuser.InvitedDate < codeValidFrom)
+            {
+                TempData["ErrorMessage"] = "Sorry, this code is no longer valid.";
+                return RedirectToAction("Create");
+            }
+
             if (ModelState.IsValid)
             {
                 if (InviteCode != null)
                 {
-                    var email = User.Identity.GetUserName();
-                    var Iuser = db.InvitedUsers.FirstOrDefault(u => u.InviteCode == InviteCode && u.Email == email);
-
                     if (Iuser != null)
                     {
                         var user = db.Users.FirstOrDefault(u => u.Email == Iuser.Email);
