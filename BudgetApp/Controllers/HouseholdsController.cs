@@ -249,33 +249,6 @@ namespace BudgetApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        //// GET: Households/Delete/5
-        //[AuthorizeHouseholdRequired]
-        //public ActionResult Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Household household = db.Households.Find(id);
-        //    if (household == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(household);
-        //}
-
-        //// POST: Households/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //[AuthorizeHouseholdRequired]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    Household household = db.Households.Find(id);
-        //    db.Households.Remove(household);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
 
         protected override void Dispose(bool disposing)
         {

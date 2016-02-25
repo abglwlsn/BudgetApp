@@ -27,21 +27,6 @@ namespace BudgetApp.Controllers
             return View(hh);
         }
 
-        // GET: BudgetItems/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            BudgetItem budgetItem = db.BudgetItems.Include("Transactions").FirstOrDefault(b=>b.Id == id);
-            if (budgetItem == null)
-            {
-                return HttpNotFound();
-            }
-            return View(budgetItem);
-        }
-
         // GET: BudgetItems/Create
         public PartialViewResult _Create()
         {
@@ -137,12 +122,9 @@ namespace BudgetApp.Controllers
             var misc = hh.Categories.FirstOrDefault(c => c.Name == "Miscellaneous");
 
             foreach (var trans in transactions)
-            {
-                trans.BudgetItemId = null;
                 trans.Category.Id = misc.Id;
-            }
 
-            db.BudgetItems.Remove(budgetItem);
+            budgetItem.IsSoftDeleted = true;
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -7,7 +7,7 @@
 }
 <div class="row">
     <div class="col-md-8">
-    <!-- USERS BOX -->
+        <!-- USERS BOX -->
         <div class="box-info shadow">
             <h2><strong>Users</strong></h2>
             <table id="tableUsers" class="data-table compact hover table-striped">
@@ -34,7 +34,7 @@
                             <td class="description">
                                 @if (Model.BudgetItems != null)
                                 {
-                                    foreach (var budget in Model.BudgetItems)
+                                    foreach (var budget in Model.BudgetItems.Where(b => b.IsSoftDeleted != true))
                                     {
                                         if (budget.CreatorId == user.Id && budget.AllowEdits != true)
                                         { <p>@budget.Name, @budget.Balance of @budget.AmountLimit </p><br />;
@@ -66,7 +66,7 @@
             </table>
         </div>
 
-    <!-- INVITED USERS BOX -->
+        <!-- INVITED USERS BOX -->
         <div id="invitedUsers" class="box-info shadow">
             <h2><strong>Invited</strong> Users<button class="invite btn btn-teal btn-float pull-right">Invite New User</button></h2>
             <div class="clearfix"></div>
@@ -101,7 +101,6 @@
             </table>
         </div>
     </div> <!-- /column-->
-
     <!-- CATEGORIES BOX -->
     <div class="col-md-4">
         <div id="catsRender" class="box-info shadow">
@@ -119,14 +118,16 @@
             <ul class="list-unstyled categories-list">
                 @foreach (var category in Model.Categories)
                 {
-                <li><strong>@category.Name</strong>
-                    <div id="category-buttons" class="text-right">
-                        <button type="button" class="editCat btn btn-teal btn-xs" data-id="@category.Id"><i class="fa fa-edit"></i></button>
-                        <button type="button" class="deleteCat btn btn-danger btn-xs" data-id="@category.Id"><i class="fa fa-trash-o"></i></button>
-                    </div>
-                </li>
+                    <li>
+                        <strong>@category.Name</strong>
+                        <div id="category-buttons" class="text-right">
+                            @if (category.Name != "Miscellaneous")
+                            {<button type="button" class="editCat btn btn-teal btn-xs" data-id="@category.Id"><i class="fa fa-edit"></i></button>
+                            <button type="button" class="deleteCat btn btn-danger btn-xs" data-id="@category.Id"><i class="fa fa-trash-o"></i></button>}
+                        </div>
+                    </li>
 
-                    }
+                }
             </ul>
         </div>
     </div>
@@ -164,7 +165,6 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
 <!-- RESCIND INVITE MODAL -->
 <div id="rescindModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog">
@@ -189,7 +189,6 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
 <!-- LEAVE HOUSEHOLD MODAL -->
 <div id="leaveModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog">
@@ -215,7 +214,7 @@
                 }
             </div>
             <div class="modal-footer">
-                
+
                 @using (Html.BeginForm("LeaveHousehold", "Households"))
                 {@Html.AntiForgeryToken()
                     <div class="form-group pull-right">
@@ -227,7 +226,6 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
 <!-- SUPER MODAL -->
 <div id="superModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog">

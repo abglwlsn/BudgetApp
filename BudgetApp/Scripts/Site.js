@@ -1,12 +1,16 @@
 ﻿$(document).ready(function () {
 
-    //datatables
-    $('.data-table').DataTable()
-    //   responsive: true
-    ;
+    window.onload = function () {
+        //datepicker
+        $('.datepicker').datepicker();
 
-    //datepicker
-    $('.datepicker').datepicker();
+        //datatables
+        $('.data-table').DataTable({
+            "order": [[0, 'desc']]
+        });
+    };
+
+
 
 
     //trigger first-visit modal with role information
@@ -103,16 +107,16 @@
     //        }
     //    });
 
-   // $('#editView').on('click', '#incomebtn', function () {
-   //     if ($('#incomebtn-ck').is(':checked')) {
-   //         $('#incomebtn-ck').prop('checked', false).prop('value', false);
-            //$('#incomebtn').removeClass('btn-teal').addClass('btn-danger');
-            //$('#income-text').text('Expense');
-       //}
-       //else {
-       //    $('#incomebtn-ck').prop('checked', true).prop('value', true);
-            //$('#incomebtn').removeClass('btn-danger').addClass('btn-teal');
-            //$('#income-text').text('Income');
+    // $('#editView').on('click', '#incomebtn', function () {
+    //     if ($('#incomebtn-ck').is(':checked')) {
+    //         $('#incomebtn-ck').prop('checked', false).prop('value', false);
+    //$('#incomebtn').removeClass('btn-teal').addClass('btn-danger');
+    //$('#income-text').text('Expense');
+    //}
+    //else {
+    //    $('#incomebtn-ck').prop('checked', true).prop('value', true);
+    //$('#incomebtn').removeClass('btn-danger').addClass('btn-teal');
+    //$('#income-text').text('Income');
     //    }
     //});
 
@@ -128,6 +132,7 @@
     AssignPartialViewHandler('#editView', '#editView', '.cancel-acct', 'BankAccounts', '_Create', false);
     AssignPartialViewHandler('#tableAcct', '#editView', '.editAcct', 'BankAccounts', '_Edit', true);
     AssignPartialViewHandler('#tableAcct', '#editView', '.deleteAcct', 'BankAccounts', '_Delete', true);
+    AssignPartialViewHandler('#tableAcct', '#viewTrans', '.viewAcctTrans', 'BankAccounts', '_Transactions', true);
     AssignPartialViewHandler('#editView', '#editView', '.cancel-budg', 'BudgetItems', '_Create', false);
     AssignPartialViewHandler('#tableBudg', '#editView', '.editBudg', 'BudgetItems', '_Edit', true);
     AssignPartialViewHandler('#tableBudg', '#editView', '.deleteBudg', 'BudgetItems', '_Delete', true)
@@ -157,15 +162,26 @@
     ManualCheckbox("#incomeCk");
     ManualCheckbox("#adminCk");
 
-    $('.delete').click(function () {
-        $('#rescindId').val($(this).data('id'));
-    });
+    //data to modals
+    function PassDataToModal(target, dataLocation) {
+        $(target).click(function () {
+            $(dataLocation).val($(this).data('id'));
+        })
+    }
 
-    $('.expel').click(function () {
-        $('#expelId').val($(this).data('id'));
-    })
+    PassDataToModal('.delete', '#rescindId');
+    PassDataToModal('.expel', '#expelId');
+    PassDataToModal('.leave', '#leaveId');
 
-    $('.leave').click(function () {
-        $('#leaveId').val($(this).data('id'));
-    })
+    //$('.delete').click(function () {
+    //    $('#rescindId').val($(this).data('id'));
+    //});
+
+    //$('.expel').click(function () {
+    //    $('#expelId').val($(this).data('id'));
+    //})
+
+    //$('.leave').click(function () {
+    //    $('#leaveId').val($(this).data('id'));
+    //})
 });

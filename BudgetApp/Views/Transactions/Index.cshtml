@@ -32,7 +32,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var trans in account.Transactions.OrderByDescending(t => t.Transacted))
+                    @foreach (var trans in account.Transactions.OrderBy(t => t.Transacted))
                     {
                         <tr>
                             <td>@trans.Transacted.DateTime.ToShortDateString()</td>

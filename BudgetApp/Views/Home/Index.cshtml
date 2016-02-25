@@ -1,4 +1,4 @@
-﻿@model BudgetApp.Models.Household
+﻿@model BudgetApp.Models.DashboardViewModel
 @{
     ViewBag.Title = "Home Page";
 }
@@ -9,43 +9,40 @@
 <div class="row">
     <div class="col-md-7">
         <div class="box-info shadow">
+            <div id="incomeDonut" style="height: 250px;" class="col-md-6"></div>
+            <div id="expenseDonut" style="height: 250px;" class="col-md-6"></div>
+        </div>
+        <div class="box-info shadow">
             <h2>Accounts Status</h2>
             <div class="row">
-                <div class="col-md-6">
-                <table class="table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>Account</th>
-                            <th>Available</th>
-                            <th>Reconciled</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var account in Model.BankAccounts)
-                        {
+                <div class="col-md-12">
+                    <table class="table-striped table-hover">
+                        <thead>
                             <tr>
-                                <td>@account.Name</td>
-                                <td class="balance">@account.Balance</td>
-                                <td>@account.ReconciledBalance</td>
+                                <th>Account</th>
+                                <th>Available</th>
+                                <th>Reconciled</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var account in Model.ReconBankAccounts)
+                            {
+                                <tr>
+                                    <td>@account.Account.Name</td>
+                                    <td class="balance">@account.Account.Balance</td>
+                                    <td>@account.ReconciledBalance</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div><!-- /iteration-->
-                <div class="col-md-6">
-                    <p>Graph: Income vs Expense (partial for all, then each account)</p>
-                </div>
-            </div>
-        </div><!-- /accounts box-->
-        <div class="box-info shadow">
-            <div class="col-md-6">Pie Chart: Categories By Expense</div>
-            <div class="col-md-6">Pie Chart: Categories By Income</div>
-        </div>
-    </div><!-- /top row-->
+            </div><!-- /accounts box-->
+        </div><!-- /top row-->
+    </div>
     <div class="col-md-5">
         <div class="box-info shadow">
             <h2>Budgets Status</h2>
-            @foreach (var budget in Model.BudgetItems)
+            @foreach (var budget in Model.BudgetList)
             {
                 var difference = budget.AmountLimit - budget.Balance;
                 var percent = (budget.Balance / budget.AmountLimit) * 100;
@@ -70,6 +67,15 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box-info shadow">
+            <div id="accountsOverviewBar" style="height: 350px;" class="col-md-12">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box-info shadow">
             <h2><strong>Unreconciled</strong> Transactions</h2>
             <table class="data-table compact hover table-striped">
                 <thead>
@@ -83,9 +89,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var account in Model.BankAccounts)
+                    @foreach (var account in Model.ReconBankAccounts)
                     {
-                        foreach (var transaction in account.Transactions)
+                        foreach (var transaction in account.Account.Transactions)
                         {
                             if (transaction.Reconciled != true)
                             {
@@ -109,3 +115,29 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $.post('@Url.Action("GetCharts", "Home")').then(function (response) {
+            new Morris.Bar({
+                element: 'accountsOverviewBar',
+                data: response.accountsOverviewBar,
+                resize: true,
+                xkey: 'label',
+                ykeys: ['income', 'expense'],
+                ymax: 150000,
+                labels: ['Income', 'Expense']
+            })
+            new Morris.Donut({
+                element: 'incomeDonut',
+                data: response.incomeDonut,
+                resize: true
+            })
+            new Morris.Donut({
+                element: 'expenseDonut',
+                data: response.expenseDonut,
+                resize: true
+            })
+        });
+    </script>
+}

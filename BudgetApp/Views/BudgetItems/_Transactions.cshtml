@@ -1,9 +1,12 @@
 ﻿@model BudgetApp.Models.BudgetItem
-<div class="row">
+<div class="col-md-12">
     <div class="box-info shadow">
         <h2>Viewing Transactions for <strong>@Model.Name</strong></h2>
-        @if (Model.Transactions != null)
+        @if (Model.Transactions.Count() == 0)
         {
+            <p>There are no transactions for this budget item.</p>
+        }
+        { 
             <table class="data-table compact hover table-striped">
                 <thead>
                     <tr>
@@ -15,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var transaction in Model.Transactions.OrderByDescending(t=>t.Transacted))
+                    @foreach (var transaction in Model.Transactions.OrderBy(t=>t.Transacted))
                     {
                         <tr>
                             <td>@transaction.BankAccount.Name</td>

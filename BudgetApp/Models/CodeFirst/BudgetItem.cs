@@ -30,6 +30,7 @@ namespace BudgetApp.Models
         public string CreatorId { get; set; }
         [Display(Name="Allow Others to Edit?")]
         public bool AllowEdits { get; set; }
+        public bool IsSoftDeleted { get; set; }
 
         public virtual Category Category { get; set; }
         public virtual Household Household { get; set; }

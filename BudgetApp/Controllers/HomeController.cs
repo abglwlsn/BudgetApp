@@ -1,6 +1,7 @@
 ﻿using BudgetApp.HelperExtensions;
 using BudgetApp.Models;
 using Microsoft.AspNet.Identity;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -13,11 +14,40 @@ namespace BudgetApp.Controllers
     [RequireHttps]
     public class HomeController : Controller
     {
+        private static ApplicationDbContext db = new ApplicationDbContext();
+
         public ActionResult Index()
         {
             var userId = User.Identity.GetUserId();
             var hh = userId.GetHousehold();
-            return View(hh);
+
+            var accountsList = (from account in db.BankAccounts.Include("Transactions")
+                                where account.IsSoftDeleted != true && account.HouseholdId == hh.Id
+                             let reconciledI = (from transaction in account.Transactions
+                                        where transaction.Reconciled == true &&
+                                        transaction.Income == true
+                                        select transaction.Amount)
+                                        .DefaultIfEmpty().Sum()
+                             let reconciledE = (from transaction in account.Transactions
+                                                where transaction.Reconciled == true &&
+                                                transaction.Income == false
+                                                select transaction.Amount)
+                                        .DefaultIfEmpty().Sum()
+                                select new ReconBankAccount
+                             {
+                                 Account = account,
+                                 ReconciledBalance = reconciledI-reconciledE,                               
+                             }).ToList();
+
+            var budgetsList = hh.BudgetItems.Where(b => b.IsSoftDeleted != true);
+
+            var model = new DashboardViewModel
+            {
+                ReconBankAccounts = accountsList,
+                BudgetList = budgetsList
+            };
+
+            return View(model);
         }
 
         public ActionResult About()
@@ -56,6 +86,78 @@ namespace BudgetApp.Controllers
                 return RedirectToAction("Login", "Account", null);
             }
         }
+
+        public ActionResult GetCharts()
+        {
+            var hh = db.Households.Find(Convert.ToInt32(User.Identity.GetHouseholdId()));
+
+            var accountsOverviewBar = (from account in hh.BankAccounts.Where(a=>a.IsSoftDeleted!=true)
+                                      let income = (from transaction in account.Transactions
+                                          .Where(t => t.Income == true &&
+                                                 t.Transacted.DateTime.Year == DateTime.Now.Year &&
+                                                 t.Transacted.DateTime.Month == DateTime.Now.Month)
+                                                    select transaction.Amount).DefaultIfEmpty().Sum()
+                                      let expense = (from trans in account.Transactions
+                                           .Where(t => t.Income == false &&
+                                                 t.Transacted.DateTime.Year == DateTime.Now.Year &&
+                                                 t.Transacted.DateTime.Month == DateTime.Now.Month)
+                                                     select trans.Amount).DefaultIfEmpty().Sum()
+                                      select new
+                                      {
+                                          label = account.Name,
+                                          income = income,
+                                          expense = expense
+                                      }).ToArray();
+
+            var expenseDonut = (from category in hh.Categories
+                                     let expense = (from transaction in category.Transactions
+                                                    where transaction.Income != true &&
+                                                    transaction.Transacted.DateTime.Year == DateTime.Now.Year &&
+                                                    transaction.Transacted.DateTime.Month == DateTime.Now.Month
+                                                    select transaction.Amount).DefaultIfEmpty().Sum()
+                                where expense > 0
+                                     select new
+                                     {
+                                         label = category.Name,
+                                         value = expense
+                                     }).ToArray();
+
+            var incomeDonut = (from category in hh.Categories
+                                    let income = (from transaction in category.Transactions
+                                                   where transaction.Income == true &&      
+                                                   transaction.Transacted.DateTime.Year == DateTime.Now.Year &&
+                                                   transaction.Transacted.DateTime.Month == DateTime.Now.Month
+                                                  select transaction.Amount).DefaultIfEmpty().Sum()
+                               where income > 0
+                                    select new
+                                    {
+                                        label = category.Name,
+                                        value = income
+                                    }).ToArray();
+
+            //            var accountsHistoryLine = from account in hh.BankAccounts.Where(a=>a.IsSoftDeleted!=true)
+            //                                      let income = (from transaction in account.Transactions
+            //    .Where(t => t.Income == true &&
+            //           t.Transacted.DateTime.Year == DateTime.Now.Year &&
+            //           t.Transacted.DateTime.Month == DateTime.Now.Month)
+            //                                                    select transaction.Amount).DefaultIfEmpty().Sum()
+
+            //riamang[1:54 PM]
+            //var monthsToDate = Enumerable.Range(1, DateTime.Today.Month)
+            //                           .Select(m => new DateTime(DateTime.Today.Year, m, 1))
+            //                           .ToList();
+
+            var allData = new
+            {
+                accountsOverviewBar = accountsOverviewBar,
+                expenseDonut = expenseDonut,
+                incomeDonut = incomeDonut
+            };
+
+            return Content(JsonConvert.SerializeObject(allData), "application/json");
+        }
+
+
 
         private ActionResult RedirectToLocal(string returnUrl)
         {

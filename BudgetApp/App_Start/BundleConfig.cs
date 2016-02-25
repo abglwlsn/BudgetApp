@@ -10,9 +10,7 @@ namespace BudgetApp
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
-                        "~/Scripts/Site.js",
                         "~/Site Template/js/jquery.slimscroll.min.js",
-                        "~/Site Template/js/morris.js",
                         "~/Site Template/js/classie.js",
                         //"~/Site Template/js/modalEffects.js",
                         "~/Site Template/js/sortable.min.js",

@@ -79,9 +79,10 @@ namespace BudgetApp.Controllers
                     Amount = bankAccount.Balance,
                     Description = "starting balance",
                     Income = true,
-                    Reconciled = true
+                    Reconciled = true,
                 };
-                bankAccount.Transactions.Add(originalTransaction);
+
+                db.Transactions.Add(originalTransaction);
                 db.SaveChanges();
 
                 return RedirectToAction("Index");
@@ -119,6 +120,13 @@ namespace BudgetApp.Controllers
             TempData["formInput"] = bankAccount;
 
             return RedirectToAction("Index");
+        }
+
+        //GET: BankAccounts/_Transactions/5/
+        public PartialViewResult _Transactions(int? id)
+        {
+            BankAccount bankAccount = db.BankAccounts.Find(id);
+            return PartialView(bankAccount);
         }
 
         // GET: BankAccounts/_Delete/5
