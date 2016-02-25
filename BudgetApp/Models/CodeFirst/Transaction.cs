@@ -26,6 +26,7 @@ namespace BudgetApp.Models
         [Required]
         public bool Income { get; set; }//how to set true to income, false to debit
         public bool Reconciled { get; set; }
+        public bool IsSoftDeleted { get; set; }
 
         public virtual BankAccount BankAccount { get; set; }
         public virtual Category Category { get; set; }

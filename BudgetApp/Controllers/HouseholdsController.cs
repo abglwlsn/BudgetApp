@@ -60,17 +60,17 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="Id, Name")]Household household)
+        public async Task<ActionResult> Create([Bind(Include = "Id, Name")]Household household)
         {
             var userId = User.Identity.GetUserId();
-            var user = db.Users.FirstOrDefault(u=>u.Id == userId);
-            
+            var user = db.Users.FirstOrDefault(u => u.Id == userId);
+
             if (ModelState.IsValid)
             {
                 if (user.HouseholdId != null)
                 {
                     ViewBag.ErrorMessage = "You can only belong to one household at a time. If you would  like to create a new household, please leave your current household.";
-                return View();
+                    return View();
                 }
 
                 userId.AddSuperUser();
@@ -104,16 +104,21 @@ namespace BudgetApp.Controllers
             var Iuser = db.InvitedUsers.FirstOrDefault(u => u.InviteCode == InviteCode && u.Email == email);
             var codeValidFrom = DateTime.Now.AddDays(-7);
 
-            if (Iuser.InvitedDate < codeValidFrom)
-            {
-                TempData["ErrorMessage"] = "Sorry, this code is no longer valid.";
-                return RedirectToAction("Create");
-            }
-
             if (ModelState.IsValid)
             {
-                if (InviteCode != null)
+                if (Iuser == null)
                 {
+                    TempData["ErrorMessage"] = "Sorry, the invite code and email do not match.";
+                    return RedirectToAction("Create");
+                }
+                else
+                {
+                    if (Iuser.InvitedDate < codeValidFrom)
+                    {
+                        TempData["ErrorMessage"] = "Sorry, this code is no longer valid.";
+                        return RedirectToAction("Create");
+                    }
+
                     if (Iuser != null)
                     {
                         var user = db.Users.FirstOrDefault(u => u.Email == Iuser.Email);
@@ -125,7 +130,7 @@ namespace BudgetApp.Controllers
                         db.SaveChanges();
 
                         if (user.HasAdminRights)
-                            user.Id.AddUserToAdmin(); 
+                            user.Id.AddUserToAdmin();
 
                         TempData["ErrorMessage"] = "";
                         db.InvitedUsers.Remove(Iuser);
@@ -133,12 +138,7 @@ namespace BudgetApp.Controllers
 
                         await ControllerContext.HttpContext.RefreshAuthentication(user);
 
-                        return RedirectToAction("Details", "Households", new { id = user.HouseholdId });
-                    }
-                    else
-                    {
-                        TempData["ErrorMessage"] = "Sorry, the invite code and email do not match.";
-                        return RedirectToAction("Create");
+                        return RedirectToAction("Index", "Home");
                     }
                 }
             }
@@ -161,10 +161,10 @@ namespace BudgetApp.Controllers
                 selectedUser.HouseholdId = null;
                 db.SaveChanges();
 
-                if (currentUser.Id==selectedUser.Id)
+                if (currentUser.Id == selectedUser.Id)
                 {
                     //delete entire household if Superuser
-                    if(User.IsInRole("SuperUser"))
+                    if (User.IsInRole("SuperUser"))
                     {
                         foreach (var user in hh.Users)
                             user.HouseholdId = null;

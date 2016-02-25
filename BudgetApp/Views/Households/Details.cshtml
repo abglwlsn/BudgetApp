@@ -21,7 +21,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @Html.Hidden("user-to-expel", "", new { @id = "user-to-expel" })
                     @foreach (var user in Model.Users)
                     {
                         <tr>
@@ -52,13 +51,13 @@
                                         {
                                             @Html.AntiForgeryToken()
                                             if (currentUserId != user.Id && user.HasAdminRights == true)
-                                            {<button type="submit" class="btn btn-teal btn-xs"><i class="fa fa-minus" style="color:#fff"></i>Admin Rights</button> }
+                                            {<button type="submit" class="btn btn-teal btn-xs">Make Admin</button> }
                                             else if (currentUserId != user.Id && user.HasAdminRights != true)
-                                            {<button type="submit" class="btn btn-teal btn-xs"><i class="fa fa-plus" style="color:#fff"></i>Admin Rights</button>}
+                                            {<button type="submit" class="btn btn-teal btn-xs">Remove Admin</button>}
                                         }
                                     }
                                     if (user.Id != currentUserId && user.IsSuperUser == false)
-                                    {<button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#expelModal" data-id="@user.Id">Expel User</button>}
+                                    {<button type="button" class="expel btn btn-danger btn-xs" data-toggle="modal" data-target="#expelModal" data-id="@user.Id">Expel</button>}
                                 }
                             </td>
                         </tr>
@@ -66,6 +65,7 @@
                 </tbody>
             </table>
         </div>
+
     <!-- INVITED USERS BOX -->
         <div id="invitedUsers" class="box-info shadow">
             <h2><strong>Invited</strong> Users<button class="invite btn btn-teal btn-float pull-right">Invite New User</button></h2>
@@ -133,9 +133,8 @@
 
 </div>
 
-@Html.Hidden("user-leaving-hh", "", new { @id = "user-leaving-hh" })
 <div class="row">
-    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#leaveModal" data-id="currentUserId">Leave Household</button>
+    <button type="button" class="leave btn btn-danger" data-toggle="modal" data-target="#leaveModal" data-id="@currentUserId">Leave Household</button>
     @if (User.IsInRole("SuperUser"))
     {<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#superModal">Assign New SuperUser</button> }
 </div>
@@ -153,14 +152,19 @@
                 <p>This user will lose all access to the household and must be invited back in order to rejoin.</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-teal" data-dismiss="modal">Close</button>
                 @using (Html.BeginForm("LeaveHousehold", "Households"))
                 {@Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-danger">Expel User</button>}
+                    <div class="form-group pull-right">
+                        <input id="expelId" type="hidden" name="id" value="" />
+                        <button type="submit" class="btn btn-danger">Expel User</button>
+                        <button type="button" class="btn btn-teal" data-dismiss="modal">Close</button>
+                    </div>
+                }
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
 <!-- RESCIND INVITE MODAL -->
 <div id="rescindModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog">
@@ -177,12 +181,15 @@
                 <button type="button" class="btn btn-teal" data-dismiss="modal">Close</button>
                 @using (Html.BeginForm("Delete", "InvitedUsers"))
                 { @Html.AntiForgeryToken()
-                    <input id="rescindId" type="hidden" name="id" value="" />
-                        <button type="submit" id="rescindInvite" class="btn btn-danger">Remove Invitation</button>}
+                    <div class="form-group pull-right">
+                        <input id="rescindId" type="hidden" name="id" value="" />
+                        <button type="submit" id="rescindInvite" class="btn btn-danger">Remove Invitation</button>
+                    </div>}
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
 <!-- LEAVE HOUSEHOLD MODAL -->
 <div id="leaveModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog">
@@ -208,14 +215,19 @@
                 }
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-teal" data-dismiss="modal">Close</button>
+                
                 @using (Html.BeginForm("LeaveHousehold", "Households"))
                 {@Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-danger">Leave Household</button>}
+                    <div class="form-group pull-right">
+                        <input id="leaveId" type="hidden" name="id" value="" />
+                        <button type="button" class="btn btn-teal" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Leave Household</button>
+                    </div>}
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
 <!-- SUPER MODAL -->
 <div id="superModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog">

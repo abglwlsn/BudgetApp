@@ -31,14 +31,9 @@ body{
     left:20%;
 }
 
-/*.full-width {
-    right: 0;
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width:100%;
-}*/
+.navbar {
+    height:50px;
+}
 
 a {
     color:#cf9c63;
@@ -163,6 +158,16 @@ h1 span {
     color:#fff;
 }
 
+#about h4 {
+    color:#737373;
+    font-family: 'Source Sans Pro', sans-serif;
+    margin:25px 0;
+}
+
+#about small {
+    margin-top:25px;
+}
+
 .text-title {
     font-family: 'Bangers', cursive;
     /*font-family: 'Source Sans Pro', sans-serif;*/
@@ -238,7 +243,6 @@ dd {
     overflow:hidden;
 }
 
-
 .progress-group .label {
     width:30%;
 }
@@ -294,6 +298,10 @@ table {
     width:100%;
 }
 
+table td {
+    vertical-align:top;
+}
+
 /*table.dataTable tbody td .description {
     text-align:left;
 }*/
@@ -311,9 +319,12 @@ img {
 
 .technologies img {
     margin:0 auto;
-    border:5px solid #f2f2f2;
+    border:5px solid #f6b302;
     width:60%;
-    max-width:200px;
+    /*padding:5px;*/
+    max-width:150px;
+    margin-top:15px;
+    margin-bottom:15px;
 }
 
 /*------------ BUTTONS ---------*/
@@ -358,6 +369,15 @@ img {
 
 .btn-float-strong {
     margin-top:-20px;
+}
+
+
+#about .btn {
+    margin:25px 0 25px 30%;
+}
+
+#tableUsers .btn {
+    margin:2px 0;
 }
 
 

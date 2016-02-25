@@ -2,7 +2,7 @@
 
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Create", "InvitedUsers"))
 {
     @Html.AntiForgeryToken()
         <p>An invite code will be emailed to the prospective user, which will be valid for seven days.</p>
@@ -22,8 +22,8 @@
             @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
         </div>
 
-        <div class="form-group pull-right">
-            <input type="submit" value="Create" class="btn btn-teal btn-float-strong" />
+        <div class="form-group pull-right btn-float-strong">
+            <input type="submit" value="Create" class="btn btn-teal" />
             <button type="button" class="cancel-invite btn btn-teal">Cancel</button>
         </div>
         <div class="clearfix"></div>

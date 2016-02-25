@@ -24,9 +24,9 @@ namespace BudgetApp.Controllers
         {
             var id = User.Identity.GetUserId();
             Household hh = id.GetHousehold();
+            var visibleAccounts = hh.BankAccounts.Where(a => a.IsSoftDeleted != true);
 
-            IEnumerable<BankAccount> bankAccounts = db.BankAccounts.Where(b=>b.HouseholdId == hh.Id);
-            return View(bankAccounts.ToList());
+            return View(visibleAccounts.OrderBy(a=>a.Name).ToList());
         }
 
         // GET: BankAccounts/Details/5
@@ -134,7 +134,8 @@ namespace BudgetApp.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             BankAccount bankAccount = db.BankAccounts.Find(id);
-            db.BankAccounts.Remove(bankAccount);
+            bankAccount.IsSoftDeleted = true;
+            //db.BankAccounts.Remove(bankAccount);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

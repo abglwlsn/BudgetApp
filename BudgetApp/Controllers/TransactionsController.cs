@@ -22,9 +22,9 @@ namespace BudgetApp.Controllers
         // GET: Transactions
         public ActionResult Index()
         {
-            var hh = db.Households.Find(Convert.ToInt32(User.Identity.GetHouseholdId())); 
-            var accounts = hh.BankAccounts;
-            return View(accounts.OrderBy(a=>a.Name).ToList());
+            var hh = db.Households.Find(Convert.ToInt32(User.Identity.GetHouseholdId()));
+            var visibleAccounts = hh.BankAccounts.Where(a => a.IsSoftDeleted != true);
+            return View(visibleAccounts.OrderBy(a=>a.Name).ToList());
         }
 
         //GET: Transactions Partial
@@ -195,9 +195,9 @@ namespace BudgetApp.Controllers
 
             //balance calculations
             account.Balance = transaction.RevertAccountBalance();
-            if (budget != null) budget.Balance = transaction.RevertBudgetBalance(); 
+            if (budget != null) budget.Balance = transaction.RevertBudgetBalance();
 
-            db.Transactions.Remove(transaction);
+            transaction.IsSoftDeleted = true;
             db.SaveChanges();
             return RedirectToAction("Index");
         }

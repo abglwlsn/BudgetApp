@@ -1,9 +1,9 @@
 ﻿$(document).ready(function () {
 
     //datatables
-    $('.data-table').DataTable(
+    $('.data-table').DataTable()
     //   responsive: true
-    );
+    ;
 
     //datepicker
     $('.datepicker').datepicker();
@@ -160,4 +160,12 @@
     $('.delete').click(function () {
         $('#rescindId').val($(this).data('id'));
     });
+
+    $('.expel').click(function () {
+        $('#expelId').val($(this).data('id'));
+    })
+
+    $('.leave').click(function () {
+        $('#leaveId').val($(this).data('id'));
+    })
 });

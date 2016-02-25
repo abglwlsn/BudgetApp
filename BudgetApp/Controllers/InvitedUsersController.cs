@@ -44,6 +44,7 @@ namespace BudgetApp.Controllers
                 invitedUser.InviteCode = Membership.GeneratePassword(10, 4);
                 invitedUser.InvitedBy = user.FirstName + " " + user.LastName;
                 invitedUser.HasAdminRights = HasAdminRights;
+                invitedUser.InvitedDate = DateTimeOffset.Now;
 
                 db.InvitedUsers.Add(invitedUser);
                 db.SaveChanges();  

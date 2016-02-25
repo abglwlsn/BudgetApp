@@ -260,6 +260,8 @@
     <Content Include="Images\hero-sunflower-mobile.jpg" />
     <Content Include="Images\hero-sunflower.jpg" />
     <Content Include="Images\icon-c.png" />
+    <Content Include="Images\icon-entity.png" />
+    <Content Include="Images\icon-javascript.png" />
     <Content Include="Images\icon-mvc.png" />
     <Content Include="Images\logo-dark.png" />
     <Content Include="Images\logo-nest.png" />
