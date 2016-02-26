@@ -29,8 +29,8 @@
                             {
                                 <tr>
                                     <td>@account.Account.Name</td>
-                                    <td class="balance">@account.Account.Balance</td>
-                                    <td>@account.ReconciledBalance</td>
+                                    <td class="balance">$ @account.Account.Balance</td>
+                                    <td class="balance">$ @account.ReconciledBalance</td>
                                 </tr>
                             }
                         </tbody>
@@ -40,7 +40,7 @@
         </div><!-- /top row-->
     </div>
     <div class="col-md-5">
-        <div class="box-info shadow">
+        <div id="budgetsDisplay" class="box-info shadow">
             <h2>Budgets Status</h2>
             @foreach (var budget in Model.BudgetList)
             {
@@ -53,11 +53,17 @@
                 {<p class="pull-right">Goal: $@budget.AmountLimit</p>}
                 else {<p class="pull-right">Limit: $@budget.AmountLimit</p>}
                     <div class="clearfix"></div>
-                    <div class="progress progress-striped active">
-                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="@percent" aria-valuemin="0" aria-valuemax="100" value=@percent>
-                            <span class="sr-only">@difference</span>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                            <span class="sr-only">40% Complete (success)</span>
                         </div>
                     </div>
+                    @*<div class="progressbar"></div>*@
+                    @*<div class="progress progress-striped active">
+                        <div class="progress-bar progress-bar-danger" value=@budget.Balance value-min="0" value-max="@budget.AmountLimit" data-value="@budget.Balance" role="progressbar" aria-valuemin="0">
+                            <span class="sr-only">@difference</span>
+                        </div>
+                    </div>*@
                 </div>
             }
         </div>
@@ -118,6 +124,11 @@
 
 @section Scripts {
     <script type="text/javascript">
+        //$(function () {
+        //    $(".progressbar").progressbar({
+        //        value: 37
+        //    });
+        //});
         $.post('@Url.Action("GetCharts", "Home")').then(function (response) {
             new Morris.Bar({
                 element: 'accountsOverviewBar',
@@ -125,18 +136,22 @@
                 resize: true,
                 xkey: 'label',
                 ykeys: ['income', 'expense'],
-                ymax: 150000,
-                labels: ['Income', 'Expense']
+                labels: ['Income', 'Expense'],
+                barColors: ['#12a114', '#d31b17']
             })
             new Morris.Donut({
                 element: 'incomeDonut',
                 data: response.incomeDonut,
-                resize: true
+                resize: true,
+                colors: ['#12a114', '#17cf1a', '#30e834', '#5eed61', '#8cf28e', '#baf7bb', '#e8fce8'],
+                formatter: function (y, data) { return '$' + y }
             })
             new Morris.Donut({
                 element: 'expenseDonut',
                 data: response.expenseDonut,
-                resize: true
+                resize: true,
+                colors: ['#d31b17', '#e83430', '#ed615e', '#f28e8c', '#f7bbba', '#fce8e8'],
+                formatter: function (y, data) { return '$' + y }
             })
         });
     </script>

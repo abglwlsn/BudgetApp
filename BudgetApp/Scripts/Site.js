@@ -1,6 +1,5 @@
 ﻿$(document).ready(function () {
 
-    window.onload = function () {
         //datepicker
         $('.datepicker').datepicker();
 
@@ -8,17 +7,11 @@
         $('.data-table').DataTable({
             "order": [[0, 'desc']]
         });
-    };
-
-
-
 
     //trigger first-visit modal with role information
     //window.onunload = function () {
     //    alert('Bye.');
     //}
-
-
 
     //disable/enable budget and category dropdowns on transaction view
     $('body').on('change', '#budgetBool', function () {
@@ -31,6 +24,26 @@
             $('.budget-item').prop('disabled', false).show('slow');
         }
     });
+
+    $('body').on('click', '.editTrans', function () {
+        $('#editView').load('/Transactions/_Edit/' + $(this).data('id'), null, function () {
+            //if ($('#BudgetItemId').disabled == "disabled") {
+                //console.log('inside disabled');
+                //$('.budget-item').hide()
+                //$('#category').show()
+                //$('#budgetBool').prop(':checked', true)
+            }
+            //console.log('in edit trans' + $('#temp').text);
+            //if ($('#temp').text == "" || $('#temp').text == null) {
+            //    console.log('in if cond');
+            //    $('.budget-item').hide()
+            //    $('.budget-item').prop('disabled', true)
+            //    $('#category').show()
+            //    $('#budgetBool').prop(':checked', true)
+            //}
+        });
+        
+    })
 
     //colors
     $('.balance').each(function (i) {
@@ -57,68 +70,76 @@
         e.preventDefault();
     });
 
-    //TogglePrettyCheckbox('#ckbtn-ck', '#ckbtn', '#ck-text', 'Spending Limit', 'Expected Income', true, '#amt-editor', "Enter goal spending limit amount", "Enter expected income amount")
-    //TogglePrettyCheckbox('#allowbtn-ck', '#allowbtn', '#allow-text', 'Only I can Edit', 'Anyone Can Edit', false, null, null, null)
-    //TogglePrettyCheckbox('#incomebtn-ck', '#incomebtn', '#type-text', 'Expense', 'Income', false, null, null, null)
 
-    //function TogglePrettyCheckbox(checkbox, button, textElement, newText1, newText0, changeEditor, editor, editorText1, editorText0) {
+    //toggle boolean buttons
+    function TogglePrettyButton(divContain, target, checkbox, textElement, textFalse, textTrue)
+    {
+        divContain = $(divContain),
+        target = $(target),
+        checkbox = $(checkbox),
+        textElement = $(textElement)
 
-    //    $('#editView').on('click', button, function () {
-    //        if ($(checkbox).is(':checked')) {
-    //            $(button).prop('checked', false).prop('value', false);
-    //            $(button).removeClass('.btn-teal').addClass('.btn-danger');
-    //            $(textElement).text(newText1);
-    //            changeEditor ? $(editor).attr("placeholder", editorText1) : "";
-    //        }
-    //        else {
-    //            $(checkbox).prop('checked', true).prop('value', true);
-    //            $(button).removeClass('.btn-danger').addClass('.btn-teal');
-    //            $(textElement).text(newText0);
-    //            changeEditor ? $(editor).attr("placeholder", editorText0) : "";
-    //        }
-    //    })
-    //};
+        divContain.on('click', target, function() {
+            if(checkbox.is(':checked')) {
+                checkbox.prop('checked', false).prop('value', false);
+                target.toggleClass('btn-success');
+                target.toggleClass('btn-danger');
+                textElement.text(textFalse)
+            }
+            else {
+                checkbox.prop('checked', true).prop('value', true);
+                target.toggleClass('btn-danger');
+                target.toggleClass('btn-success');
+                textElement.text(textTrue)
+            }
+        })
 
-    //$('#editView').on('click', '#ckbtn', function () {
-    //    if ($('#ckbtn-ck').is(':checked')) {
-    //        $('#ckbtn-ck').prop('checked', false).prop('value', false);
-    //        $('#ckbtn').removeClass('btn-teal').addClass('btn-danger');
-    //        $('#ck-text').text('Spending Limit');
-    //        $('#amt-editor').attr("placeholder", "Enter goal spending limit amount");
-    //    }
-    //    else {
-    //        $('#ckbtn-ck').prop('checked', true).prop('value', true);
-    //        $('#ckbtn').removeClass('btn-danger').addClass('btn-teal');
-    //        $('#ck-text').text('Expected Income');
-    //        $('#amt-editor').attr("placeholder", "Enter expected income amount");
-    //    }
-    //});
+    }
 
-    //$('#editView').on('click', '#allowbtn', function () {
-    //        if (!$('#allowbtn-ck').is(':checked')) {
-    //            $('#allowbtn-ck').prop('checked', true);
-    //            $('#allowbtn').removeClass('btn-danger').addClass('btn-teal');
-    //            $('#allow-text').text('Anyone Can Edit');
-    //        }
-    //        else {
-    //            $('#allowbtn-ck').prop('checked', false);
-    //            $('#allowbtn').removeClass('btn-teal').addClass('btn-danger');
-    //            $('#allow-text').text('Only I Can Edit');
-    //        }
-    //    });
+    TogglePrettyButton('#editView', '#allow-btn', '#allow-ck', '#allow-text', 'Only I Can Edit', 'Anyone Can Edit');
+    //TogglePrettyButton('#editView', '#income-btn', '#income-ck', '#income-text', 'Expense', 'Income');
+    //TogglePrettyButton('#editView', '#recon-btn', '#recon-ck', '#recon-text', 'Unreconciled', 'Reconciled');
 
-    // $('#editView').on('click', '#incomebtn', function () {
-    //     if ($('#incomebtn-ck').is(':checked')) {
-    //         $('#incomebtn-ck').prop('checked', false).prop('value', false);
-    //$('#incomebtn').removeClass('btn-teal').addClass('btn-danger');
-    //$('#income-text').text('Expense');
-    //}
-    //else {
-    //    $('#incomebtn-ck').prop('checked', true).prop('value', true);
-    //$('#incomebtn').removeClass('btn-danger').addClass('btn-teal');
-    //$('#income-text').text('Income');
-    //    }
-    //});
+    $('#editView').on('click', '#income-btn', function () {
+        if ($('#income-ck').is(':checked')) {
+            $('#income-ck').prop('checked', false).prop('value', false);
+            $('#income-btn').removeClass('btn-success').addClass('btn-danger');
+            $('#income-text').text('Expense');
+        }
+        else {
+            $('#income-ck').prop('checked', true).prop('value', true);
+            $('#income-btn').removeClass('btn-danger').addClass('btn-success');
+            $('#income-text').text('Income');
+        }
+    });
+
+    $('#editView').on('click', '#recon-btn', function () {
+        if ($('#recon-ck').is(':checked')) {
+            $('#recon-ck').prop('checked', false).prop('value', false);
+            $('#recon-btn').removeClass('btn-success').addClass('btn-danger');
+            $('#recon-text').text('UnReconciled');
+        }
+        else {
+            $('#recon-ck').prop('checked', true).prop('value', true);
+            $('#recon-btn').removeClass('btn-danger').addClass('btn-success');
+            $('#recon-text').text('Reconciled');
+        }
+    })
+
+    $('#editView').on('click', '#budget-btn', function () {
+        if ($('#budget-ck').is(':checked')) {
+            $('#budget-ck').prop('checked', false).prop('value', false);
+            $('#budget-btn').removeClass('btn-success').addClass('btn-danger');
+            $('#budget-text').text('Spending Limit');
+            $('#amt-editor').attr("placeholder", "Enter goal spending limit amount");
+        }
+        else {
+            $('#budget-ck').prop('checked', true).prop('value', true);
+            $('#budget-btn').removeClass('btn-danger').addClass('btn-success');
+            $('#budget-text').text('Expected Income');
+            $('#amt-editor').attr("placeholder", "Enter expected income");
+        }
+    });
 
     //partial views handling
     function AssignPartialViewHandler(divContain, divRender, target, controllerName, actionName, hasDataTag) {
@@ -137,7 +158,7 @@
     AssignPartialViewHandler('#tableBudg', '#editView', '.editBudg', 'BudgetItems', '_Edit', true);
     AssignPartialViewHandler('#tableBudg', '#editView', '.deleteBudg', 'BudgetItems', '_Delete', true)
     AssignPartialViewHandler('#tableBudg', '#viewTrans', '.viewBudgTrans', 'BudgetItems', '_Transactions', true);
-    AssignPartialViewHandler('#accountsRender', '#editView', '.editTrans', 'Transactions', '_Edit', true);
+    //AssignPartialViewHandler('#accountsRender', '#editView', '.editTrans', 'Transactions', '_Edit', true);
     AssignPartialViewHandler('#accountsRender', '#editView', '.deleteTrans', 'Transactions', '_Delete', true);
     AssignPartialViewHandler('#catsRender', '#editView', '.editCat', 'Categories', '_Edit', true);
     AssignPartialViewHandler('#catsRender', '#editView', '.deleteCat', 'Categories', '_Delete', true);
@@ -163,25 +184,62 @@
     ManualCheckbox("#adminCk");
 
     //data to modals
-    function PassDataToModal(target, dataLocation) {
-        $(target).click(function () {
-            $(dataLocation).val($(this).data('id'));
-        })
+    function PassIdToModal(target, dataElement) {
+        $('body').on('click', target, function () {
+            $(dataElement).val($(this).data('id'));
+        });
     }
 
-    PassDataToModal('.delete', '#rescindId');
-    PassDataToModal('.expel', '#expelId');
-    PassDataToModal('.leave', '#leaveId');
+    function PassAttributeToModal(target, dataElement, attribute) {
+        dataElement = $(dataElement)
+        $('body').on('click', target, function () {
+            if (attribute == 'income' && ($(this).data(attribute)) == "True") {
+                dataElement.text = ""
+                dataElement.html("<i class=\"fa fa-plus\"></i>")
+            }
+            else if (attribute == 'income' && ($(this).data(attribute)) == "False") {
+                dataElement.text = ""
+                dataElement.html("<i class=\"fa fa-minus\"></i>")
+            }
+            else if (attribute == 'recon' && ($(this).data(attribute)) == "True") {
+                dataElement.text = ""
+                dataElement.html("<i class=\"fa fa-check\"></i>")
+            }
+            else if (attribute == 'recon' && ($(this).data(attribute)) == "False") {
+                dataElement.text = ""
+                dataElement.html("<i class=\"fa fa-times\"></i>")
+            }
+            else {
+                dataElement.text($(this).data(attribute));
+            }
+        });
 
-    //$('.delete').click(function () {
-    //    $('#rescindId').val($(this).data('id'));
-    //});
+    }
 
-    //$('.expel').click(function () {
-    //    $('#expelId').val($(this).data('id'));
-    //})
+    PassIdToModal('.delete', '#rescindId');
+    PassIdToModal('.expel', '#expelId');
+    PassIdToModal('.leave', '#leaveId');
 
-    //$('.leave').click(function () {
-    //    $('#leaveId').val($(this).data('id'));
-    //})
+    PassAttributeToModal('.tranDetails', '#transId', 'id')
+    PassAttributeToModal('.transDetails', '#transAccount', 'account');
+    PassAttributeToModal('.transDetails', '#transCategory', 'category');
+    PassAttributeToModal('.transDetails', '#transUser', 'user');
+    PassAttributeToModal('.transDetails', '#transTransacted', 'transacted');
+    PassAttributeToModal('.transDetails', '#transEntered', 'entered');
+    PassAttributeToModal('.transDetails', '#transAmount', 'amount');
+    PassAttributeToModal('.transDetails', '#transDesc', 'desc');
+    PassAttributeToModal('.transDetails', '#transIncome', 'income');
+    PassAttributeToModal('.transDetails', '#transRecon', 'recon');
+
+    PassAttributeToModal('.transDetailsB', '#transId', 'id')
+    PassAttributeToModal('.transDetailsB', '#transAccount', 'account');
+    PassAttributeToModal('.transDetailsB', '#transBudget', 'budget');
+    PassAttributeToModal('.transDetailsB', '#transCategory', 'category');
+    PassAttributeToModal('.transDetailsB', '#transUser', 'user');
+    PassAttributeToModal('.transDetailsB', '#transTransacted', 'transacted');
+    PassAttributeToModal('.transDetailsB', '#transEntered', 'entered');
+    PassAttributeToModal('.transDetailsB', '#transAmount', 'amount');
+    PassAttributeToModal('.transDetailsB', '#transDesc', 'desc');
+    PassAttributeToModal('.transDetailsB', '#transIncome', 'income');
+    PassAttributeToModal('.transDetailsB', '#transRecon', 'recon');
 });

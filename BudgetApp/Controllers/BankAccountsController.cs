@@ -26,7 +26,30 @@ namespace BudgetApp.Controllers
             Household hh = id.GetHousehold();
             var visibleAccounts = hh.BankAccounts.Where(a => a.IsSoftDeleted != true);
 
-            return View(visibleAccounts.OrderBy(a=>a.Name).ToList());
+            var accountsList = (from account in db.BankAccounts.Include("Transactions")
+                                where account.IsSoftDeleted != true && account.HouseholdId == hh.Id
+                                let reconciledI = (from transaction in account.Transactions
+                                                   where transaction.Reconciled == true &&
+                                                   transaction.Income == true
+                                                   select transaction.Amount)
+                                           .DefaultIfEmpty().Sum()
+                                let reconciledE = (from transaction in account.Transactions
+                                                   where transaction.Reconciled == true &&
+                                                   transaction.Income == false
+                                                   select transaction.Amount)
+                                           .DefaultIfEmpty().Sum()
+                                select new ReconBankAccount
+                                {
+                                    Account = account,
+                                    ReconciledBalance = reconciledI - reconciledE,
+                                }).ToList();
+
+            var model = new ManageAccountsViewModel
+            {
+                ReconBankAccounts = accountsList,
+            };
+
+            return View(model);
         }
 
         // GET: BankAccounts/Details/5

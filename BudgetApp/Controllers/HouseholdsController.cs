@@ -39,7 +39,8 @@ namespace BudgetApp.Controllers
             var hId = Convert.ToInt32(User.Identity.GetHouseholdId());
             var hh = db.Households.Find(hId);
 
-            ViewBag.UserId = new SelectList(hh.Users, "Id", "Name");
+            ViewBag.ErrorMessage = TempData["ErrorMessage"];
+            ViewBag.UserId = new SelectList(hh.Users, "Id", "FirstName");
 
             if (hh == null)
             {
@@ -248,8 +249,35 @@ namespace BudgetApp.Controllers
         //POST: Households/ChangeSuperUser
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeSuperUser(string userId)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = db.Users.Find(userId);
+                var currentUserId = User.Identity.GetUserId();
+                var currentUser = db.Users.FirstOrDefault(u=>u.Id==currentUserId);
 
+                currentUser.IsSuperUser = false;
+                currentUserId.RemoveSuperUser();
 
+                user.IsSuperUser = true;
+                user.Id.AddSuperUser();
+                if (user.HasAdminRights!= true)
+                {
+                    user.HasAdminRights = true;
+                    user.Id.AddUserToAdmin();
+                }
+
+                db.SaveChanges();
+                await ControllerContext.HttpContext.RefreshAuthentication(user);
+
+                return RedirectToAction("Details", "Households");
+            }
+
+            TempData["ErrorMessage"] = "Sorry, something went wrong. Please contact the architect to solve this issue.";
+
+            return RedirectToAction("Details", "Households");
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

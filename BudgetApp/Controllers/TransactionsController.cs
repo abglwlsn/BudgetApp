@@ -26,31 +26,18 @@ namespace BudgetApp.Controllers
             return View(hh.BankAccounts.Where(a=>a.IsSoftDeleted!= true).OrderBy(a=>a.Name).ToList());
         }
 
-        //// GET: Transactions/Details/5
-        //public ActionResult Details(int? id)
-        //{
-        //    if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            
-        //    Transaction transaction = db.Transactions.Find(id);
-        //    if (transaction == null) return HttpNotFound();
-
-        //    return View(transaction);
-        //}
-
         // GET: Transactions/Create
         public ActionResult Create()
         {
             var userId = User.Identity.GetUserId();
             var hh = userId.GetHousehold();
 
-            ViewBag.BankAccountId = new SelectList(hh.BankAccounts.Where(a=>a.IsSoftDeleted!= true), "Id", "Name");
-            ViewBag.BudgetItemId = new SelectList(hh.BudgetItems.Where(b=>b.IsSoftDeleted!= true), "Id", "Name");
-            ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name");
+            ViewBag.BAId = new SelectList(hh.BankAccounts.Where(a=>a.IsSoftDeleted!= true), "Id", "Name");
+            ViewBag.BIId = new SelectList(hh.BudgetItems.Where(b=>b.IsSoftDeleted!= true), "Id", "Name");
+            ViewBag.CId = new SelectList(hh.Categories, "Id", "Name");
 
             return View();
         }
-
-
 
         // POST: Transactions/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -83,7 +70,8 @@ namespace BudgetApp.Controllers
                 db.SaveChanges();
 
                 //check budget warnings
-                //if (budget.AmountLimit - budget.Balance <= )
+                if (transaction.BudgetItemId != null && (budget.AmountLimit - budget.Balance <= Convert.ToDecimal(budget.Warning.WarningLevel)))
+                    { }
 
                 //finish up
                 transaction.Entered = DateTimeOffset.Now;
@@ -96,9 +84,9 @@ namespace BudgetApp.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.BankAccountId = new SelectList(hh.BankAccounts.Where(a => a.IsSoftDeleted != true), "Id", "Name");
-            ViewBag.BudgetItemId = new SelectList(hh.BudgetItems.Where(b => b.IsSoftDeleted != true), "Id", "Name");
-            ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name");
+            ViewBag.BAId = new SelectList(hh.BankAccounts.Where(a => a.IsSoftDeleted != true), "Id", "Name");
+            ViewBag.BIId = new SelectList(hh.BudgetItems.Where(b => b.IsSoftDeleted != true), "Id", "Name");
+            ViewBag.CId = new SelectList(hh.Categories, "Id", "Name");
 
             return RedirectToAction("Index");
         }
@@ -112,9 +100,9 @@ namespace BudgetApp.Controllers
 
             //TempData["OriginalAmount"] = transaction.Amount; - use .AsNoTracking() in Post instead
 
-            ViewBag.BankAccountId = new SelectList(hh.BankAccounts.Where(a => a.IsSoftDeleted != true), "Id", "Name");
-            ViewBag.BudgetItemId = new SelectList(hh.BudgetItems.Where(b => b.IsSoftDeleted != true), "Id", "Name");
-            ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name", transaction.CategoryId);
+            ViewBag.BAId = new SelectList(hh.BankAccounts.Where(a => a.IsSoftDeleted != true), "Id", "Name");
+            ViewBag.BIId = new SelectList(hh.BudgetItems.Where(b => b.IsSoftDeleted != true), "Id", "Name");
+            ViewBag.CId = new SelectList(hh.Categories, "Id", "Name", transaction.CategoryId);
 
             return PartialView(transaction);
         }

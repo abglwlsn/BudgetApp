@@ -54,7 +54,15 @@
                     { <i class="fa fa-check"></i>  }
                             </td>
                             <td>
-                                <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="detailsModal" data-id="@trans.Id" data-account="@trans.BankAccount" data-budget="@trans.BudgetItem" data-category="@trans.Category" data-user="@trans.User" data-transacted="@trans.Transacted" data-entered="@trans.Entered" data-amount="@trans.Amount" data-desc="@trans.Description" data-income="@trans.Income" data-recon="@trans.Reconciled">Details</button>
+                                @if (trans.BudgetItemId != null)
+                                {
+                                    <button type="button" class="transDetailsB btn btn-primary btn-xs" data-toggle="modal" data-target="detailsModal" data-id="@trans.Id" data-account="@trans.BankAccount.Name" data-budget="@trans.BudgetItem.Name" data-category="@trans.Category.Name" data-user="@trans.User.FirstName" data-transacted="@trans.Transacted.DateTime.ToShortDateString()" data-entered="@trans.Entered.DateTime.ToShortDateString()" data-amount="$ @trans.Amount" data-desc="@trans.Description" data-income="@trans.Income" data-recon="@trans.Reconciled"><i class="fa fa-eye"></i></button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="transDetails btn btn-primary btn-xs" data-toggle="modal" data-target="#detailsModal" data-id="@trans.Id" data-account="@trans.BankAccount.Name" data-category="@trans.Category.Name" data-user="@trans.User.FirstName" data-transacted="@trans.Transacted.DateTime.ToShortDateString()" data-entered="@trans.Entered.DateTime.ToShortDateString()" data-amount="$ @trans.Amount" data-desc="@trans.Description" data-income="@trans.Income" data-recon="@trans.Reconciled"><i class="fa fa-eye"></i></button>
+                                }
+
                                 <button type="button" class="editTrans btn btn-primary btn-xs" data-id="@trans.Id"><i class="fa fa-edit"></i></button>
                                 <button type="button" class="deleteTrans btn btn-danger btn-xs" data-id="@trans.Id"><i class="fa fa-trash-o"></i></button>
                             </td>
@@ -76,36 +84,27 @@
             </div>
             <div class="modal-body">
                 <dl class="dl-horizontal">
-                    @*<dt>Account</dt>
-    <dd>@Html.DisplayFor(model => model.BankAccount.Name)</dd>
-    @if (Model.BudgetItemId != null)
-    {
+                    <dt>Account</dt>
+    <dd id="transAccount"></dd>
         <dt>Budget</dt>
-        <dd> @Html.DisplayFor(model => model.BudgetItem.Name)</dd>
-    }
+        <dd id="transBudget"></dd>
     <dt>Category</dt>
-    <dd>@Html.DisplayFor(model => model.Category.Name)</dd>
+    <dd id="transCategory"></dd>
     <dt>Entered By</dt>
-    <dd> @Html.DisplayFor(model => model.User.FirstName)</dd>
+    <dd id="transUser"></dd>
     <dt>Transaction Date</dt>
-    <dd> @Html.DisplayFor(model => model.Transacted.DateTime.ToShortDateString())</dd>
+    <dd id="transTransacted"></dd>
     <dt>Entered</dt>
-    <dd>@Html.DisplayFor(model => model.Entered.DateTime.ToShortDateString())</dd>
+    <dd id="transEntered"></dd>
     <dt>Amount</dt>
-    <dd>$@Html.DisplayFor(model => model.Amount)</dd>
+    <dd id="transAmount"></dd>
     <dt>Description</dt>
-    <dd> @Html.DisplayFor(model => model.Description)</dd>
-    <dt> Type</dt>
-    @if (Model.Income)
-    {
-    <dd>Income</dd>}
-    else {
-    <dd>Expense</dd>}
-    <dd>@Html.DisplayFor(model => model.Income)</dd>
+    <dd id="transDesc"></dd>
+    <dt>Type</dt>
+    <dd id="transIncome">
+    </dd>
     <dt> Reconciled?</dt>
-    <dd>
-        @Html.DisplayFor(model => model.Reconciled)
-    </dd>*@
+    <dd id="transRecon"></dd>
                 </dl>
             </div>
             <div class="modal-footer">

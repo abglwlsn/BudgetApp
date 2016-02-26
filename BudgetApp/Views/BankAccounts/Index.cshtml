@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BudgetApp.Models.BankAccount>
+﻿@model BudgetApp.Models.ManageAccountsViewModel
 
 @{
     ViewBag.Title = "Index";
@@ -18,38 +18,39 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var account in Model)
+                    @foreach (var account in Model.ReconBankAccounts)
                     {
                         <tr>
-                            <td>@account.Name</td>
-                            <td class="balance text-succ">@account.Balance</td>
+                            <td>@account.Account.Name</td>
+                            <td class="balance text-succ">@account.Account.Balance</td>
                             <td class="balance text-succ">@account.ReconciledBalance</td>
-                            @*render partial view of transactions on click*@
                             <td>
-                                <button class="viewAcctTrans btn btn-xs btn-teal" data-id="@account.Id" type="button">Recent Transactions</button>
-                                @*@if (User.IsInRole("Admin"))
-                                    {*@
-                                <button id="" class="editAcct btn btn-teal btn-xs" data-id="@account.Id" type="button"><i class="fa fa-edit"></i></button>
-                                <button id="" class="deleteAcct btn btn-danger btn-xs" data-id="@account.Id" type="button"><i class="fa fa-trash"></i></button>
+                                <button class="viewAcctTrans btn btn-xs btn-teal" data-id="@account.Account.Id" type="button"><i class="fa fa-eye"></i></button>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <button id="" class="editAcct btn btn-teal btn-xs" data-id="@account.Account.Id" type="button"><i class="fa fa-edit"></i></button>
+                                    <button id="" class="deleteAcct btn btn-danger btn-xs" data-id="@account.Account.Id" type="button"><i class="fa fa-trash"></i></button>
+                                }
                             </td>
-                            @*}*@
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
     </div>
-    @*@if(User.IsInRole("Admin"))
-        {*@
+    @if(User.IsInRole("Admin"))
+        {
     <div class="col-md-5 box-info shadow">
         <div id="editView">
             @Html.Action("_Create")
         </div>
     </div>
-    @*}*@
+    }
 </div>
 <div class="row">
-    <div id="viewTrans">
+    <div class="col-md-12">
+        <div id="viewTrans">
+        </div>
     </div>
 </div>
 

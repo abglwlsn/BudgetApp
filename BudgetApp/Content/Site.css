@@ -254,10 +254,11 @@ ul {
 
 /* --- FORMS AND VERIFICATION --*/
 
-#category/*, 
-#ckbtn-ck, 
-#allowbtn-ck, 
-#typebtn-ck*/ {
+#category,
+#income-ck,
+#recon-ck,
+#allow-ck, 
+#budget-ck {
     display:none;
 }
 
@@ -382,6 +383,20 @@ img {
 
 #tableUsers .btn {
     margin:2px 0;
+}
+
+#learn-btn {
+    height:1px;
+    position:absolute;
+    top:80px;
+    left:500px;
+}
+
+#budget-btn, 
+#income-btn, 
+#allow-btn,
+#recon-btn {
+    width:100%;
 }
 
 

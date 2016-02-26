@@ -10,4 +10,9 @@ namespace BudgetApp.Models
         public IEnumerable<ReconBankAccount> ReconBankAccounts { get; set; }
         public IEnumerable<BudgetItem> BudgetList { get; set; }
     }
+
+    public class ManageAccountsViewModel
+    {
+        public IEnumerable<ReconBankAccount> ReconBankAccounts { get; set; }
+    }
 }

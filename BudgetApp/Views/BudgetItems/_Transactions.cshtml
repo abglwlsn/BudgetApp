@@ -4,9 +4,9 @@
         <h2>Viewing Transactions for <strong>@Model.Name</strong></h2>
         @if (Model.Transactions.Count() == 0)
         {
-            <p>There are no transactions for this budget item.</p>
+            <p>There are no transactions for this budget item yet.</p>
         }
-        { 
+        else { 
             <table class="data-table compact hover table-striped">
                 <thead>
                     <tr>
@@ -35,6 +35,5 @@
                 </tbody>
             </table>
         }
-        else { <p>There are no transactions for this budget yet.</p>}
     </div>
 </div>

@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="col-md-10 col-md-offset-1">
+<div id="editView" class="col-md-10 col-md-offset-1">
     <div class="box-info shadow">
         <h2><strong>Add</strong> Transaction</h2>
         @using (Html.BeginForm("Create", "Transactions"))
@@ -14,7 +14,8 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="col-md-4">
                 <div class="form-group login-input">
-                    @Html.DropDownList("BankAccountId", (IEnumerable<SelectListItem>)ViewBag.BankAccountId, "Choose Account", htmlAttributes: new { @class = "form-control" })
+                    <label>Account</label>
+                    @Html.DropDownList("BankAccountId", ViewBag.BAId as SelectList, htmlAttributes: new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.BankAccountId, "", new { @class = "text-anger" })
                 </div>
                 <div class="form-group">
@@ -22,18 +23,15 @@
                     @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
                 </div>
                 <div class="form-group">
-                    @*<button type="button" id="typebtn" class="btn btn-danger form-control"><span id="type-text">Expense</span></button>*@
-                    <div id="incomebtn">
-                        <label>Income?</label>
-                        @Html.CheckBox("IsIncome", new { @id = "incomeCk", @checked="checked", @class="btn btn-danger"})
-                        @*<input id="incomebtn-ck" type="checkbox" name="Income" class="btn btn-danger"/><span id="income-text">Expense</span>*@
-                    </div>
-                </div>
+                    <button id="income-btn" class="btn btn-danger" type="button"><span id="income-text">Expense</span></button>
+                    <input id="income-ck" type="checkbox" name="IsIncome" value="false" />
+                    @Html.ValidationMessageFor(model => model.Income, "", new { @class = "text-danger" })
+                </div>  
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label>Budget</label>
-                    @Html.DropDownList("BudgetItemId", (IEnumerable<SelectListItem>)ViewBag.BudgetItemsId, "Choose Budget", htmlAttributes: new { @class = "form-control budget-item" })
+                    @Html.DropDownList("BudgetItemId", ViewBag.BIId as SelectList, htmlAttributes: new { @class = "form-control budget-item" })
                     @Html.ValidationMessageFor(model => model.BudgetItemId, "", new { @class = "text-danger" })
                     <div class="checkbox">
                         <input id="budgetBool" type="checkbox" class="m-t-0" />
@@ -42,16 +40,21 @@
                 </div>
                 <div class="form-group" id="category">
                     <label>Category</label>
-                    @Html.DropDownList("CategoryId", (IEnumerable<SelectListItem>)ViewBag.CategoryId, "Choose Category", htmlAttributes: new { @class = "form-control" })
+                    @Html.DropDownList("CategoryId", ViewBag.CId as SelectList, htmlAttributes: new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
                 </div>
-                <div class="form-group">
+                @*<div class="form-group">
                     <div class="checkbox m-t-0" style="display:inline-block">
                         <label> Reconciled?</label>
                         @Html.CheckBox("IsReconciled", new { @class = "m-t-0", @id = "reconcileCk" })
                         @Html.ValidationMessageFor(model => model.Reconciled, "", new { @class = "text-danger" })
                     </div>
-                </div>
+                </div>*@
+                <div class="form-group">
+                    <button id="recon-btn" class="btn btn-danger" type="button"><span id="recon-text">UnReconciled</span></button>
+                    <input id="recon-ck" type="checkbox" name="IsReconciled" value="false" />
+                    @Html.ValidationMessageFor(model => model.Reconciled, "", new { @class = "text-danger" })
+                </div>  
             </div>
             <div class="col-md-4">
                 <div class="form-group">

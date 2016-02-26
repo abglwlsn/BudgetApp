@@ -41,7 +41,7 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,CategoryId,AmountLimit,Balance,Income,WarningId,CreatorId,AllowEdits")] BudgetItem budgetItem, bool IsIncome, bool AllowEdits)
+        public ActionResult Create([Bind(Include = "Id,Name,HouseholdId,CategoryId,AmountLimit,Balance,Income,WarningId,CreatorId,AllowEdits")] BudgetItem budgetItem, bool IsIncome, bool AllowEdits)
         {
             if (ModelState.IsValid)
             {
