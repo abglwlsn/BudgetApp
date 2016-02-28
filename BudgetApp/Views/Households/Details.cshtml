@@ -16,9 +16,9 @@
                     <tr>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Admin Rights?</th>
+                        @if (User.IsInRole("Admin")){<th> Admin Rights ?</th >}
                         <th>Personal Budgets</th>
-                        <th>Actions</th>
+                        @if (User.IsInRole("Admin")){<th> Actions </th >}
                     </tr>
                 </thead>
                 <tbody>
@@ -27,11 +27,14 @@
                         <tr>
                             <td>@user.FirstName @user.LastName </td>
                             <td>@user.Email</td>
-                            @if (user.HasAdminRights)
+                            @if (User.IsInRole("Admin"))
+                            {
+                            if (user.HasAdminRights)
                             {
                                 <td><i class="fa fa-check"></i></td>}
                             else {
                                 <td><i class="fa fa-times"></i></td>}
+                            }
                             <td class="description">
                                 @if (Model.BudgetItems != null)
                                 {
@@ -57,7 +60,7 @@
                                             {<button type="submit" class="btn btn-teal btn-xs">Remove Admin</button>}
                                         }
                                     }
-                                    if (user.Id != currentUserId && user.IsSuperUser == false)
+                                    if (user.Id != currentUserId || user.IsSuperUser == false)
                                     {<button type="button" class="expel btn btn-danger btn-xs" data-toggle="modal" data-target="#expelModal" data-id="@user.Id">Expel</button>}
                                 }
                             </td>
@@ -69,7 +72,8 @@
 
         <!-- INVITED USERS BOX -->
         <div id="invitedUsers" class="box-info shadow">
-            <h2><strong>Invited</strong> Users<button class="invite btn btn-teal btn-float pull-right">Invite New User</button></h2>
+            <h2><strong>Invited</strong> Users
+            @if(User.IsInRole("Admin")) {<button class="invite btn btn-teal btn-float pull-right">Invite New User</button>}</h2>
             <div class="clearfix"></div>
             <div id="inviteUserPartial"></div>
             <table id="tableIUsers" class="data-table compact hover table-striped">

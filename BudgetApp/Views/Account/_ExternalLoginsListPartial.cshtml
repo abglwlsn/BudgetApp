@@ -2,10 +2,10 @@
 @using Microsoft.Owin.Security
 
 @{
-    <div class="row">
+    <div class="row anon">
         <div class="col-md-3 full-content-large">
             <div class="login-wrap">
-                var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
+                @{var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
                 if (loginProviders.Count() == 0) {
                 <div>
                     <p>
@@ -43,3 +43,4 @@
             </div>
         </div>
     </div>
+    }

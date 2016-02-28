@@ -1,12 +1,12 @@
 ﻿$(document).ready(function () {
 
         //datepicker
-        $('.datepicker').datepicker();
+        $('.datepicker').datepicker()
 
         //datatables
         $('.data-table').DataTable({
             "order": [[0, 'desc']]
-        });
+        })
 
     //trigger first-visit modal with role information
     //window.onunload = function () {
@@ -23,16 +23,16 @@
             $('#category').hide("slow");
             $('.budget-item').prop('disabled', false).show('slow');
         }
-    });
+    })
 
-    $('body').on('click', '.editTrans', function () {
-        $('#editView').load('/Transactions/_Edit/' + $(this).data('id'), null, function () {
+    //$('body').on('click', '.editTrans', function () {
+        //$('#editView').load('/Transactions/_Edit/' + $(this).data('id'), null, function () {
             //if ($('#BudgetItemId').disabled == "disabled") {
                 //console.log('inside disabled');
                 //$('.budget-item').hide()
                 //$('#category').show()
                 //$('#budgetBool').prop(':checked', true)
-            }
+            //}
             //console.log('in edit trans' + $('#temp').text);
             //if ($('#temp').text == "" || $('#temp').text == null) {
             //    console.log('in if cond');
@@ -41,12 +41,12 @@
             //    $('#category').show()
             //    $('#budgetBool').prop(':checked', true)
             //}
-        });
+        //});
         
-    })
+    //})
 
     //colors
-    $('.balance').each(function (i) {
+    $('.balance').each(function(i) {
         var content = parseInt($(this).text().replace('$', ''), 10);
         var balance = parseInt(content, 10);
         if (balance <= 0) {
@@ -72,42 +72,55 @@
 
 
     //toggle boolean buttons
-    function TogglePrettyButton(divContain, target, checkbox, textElement, textFalse, textTrue)
-    {
-        divContain = $(divContain),
-        target = $(target),
-        checkbox = $(checkbox),
-        textElement = $(textElement)
+    //function TogglePrettyButton(divContain, target, checkbox, textElement, textFalse, textTrue)
+    //{
+    //    divContain = $(divContain),
+    //    target = $(target),
+    //    checkbox = $(checkbox),
+    //    textElement = $(textElement)
 
-        divContain.on('click', target, function() {
-            if(checkbox.is(':checked')) {
-                checkbox.prop('checked', false).prop('value', false);
-                target.toggleClass('btn-success');
-                target.toggleClass('btn-danger');
-                textElement.text(textFalse)
-            }
-            else {
-                checkbox.prop('checked', true).prop('value', true);
-                target.toggleClass('btn-danger');
-                target.toggleClass('btn-success');
-                textElement.text(textTrue)
-            }
-        })
+    //    divContain.on('click', target, function() {
+    //        if(checkbox.is(':checked')) {
+    //            checkbox.prop('checked', false).prop('value', false);
+    //            target.toggleClass('btn-success');
+    //            target.toggleClass('btn-danger');
+    //            textElement.text(textFalse)
+    //        }
+    //        else {
+    //            checkbox.prop('checked', true).prop('value', true);
+    //            target.toggleClass('btn-danger');
+    //            target.toggleClass('btn-success');
+    //            textElement.text(textTrue)
+    //        }
+    //    })
 
-    }
+    //}
 
-    TogglePrettyButton('#editView', '#allow-btn', '#allow-ck', '#allow-text', 'Only I Can Edit', 'Anyone Can Edit');
+    //TogglePrettyButton('#editView', '#allow-btn', '#allow-ck', '#allow-text', 'Only I Can Edit', 'Anyone Can Edit');
     //TogglePrettyButton('#editView', '#income-btn', '#income-ck', '#income-text', 'Expense', 'Income');
     //TogglePrettyButton('#editView', '#recon-btn', '#recon-ck', '#recon-text', 'Unreconciled', 'Reconciled');
 
+    $('#editView').on('click', '#allow-btn', function () {
+        if ($('#allow-ck').is(':checked')) {
+            $('#allow-ck').prop('checked', false).prop('false');
+            $('#allow-btn').removeClass('btn-success').addClass('btn-danger');
+            $('#allow-text').text('Only I Can Edit');
+        }
+        else {
+            $('#allow-ck').prop('checked', true).val('true');
+            $('#allow-btn').removeClass('btn-danger').addClass('btn-success');
+            $('#allow-text').text('Anyone Can Edit');
+        }
+    })
+
     $('#editView').on('click', '#income-btn', function () {
         if ($('#income-ck').is(':checked')) {
-            $('#income-ck').prop('checked', false).prop('value', false);
+            $('#income-ck').prop('checked', false).val('false');
             $('#income-btn').removeClass('btn-success').addClass('btn-danger');
             $('#income-text').text('Expense');
         }
         else {
-            $('#income-ck').prop('checked', true).prop('value', true);
+            $('#income-ck').prop('checked', true).val('true');
             $('#income-btn').removeClass('btn-danger').addClass('btn-success');
             $('#income-text').text('Income');
         }
@@ -115,12 +128,12 @@
 
     $('#editView').on('click', '#recon-btn', function () {
         if ($('#recon-ck').is(':checked')) {
-            $('#recon-ck').prop('checked', false).prop('value', false);
+            $('#recon-ck').prop('checked', false).val('false');
             $('#recon-btn').removeClass('btn-success').addClass('btn-danger');
             $('#recon-text').text('UnReconciled');
         }
         else {
-            $('#recon-ck').prop('checked', true).prop('value', true);
+            $('#recon-ck').prop('checked', true).val('true');
             $('#recon-btn').removeClass('btn-danger').addClass('btn-success');
             $('#recon-text').text('Reconciled');
         }
@@ -128,13 +141,13 @@
 
     $('#editView').on('click', '#budget-btn', function () {
         if ($('#budget-ck').is(':checked')) {
-            $('#budget-ck').prop('checked', false).prop('value', false);
+            $('#budget-ck').prop('checked', false).val('false');
             $('#budget-btn').removeClass('btn-success').addClass('btn-danger');
             $('#budget-text').text('Spending Limit');
             $('#amt-editor').attr("placeholder", "Enter goal spending limit amount");
         }
         else {
-            $('#budget-ck').prop('checked', true).prop('value', true);
+            $('#budget-ck').prop('checked', true).val('true');
             $('#budget-btn').removeClass('btn-danger').addClass('btn-success');
             $('#budget-text').text('Expected Income');
             $('#amt-editor').attr("placeholder", "Enter expected income");
@@ -158,7 +171,7 @@
     AssignPartialViewHandler('#tableBudg', '#editView', '.editBudg', 'BudgetItems', '_Edit', true);
     AssignPartialViewHandler('#tableBudg', '#editView', '.deleteBudg', 'BudgetItems', '_Delete', true)
     AssignPartialViewHandler('#tableBudg', '#viewTrans', '.viewBudgTrans', 'BudgetItems', '_Transactions', true);
-    //AssignPartialViewHandler('#accountsRender', '#editView', '.editTrans', 'Transactions', '_Edit', true);
+    AssignPartialViewHandler('#accountsRender', '#editView', '.editTrans', 'Transactions', '_Edit', true);
     AssignPartialViewHandler('#accountsRender', '#editView', '.deleteTrans', 'Transactions', '_Delete', true);
     AssignPartialViewHandler('#catsRender', '#editView', '.editCat', 'Categories', '_Edit', true);
     AssignPartialViewHandler('#catsRender', '#editView', '.deleteCat', 'Categories', '_Delete', true);
@@ -169,7 +182,7 @@
 
     //manually change checkbox values (in partial views)
     function ManualCheckbox(target) {
-        $('body').on('click', target, function () {
+        $('body').on('change', target, function () {
             if ($(this).is(':checked')) {
                 $(this).val(true);
 
@@ -180,7 +193,8 @@
         });
     }
 
-    ManualCheckbox("#incomeCk");
+    ManualCheckbox("#income-ck");
+    ManualCheckbox('#recon-ck')
     ManualCheckbox("#adminCk");
 
     //data to modals

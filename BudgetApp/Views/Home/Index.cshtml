@@ -4,14 +4,9 @@
 }
 @* DASHBOARD *@
 
-<h2>Dashboard</h2>
 
 <div class="row">
-    <div class="col-md-7">
-        <div class="box-info shadow">
-            <div id="incomeDonut" style="height: 250px;" class="col-md-6"></div>
-            <div id="expenseDonut" style="height: 250px;" class="col-md-6"></div>
-        </div>
+    <div class="col-md-8">
         <div class="box-info shadow">
             <h2>Accounts Status</h2>
             <div class="row">
@@ -38,34 +33,46 @@
                 </div><!-- /iteration-->
             </div><!-- /accounts box-->
         </div><!-- /top row-->
+        <div class="box-info shadow">
+            <div class="col-md-12">
+                <h2>Budgets Status</h2>
+                <div id="budgetsBar" style="height: 200px;"></div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-5">
-        <div id="budgetsDisplay" class="box-info shadow">
-            <h2>Budgets Status</h2>
-            @foreach (var budget in Model.BudgetList)
+    <div class="col-md-4">
+        <div class="box-info shadow">
+            <h4 class="text-center">All Income</h4>
+            <div id="incomeDonut" style="height: 200px;" class="col-md-12"></div>
+            <h4 class="text-center">All Expenses</h4>
+            <div id="expenseDonut" style="height: 200px;" class="col-md-12"></div>
+           
+
+            @*@foreach (var budget in Model.BudgetList)
             {
-                var difference = budget.AmountLimit - budget.Balance;
-                var percent = (budget.Balance / budget.AmountLimit) * 100;
+
                 <div class="progress-group">
                     <p class="progress-title pull-left">@budget.Name</p>
                     <p class="pull-left">Current: $@budget.Balance</p>
                     @if (budget.Income == true)
-                {<p class="pull-right">Goal: $@budget.AmountLimit</p>}
-                else {<p class="pull-right">Limit: $@budget.AmountLimit</p>}
+                    {<p class="pull-right">Goal: $@budget.AmountLimit</p>}
+                    else {<p class="pull-right">Limit: $@budget.AmountLimit</p>}
                     <div class="clearfix"></div>
                     <div class="progress">
                         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
                             <span class="sr-only">40% Complete (success)</span>
                         </div>
                     </div>
-                    @*<div class="progressbar"></div>*@
-                    @*<div class="progress progress-striped active">
-                        <div class="progress-bar progress-bar-danger" value=@budget.Balance value-min="0" value-max="@budget.AmountLimit" data-value="@budget.Balance" role="progressbar" aria-valuemin="0">
-                            <span class="sr-only">@difference</span>
+                    @{ var percentage = (budget.Balance / budget.AmountLimit);
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success" role="progressbar" aria-value="@percentage" aria-valuemin="0" aria-valuemax="100" style="width: @percentage" @*value-max="@budget.AmountLimit" value-min="0" value="@budget.Balance">
+                            <input type="hidden" id="balance" value="@budget.Balance" />
+                            <input type="hidden" id="limit" value="@budget.AmountLimit" />
                         </div>
-                    </div>*@
+                    </div>
+                        }
                 </div>
-            }
+            }*@
         </div>
     </div><!-- /budgets-->
 </div>
@@ -73,7 +80,8 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box-info shadow">
-            <div id="accountsOverviewBar" style="height: 350px;" class="col-md-12">
+            <h2>Expense vs. Income</h2>
+            <div id="accountsOverviewBar" style="height: 250px;" class="col-md-12">
             </div>
         </div>
     </div>
@@ -125,8 +133,9 @@
 @section Scripts {
     <script type="text/javascript">
         //$(function () {
-        //    $(".progressbar").progressbar({
-        //        value: 37
+        //    $(".progress-bar").progressbar({
+        //        //max:$('#limit').val(),
+        //        //value: $('#balance').val()
         //    });
         //});
         $.post('@Url.Action("GetCharts", "Home")').then(function (response) {
@@ -138,6 +147,17 @@
                 ykeys: ['income', 'expense'],
                 labels: ['Income', 'Expense'],
                 barColors: ['#12a114', '#d31b17']
+            })
+            new Morris.Bar({
+                element: 'budgetsBar',
+                data: response.budgetsBar,
+                resize: true,
+                xkey: 'label',
+                ykeys: ['limit', 'balance'],
+                labels: ['Budget Limit', 'Current Balance'],
+                barColors: ['#12a114', '#d31b17'],
+                xLabelMargin: 10,
+                xLabelsDiagonal:true
             })
             new Morris.Donut({
                 element: 'incomeDonut',

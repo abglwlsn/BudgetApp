@@ -16,12 +16,12 @@
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group login-input">
-                        <i class="fa fa-user overlay"></i>
-                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control text-input", placeholder = "Username" })
-                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                    </div>
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group login-input">
+                    <i class="fa fa-user overlay"></i>
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control text-input", placeholder = "Username" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                </div>
                     <div class="form-group login-input">
                         <i class="fa fa-key overlay"></i>
                         @Html.PasswordFor(m => m.Password, new { @class = "form-control text-input", placeholder = "Password" })
@@ -38,30 +38,38 @@
                             <div class="col-md-11 col-md-offset-1">
                                 <div class="checkbox">
                                     @Html.CheckBoxFor(m => m.RememberMe)
-                                    <small>@Html.LabelFor(m => m.RememberMe, new { @style = "color:#fff" })  @Html.ActionLink("Forgot your password?", "ForgotPassword", null, new { @style = "color:#fff", @class="pull-right" })</small>
+                                    <small>@Html.LabelFor(m => m.RememberMe, new { @style = "color:#fff" })  @Html.ActionLink("Forgot your password?", "ForgotPassword", null, new { @style = "color:#fff", @class = "pull-right" })</small>
                                 </div>
                             </div>
                         </div>
                     </div>
             }
-            <p>
-                <small></small>
-            </p>
+            @using (Html.BeginForm("LoginGuest", "Account"))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-teal btn-block">Sign in as Guest</button>
+            }
+            @using (Html.BeginForm("LoginGuestSuperUser", "Account"))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-teal btn-block">Sign in as Guest SuperUser</button>
+            }
+
 
         </div>
     </div>
-    </div>
+</div>
 <div class="row">
     <div id="title" class="col-md-4">
         <h4 class="pull-left" style="color:#09c3c3">Welcome to</h4>
         <h1 class="app-title text-right">Cachin' Cash</h1>
     </div>
     <div id="learn-btn">
-            <a class="section-scroll btn btn-teal btn-lg" href="#about">Learn More</a>
+        <a class="section-scroll btn btn-teal btn-lg" href="#about">Learn More</a>
     </div>
 </div>
-    <!-- End Login Page -->
+<!-- End Login Page -->
 
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-    }
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

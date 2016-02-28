@@ -251,6 +251,17 @@ ul {
     padding-bottom:25px;
 }
 
+.anon h1, 
+.anon h2, 
+.anon h3, 
+.anon h4, 
+.anon h5, 
+.anon h6, 
+.anon p, 
+.anon label {
+    color:#fff;
+}
+
 
 /* --- FORMS AND VERIFICATION --*/
 
@@ -379,6 +390,12 @@ img {
 
 #about .btn {
     margin:25px 0 25px 30%;
+}
+
+#manage .btn {
+    margin-left:12%;
+    margin-top:10px;
+    width:75%;
 }
 
 #tableUsers .btn {

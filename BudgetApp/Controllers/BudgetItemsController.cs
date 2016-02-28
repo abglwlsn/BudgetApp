@@ -30,7 +30,10 @@ namespace BudgetApp.Controllers
         // GET: BudgetItems/Create
         public PartialViewResult _Create()
         {
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name");
+            var hId = Convert.ToInt32(User.Identity.GetHouseholdId());
+            var hh = db.Households.FirstOrDefault(h => h.Id == hId);
+
+            ViewBag.CategoryId = new SelectList(db.Categories.Where(c=>c.HouseholdId == hh.Id), "Id", "Name");
             ViewBag.WarningId = new SelectList(db.Warnings, "Id", "WarningLevel");
 
             return PartialView();
@@ -41,15 +44,15 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,HouseholdId,CategoryId,AmountLimit,Balance,Income,WarningId,CreatorId,AllowEdits")] BudgetItem budgetItem, bool IsIncome, bool AllowEdits)
+        public ActionResult Create([Bind(Include = "Id,Name,HouseholdId,CategoryId,AmountLimit,Balance,Income,WarningId,CreatorId,AllowEdits")] BudgetItem budgetItem/* bool IsIncome, bool AllowEdits*/)
         {
             if (ModelState.IsValid)
             {
                 budgetItem.HouseholdId = Convert.ToInt32(User.Identity.GetHouseholdId());
                 budgetItem.Balance = 0;
                 budgetItem.CreatorId = User.Identity.GetUserId();
-                budgetItem.Income = IsIncome;
-                budgetItem.AllowEdits = AllowEdits;
+                //budgetItem.Income = IsIncome;
+                //budgetItem.AllowEdits = AllowEdits;
 
                 db.BudgetItems.Add(budgetItem);
                 db.SaveChanges();
@@ -59,7 +62,7 @@ namespace BudgetApp.Controllers
             var userId = User.Identity.GetUserId();
             var hh = userId.GetHousehold();
 
-            ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name");
+            ViewBag.CategoryId = new SelectList(db.Categories.Where(c=>c.HouseholdId == hh.Id), "Id", "Name");
             ViewBag.WarningId = new SelectList(db.Warnings, "Id", "WarningLevel");
             return RedirectToAction("Index");
         }
@@ -71,7 +74,7 @@ namespace BudgetApp.Controllers
             var hh = userId.GetHousehold();
             BudgetItem budgetItem = db.BudgetItems.Find(id);
 
-            ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name", budgetItem.CategoryId);
+            ViewBag.CategoryId = new SelectList(db.Categories.Where(c=>c.HouseholdId == hh.Id), "Id", "Name", budgetItem.CategoryId);
             ViewBag.WarningId = new SelectList(db.Warnings, "Id", "WarningLevel", budgetItem.WarningId);
             return PartialView(budgetItem);
         }
@@ -95,7 +98,7 @@ namespace BudgetApp.Controllers
                     return RedirectToAction("Index");
                 }
 
-            ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name", budgetItem.CategoryId);
+            ViewBag.CategoryId = new SelectList(db.Categories.Where(c=>c.HouseholdId == hh.Id), "Id", "Name", budgetItem.CategoryId);
             ViewBag.WarningId = new SelectList(db.Warnings, "Id", "WarningLevel");
             return View(budgetItem);
         }

@@ -109,6 +109,20 @@ namespace BudgetApp.Controllers
                                           expense = expense
                                       }).ToArray();
 
+            var budgetsBar = (from budget in hh.BudgetItems
+                              let limit = (budget.AmountLimit)
+                              let balance = (from trans in budget.Transactions
+                                             .Where(t => t.Transacted.DateTime.Year == DateTime.Now.Year &&
+                                                  t.Transacted.DateTime.Month == DateTime.Now.Month)
+                                             select trans.Amount).DefaultIfEmpty().Sum()
+                              select new
+                              {
+                                  label = budget.Name,
+                                   limit = limit,
+                                   balance = balance
+                               }).ToArray();
+
+
             var expenseDonut = (from category in hh.Categories
                                      let expense = (from transaction in category.Transactions
                                                     where transaction.Income != true &&
@@ -151,7 +165,8 @@ namespace BudgetApp.Controllers
             {
                 accountsOverviewBar = accountsOverviewBar,
                 expenseDonut = expenseDonut,
-                incomeDonut = incomeDonut
+                incomeDonut = incomeDonut,
+                budgetsBar = budgetsBar
             };
 
             return Content(JsonConvert.SerializeObject(allData), "application/json");

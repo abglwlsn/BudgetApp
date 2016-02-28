@@ -80,13 +80,14 @@ namespace BudgetApp.Controllers
                 user.HasAdminRights = true;
                 db.Households.Add(household);
                 db.SaveChanges();
+                user.HouseholdId = household.Id;
+                db.SaveChanges();
 
                 //add standard categories to category table
                 var hh = userId.GetHousehold();
                 var categories = db.CategoryStandards.ToList();
-                categories.AddStandardCategories(hh);
+                db.Categories.AddRange(categories.AddStandardCategories(hh));
 
-                user.HouseholdId = household.Id;
                 db.SaveChanges();
 
                 await ControllerContext.HttpContext.RefreshAuthentication(user);

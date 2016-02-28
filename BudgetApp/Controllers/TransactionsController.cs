@@ -32,9 +32,9 @@ namespace BudgetApp.Controllers
             var userId = User.Identity.GetUserId();
             var hh = userId.GetHousehold();
 
-            ViewBag.BAId = new SelectList(hh.BankAccounts.Where(a=>a.IsSoftDeleted!= true), "Id", "Name");
-            ViewBag.BIId = new SelectList(hh.BudgetItems.Where(b=>b.IsSoftDeleted!= true), "Id", "Name");
-            ViewBag.CId = new SelectList(hh.Categories, "Id", "Name");
+            ViewBag.BAId = new SelectList(db.BankAccounts.Where(a=>a.IsSoftDeleted!= true && a.HouseholdId == hh.Id), "Id", "Name");
+            ViewBag.BIId = new SelectList(db.BudgetItems.Where(b=>b.IsSoftDeleted!= true && b.HouseholdId == hh.Id), "Id", "Name");
+            ViewBag.CId = new SelectList(db.Categories.Where(c=>c.HouseholdId == hh.Id), "Id", "Name");
 
             return View();
         }
@@ -44,7 +44,7 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,BankAccountId,CategoryId,BudgetItemId,UserId,Transacted,Entered,Amount,Description,Income,Reconciled,")] Transaction transaction, bool IsIncome, bool IsReconciled)
+        public ActionResult Create([Bind(Include = "Id,BankAccountId,CategoryId,BudgetItemId,UserId,Transacted,Entered,Amount,Description,Income,Reconciled,")] Transaction transaction/*, bool IsIncome, bool IsReconciled*/)
         {
             var id = User.Identity.GetUserId();
             var hh = id.GetHousehold();
@@ -54,8 +54,8 @@ namespace BudgetApp.Controllers
                 var account = db.BankAccounts.FirstOrDefault(a => a.Id == transaction.BankAccountId);
                 var budget = db.BudgetItems.FirstOrDefault(b => b.Id == transaction.BudgetItemId);
 
-                transaction.Reconciled = IsReconciled;
-                transaction.Income = IsIncome;
+                //transaction.Reconciled = IsReconciled;
+                //transaction.Income = IsIncome;
 
                 //set category
                 if (transaction.BudgetItemId != null)
@@ -69,9 +69,17 @@ namespace BudgetApp.Controllers
 
                 db.SaveChanges();
 
-                //check budget warnings
-                if (transaction.BudgetItemId != null && (budget.AmountLimit - budget.Balance <= Convert.ToDecimal(budget.Warning.WarningLevel)))
-                    { }
+                //check budget warnings and send alert
+                if (transaction.BudgetItemId != null && budget.Warning.WarningLevel != "None" && (budget.AmountLimit - budget.Balance <= Convert.ToDecimal(budget.Warning.WarningLevel)))
+                {
+                    var users = db.Users.Where(u => u.HasAdminRights == true && u.HouseholdId == budget.HouseholdId);
+                    foreach (var user in users)
+                    {
+                        var es = new EmailService();
+                        var msg = user.CreateBudgetWarningMessage(budget);
+                        es.SendAsync(msg);
+                    }
+                }
 
                 //finish up
                 transaction.Entered = DateTimeOffset.Now;
@@ -84,9 +92,9 @@ namespace BudgetApp.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.BAId = new SelectList(hh.BankAccounts.Where(a => a.IsSoftDeleted != true), "Id", "Name");
-            ViewBag.BIId = new SelectList(hh.BudgetItems.Where(b => b.IsSoftDeleted != true), "Id", "Name");
-            ViewBag.CId = new SelectList(hh.Categories, "Id", "Name");
+            ViewBag.BAId = new SelectList(db.BankAccounts.Where(a => a.IsSoftDeleted != true && a.HouseholdId == hh.Id), "Id", "Name");
+            ViewBag.BIId = new SelectList(db.BudgetItems.Where(b => b.IsSoftDeleted != true && b.HouseholdId == hh.Id), "Id", "Name");
+            ViewBag.CId = new SelectList(db.Categories.Where(c=>c.HouseholdId == hh.Id), "Id", "Name");
 
             return RedirectToAction("Index");
         }
@@ -100,9 +108,9 @@ namespace BudgetApp.Controllers
 
             //TempData["OriginalAmount"] = transaction.Amount; - use .AsNoTracking() in Post instead
 
-            ViewBag.BAId = new SelectList(hh.BankAccounts.Where(a => a.IsSoftDeleted != true), "Id", "Name");
-            ViewBag.BIId = new SelectList(hh.BudgetItems.Where(b => b.IsSoftDeleted != true), "Id", "Name");
-            ViewBag.CId = new SelectList(hh.Categories, "Id", "Name", transaction.CategoryId);
+            ViewBag.BAId = new SelectList(db.BankAccounts.Where(a => a.IsSoftDeleted != true && a.HouseholdId == hh.Id), "Id", "Name");
+            ViewBag.BIId = new SelectList(db.BudgetItems.Where(b => b.IsSoftDeleted != true && b.HouseholdId == hh.Id), "Id", "Name");
+            ViewBag.CId = new SelectList(db.Categories.Where(c=>c.HouseholdId == hh.Id), "Id", "Name", transaction.CategoryId);
 
             return PartialView(transaction);
         }
@@ -112,14 +120,14 @@ namespace BudgetApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,BankAccountId,CategoryId,BudgetItemId,UserId,Transacted,Amount,Description,Income,Reconciled")] Transaction transaction, bool IsIncome)
+        public ActionResult Edit([Bind(Include = "Id,BankAccountId,CategoryId,BudgetItemId,UserId,Transacted,Amount,Description,Income,Reconciled")] Transaction transaction/*, bool IsIncome*/)
         {
             var id = User.Identity.GetUserId();
             var hh = id.GetHousehold();
 
             if (ModelState.IsValid)
             {
-                transaction.Income = IsIncome;
+                //transaction.Income = IsIncome;
                 //var original = (decimal)TempData["OriginalAmount"]; - not best practice
                 var original = db.Transactions.AsNoTracking().FirstOrDefault(t => t.Id == transaction.Id); 
                 var account = db.BankAccounts.FirstOrDefault(a => a.Id == original.BankAccountId);
@@ -140,6 +148,18 @@ namespace BudgetApp.Controllers
                 transaction.UserId = id;
                 db.SaveChanges();
 
+                //check budget warnings and send alert
+                if (transaction.BudgetItemId != null && (budget.AmountLimit - budget.Balance <= Convert.ToDecimal(budget.Warning.WarningLevel)))
+                {
+                    var users = db.Users.Where(u => u.HasAdminRights == true && u.HouseholdId == budget.HouseholdId);
+                    foreach (var user in users)
+                    {
+                        var es = new EmailService();
+                        var msg = user.CreateBudgetWarningMessage(budget);
+                        es.SendAsync(msg);
+                    }
+                }
+
                 //set category
                 transaction.BudgetItem = budget;
                 if (transaction.BudgetItemId != null) transaction.CategoryId = transaction.BudgetItem.CategoryId;
@@ -150,9 +170,9 @@ namespace BudgetApp.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.BankAccountId = new SelectList(hh.BankAccounts.Where(a => a.IsSoftDeleted != true), "Id", "Name", transaction.BankAccountId);
-            ViewBag.BudgetItemId = new SelectList(hh.BudgetItems.Where(b => b.IsSoftDeleted != true), "Id", "Name", transaction.BudgetItemId);
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", transaction.CategoryId);
+            ViewBag.BankAccountId = new SelectList(db.BankAccounts.Where(a => a.IsSoftDeleted != true && a.HouseholdId == hh.Id), "Id", "Name", transaction.BankAccountId);
+            ViewBag.BudgetItemId = new SelectList(db.BudgetItems.Where(b => b.IsSoftDeleted != true && b.HouseholdId == hh.Id), "Id", "Name", transaction.BudgetItemId);
+            ViewBag.CategoryId = new SelectList(db.Categories.Where(c=>c.HouseholdId == hh.Id), "Id", "Name", transaction.CategoryId);
 
             return RedirectToAction("Index");
         }

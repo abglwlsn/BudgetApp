@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Globalization;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -111,6 +113,93 @@ namespace BudgetApp.Controllers
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
                     return View(model);
+            }
+        }
+
+        // POST: /Account/LoginGuestSuperUser
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> LoginGuestSuperUser()
+        {
+            // This doesn't count login failures towards account lockout
+            // To enable password failures to trigger account lockout, change to shouldLockout: true
+            var user = await UserManager.FindByNameAsync("scrooge@mcduck.com");
+            if (user != null)
+            {
+                if (!await UserManager.IsEmailConfirmedAsync(user.Id))
+                {
+                    string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account-Resend");
+                    ViewBag.errorMessage = "You must have a confirmed email to log in. The confirmation link has been resent to your email account.";
+                    return View("Error");
+                }
+            }
+
+            var result = await SignInManager.PasswordSignInAsync("scrooge@mcduck.com", "Cash1!", false, shouldLockout: false);
+
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    if (user.HouseholdId != null)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Create", "Households");
+                    }
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View("Login");
+            }
+        }
+
+        // POST: /Account/LoginGuest
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> LoginGuest()
+        {
+            // This doesn't count login failures towards account lockout
+            // To enable password failures to trigger account lockout, change to shouldLockout: true
+            var user = await UserManager.FindByNameAsync("dewey@mcduck.com");
+            if (user != null)
+            {
+                if (!await UserManager.IsEmailConfirmedAsync(user.Id))
+                {
+                    string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account-Resend");
+                    ViewBag.errorMessage = "You must have a confirmed email to log in. The confirmation link has been resent to your email account.";
+                    return View("Error");
+                }
+            }
+
+            var result = await SignInManager.PasswordSignInAsync("dewey@mcduck.com", "Cash1!", false, shouldLockout: false);
+
+            //db.RemoveDuckDBChanges();
+
+            //var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            //db.Database.ExecuteSqlCommand(System.IO.File.ReadAllText(baseDirectory + "\\BudgetAppSeedDB.sql"));
+            
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    if (user.HouseholdId != null)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Create", "Households");
+                    }
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View("Login");
             }
         }
 
