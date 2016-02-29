@@ -44,18 +44,6 @@
                         </div>
                     </div>
             }
-            @using (Html.BeginForm("LoginGuest", "Account"))
-            {
-                @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-teal btn-block">Sign in as Guest</button>
-            }
-            @using (Html.BeginForm("LoginGuestSuperUser", "Account"))
-            {
-                @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-teal btn-block">Sign in as Guest SuperUser</button>
-            }
-
-
         </div>
     </div>
 </div>
@@ -63,9 +51,6 @@
     <div id="title" class="col-md-4">
         <h4 class="pull-left" style="color:#09c3c3">Welcome to</h4>
         <h1 class="app-title text-right">Cachin' Cash</h1>
-    </div>
-    <div id="learn-btn">
-        <a class="section-scroll btn btn-teal btn-lg" href="#about">Learn More</a>
     </div>
 </div>
 <!-- End Login Page -->

@@ -139,17 +139,17 @@ namespace BudgetApp.Controllers
                 account.Balance = transaction.GetAccountBalance();
 
                 if (budget != null)
-                {
                     budget.Balance = original.RevertBudgetBalance();
-                    budget = db.BudgetItems.FirstOrDefault(b => b.Id == transaction.BudgetItemId);
+
+                budget = db.BudgetItems.FirstOrDefault(b => b.Id == transaction.BudgetItemId);
+                if (budget != null)
                     budget.Balance = transaction.GetBudgetBalance();
-                }
 
                 transaction.UserId = id;
                 db.SaveChanges();
 
                 //check budget warnings and send alert
-                if (transaction.BudgetItemId != null && (budget.AmountLimit - budget.Balance <= Convert.ToDecimal(budget.Warning.WarningLevel)))
+                if (transaction.BudgetItem != null && (budget.AmountLimit - budget.Balance <= Convert.ToDecimal(budget.Warning.WarningLevel)))
                 {
                     var users = db.Users.Where(u => u.HasAdminRights == true && u.HouseholdId == budget.HouseholdId);
                     foreach (var user in users)

@@ -1,101 +1,37 @@
 ﻿@model BudgetApp.Models.Household
 @{
-    ViewBag.Title = "Home Page";
-}
-@* DASHBOARD *@
-
-<h2>Dashboard</h2>
+    Layout = "~/Views/Shared/_AnonLayout.cshtml";
+ }
 
 <div class="row">
-    <div class="col-md-7">
-        <div class="box-info shadow">
-            <h2>Accounts Status</h2>
-            <div class="row">
-                <div class="col-md-5">
-                    @foreach (var account in Model.BankAccounts)
-            {
-                        <div class="row">
-                            <div class="col-md-8">
-                                <p class="text-title-sm text-right">@account.Name</p>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="balance">@account.Balance</p>
-                            </div>
-                        </div>
-                    }
-                </div><!-- /iteration-->
-                <div class="col-md-7">
-                    <p>Graph: Income vs Expense (partial for all, then each account)</p>
-                </div>
-            </div>
-        </div><!-- /accounts box-->
-        <div class="box-info shadow">
-            <div class="col-md-6">Pie Chart: Categories By Expense</div>
-            <div class="col-md-6">Pie Chart: Categories By Income</div>
+    <div class="col-md-3 full-content-xsmall animated fadeInDownBig">
+        <div class="login-wrap">
+            <a href=@Url.Action("Login", "Account") class="btn btn-teal btn-block"><i class="fa fa-unlock"></i> Login</a>
+            <a href=@Url.Action("Register", "Account") class="btn btn-teal btn-block"><i class="fa fa-rocket fa-inverse"></i> Register</a>
         </div>
-    </div><!-- /top row-->
-    <div class="col-md-5">
-        <div class="box-info shadow">
-            <h2>Budgets Status</h2>
-            @foreach (var budget in Model.BudgetItems)
+        <div class="login-wrap">
+            @using (Html.BeginForm("LoginGuest", "Account"))
             {
-                var difference = budget.AmountLimit - budget.Balance;
-                var percent = (budget.Balance / budget.AmountLimit) * 100;
-                <div class="progress-group">
-                    <p class="progress-title pull-left">@budget.Name</p>
-                    <p class="pull-left">Current: $@budget.Balance</p>
-                    @if (budget.Income == true)
-                {<p class="pull-right">Goal: $@budget.AmountLimit</p>}
-                else {<p class="pull-right">Limit: $@budget.AmountLimit</p>}
-                    <div class="clearfix"></div>
-                    <div class="progress progress-striped active">
-                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="@percent" aria-valuemin="0" aria-valuemax="100" value=@percent>
-                            <span class="sr-only">@difference</span>
-                        </div>
-                    </div>
-                </div>
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-dark btn-block">Demo as Guest</button>
+            }
+            @using (Html.BeginForm("LoginGuestSuperUser", "Account"))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-dark btn-block">Demo as Guest SuperUser</button>
             }
         </div>
-    </div><!-- /budgets-->
-</div>
+    </div>
+    <div class="col-md-3 full-content-xsmall animated fadeInDownBig">
+        <div class="login-wrap">
+            <a class="section-scroll btn btn-teal btn-block btn-lg" href="#about">Learn More</a>
 
+        </div>
+    </div>
+</div>
 <div class="row">
-    <div class="box-info shadow">
-        <h2><strong>Unreconciled</strong> Transactions</h2>
-        <table class="data-table compact hover table-striped">
-            <thead>
-                <tr>
-                    <th>Account</th>
-                    <th>Transacted</th>
-                    <th>Type</th>
-                    <th>Amount</th>
-                    <th>Description</th>
-                    <th>Entered By</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var account in Model.BankAccounts)
-                {
-                    foreach (var transaction in account.Transactions)
-                    {
-                        if (transaction.Reconciled != true)
-                        {
-                        <tr>
-                            <td>@transaction.BankAccount.Name</td>
-                            <td>@transaction.Transacted.DateTime.ToShortDateString()</td>
-                            @if (transaction.Income)
-                            {
-                                <td><i class="fa fa-plus"></i></td>}
-                            else {
-                                <td><i class="fa fa-minus"></i></td>}
-                            <td>@transaction.Amount</td>
-                            <td>@transaction.Description</td>
-                            <td>@transaction.User.FirstName</td>
-                        </tr>
-                            }
-                        }
-                    }
-            </tbody>
-        </table>
+    <div id="title" class="col-md-4">
+        <h4 class="pull-left" style="color:#09c3c3">Welcome to</h4>
+        <h1 class="app-title text-right">Cachin' Cash</h1>
     </div>
 </div>

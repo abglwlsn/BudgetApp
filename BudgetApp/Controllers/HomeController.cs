@@ -18,36 +18,7 @@ namespace BudgetApp.Controllers
 
         public ActionResult Index()
         {
-            var userId = User.Identity.GetUserId();
-            var hh = userId.GetHousehold();
-
-            var accountsList = (from account in db.BankAccounts.Include("Transactions")
-                                where account.IsSoftDeleted != true && account.HouseholdId == hh.Id
-                             let reconciledI = (from transaction in account.Transactions
-                                        where transaction.Reconciled == true &&
-                                        transaction.Income == true
-                                        select transaction.Amount)
-                                        .DefaultIfEmpty().Sum()
-                             let reconciledE = (from transaction in account.Transactions
-                                                where transaction.Reconciled == true &&
-                                                transaction.Income == false
-                                                select transaction.Amount)
-                                        .DefaultIfEmpty().Sum()
-                                select new ReconBankAccount
-                             {
-                                 Account = account,
-                                 ReconciledBalance = reconciledI-reconciledE,                               
-                             }).ToList();
-
-            var budgetsList = hh.BudgetItems.Where(b => b.IsSoftDeleted != true);
-
-            var model = new DashboardViewModel
-            {
-                ReconBankAccounts = accountsList,
-                BudgetList = budgetsList
-            };
-
-            return View(model);
+            return View();
         }
 
         public ActionResult About()
@@ -74,7 +45,7 @@ namespace BudgetApp.Controllers
             var msg = new IdentityMessage();
             msg.Destination = ConfigurationManager.AppSettings["ContactEmail"];
             msg.Body = "You have been sent a message from " + contact.Name + " (" + contact.Email + ") with the following contents. <br/><br/>\"" + contact.Message + "\"";
-            msg.Subject = "Message received through Words from the West";
+            msg.Subject = "Message received through Cachin' Cash";
             es.SendAsync(msg);
 
             if (User.Identity.IsAuthenticated)
@@ -111,10 +82,7 @@ namespace BudgetApp.Controllers
 
             var budgetsBar = (from budget in hh.BudgetItems
                               let limit = (budget.AmountLimit)
-                              let balance = (from trans in budget.Transactions
-                                             .Where(t => t.Transacted.DateTime.Year == DateTime.Now.Year &&
-                                                  t.Transacted.DateTime.Month == DateTime.Now.Month)
-                                             select trans.Amount).DefaultIfEmpty().Sum()
+                              let balance = (budget.Balance)                                           
                               select new
                               {
                                   label = budget.Name,

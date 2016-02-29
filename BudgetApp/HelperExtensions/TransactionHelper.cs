@@ -77,7 +77,7 @@ namespace BudgetApp.HelperExtensions
             var admin = user;
             var msg = new IdentityMessage();
             msg.Destination = admin.Email; //ConfigurationManager.AppSettings["ContactEmail"];
-            msg.Body = "This is a notification from Cachin' Cash to let you know that a budget in your household - " + budget.Name + "- is getting close to its limit. You requested to be notified when the budget approached " + budget.AmountLimit + " and the balance is currently at " + budget.Balance + ". <br/><br/> To view your budget and transactions, click <a href=\"https://awest-budget.azurewebsites.net/BudgetItems/Index\">here</a>. To see your household overview, click <a href=\"https://awest-budget.azurewebsites.net/Home/Index\">here</a>. <br/><br/>Thank you for using Cachin' Cash!";
+            msg.Body = "This is a notification from Cachin' Cash to let you know that a budget in your household - " + budget.Name + "- is getting close to its limit. You requested to be notified when the budget approached " + budget.AmountLimit + " and the balance is currently at " + budget.Balance + ". <br/><br/> To view your budget and transactions, click <a href=\"https://awest-budget.azurewebsites.net/BudgetItems/Index\">here</a>. To see your household overview, click <a href=\"https://awest-budget.azurewebsites.net/Households/Index\">here</a>. <br/><br/>Thank you for using Cachin' Cash!";
             msg.Subject = "Warning! Budget Limit has been exceeded";
 
             return msg;

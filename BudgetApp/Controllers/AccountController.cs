@@ -99,7 +99,7 @@ namespace BudgetApp.Controllers
                 case SignInStatus.Success:
                     if (user.HouseholdId!=null)
                     {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Households");
                     }
                     else
                     {
@@ -142,7 +142,7 @@ namespace BudgetApp.Controllers
                 case SignInStatus.Success:
                     if (user.HouseholdId != null)
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Households");
                     }
                     else
                     {
@@ -188,7 +188,7 @@ namespace BudgetApp.Controllers
                 case SignInStatus.Success:
                     if (user.HouseholdId != null)
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Households");
                     }
                     else
                     {
@@ -518,7 +518,7 @@ namespace BudgetApp.Controllers
                     if (result.Succeeded)
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Households");
                     }
                 }
                 AddErrors(result);

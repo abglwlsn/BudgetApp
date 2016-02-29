@@ -23,14 +23,36 @@ namespace BudgetApp.Controllers
         // GET: Households
         public ActionResult Index()
         {
-            var hId = User.Identity.GetHouseholdId();
             var userId = User.Identity.GetUserId();
             var hh = userId.GetHousehold();
 
-            ViewBag.CategoryId = new SelectList(hh.Categories, "Id", "Name");
+            var accountsList = (from account in db.BankAccounts.Include("Transactions")
+                                where account.IsSoftDeleted != true && account.HouseholdId == hh.Id
+                                let reconciledI = (from transaction in account.Transactions
+                                                   where transaction.Reconciled == true &&
+                                                   transaction.Income == true
+                                                   select transaction.Amount)
+                                           .DefaultIfEmpty().Sum()
+                                let reconciledE = (from transaction in account.Transactions
+                                                   where transaction.Reconciled == true &&
+                                                   transaction.Income == false
+                                                   select transaction.Amount)
+                                           .DefaultIfEmpty().Sum()
+                                select new ReconBankAccount
+                                {
+                                    Account = account,
+                                    ReconciledBalance = reconciledI - reconciledE,
+                                }).ToList();
 
-            return View(hId);
-            //return View(db.Households.ToList());
+            var budgetsList = hh.BudgetItems.Where(b => b.IsSoftDeleted != true);
+
+            var model = new DashboardViewModel
+            {
+                ReconBankAccounts = accountsList,
+                BudgetList = budgetsList
+            };
+
+            return View(model);
         }
 
         // GET: Households/Details/5
@@ -140,7 +162,7 @@ namespace BudgetApp.Controllers
 
                         await ControllerContext.HttpContext.RefreshAuthentication(user);
 
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Households");
                     }
                 }
             }

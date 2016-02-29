@@ -8,11 +8,6 @@
             "order": [[0, 'desc']]
         })
 
-    //trigger first-visit modal with role information
-    //window.onunload = function () {
-    //    alert('Bye.');
-    //}
-
     //disable/enable budget and category dropdowns on transaction view
     $('body').on('change', '#budgetBool', function () {
         if ($(this).is(':checked')) {
@@ -93,8 +88,6 @@
     //            textElement.text(textTrue)
     //        }
     //    })
-
-    //}
 
     //TogglePrettyButton('#editView', '#allow-btn', '#allow-ck', '#allow-text', 'Only I Can Edit', 'Anyone Can Edit');
     //TogglePrettyButton('#editView', '#income-btn', '#income-ck', '#income-text', 'Expense', 'Income');

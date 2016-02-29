@@ -55,18 +55,20 @@ namespace BudgetApp.HelperExtensions
 
         public static void RemoveDuckDBChanges(this ApplicationDbContext context)
         {
-            var accounts = db.BankAccounts.Where(a => a.HouseholdId == 13);
-            var invitedUsers = db.InvitedUsers.Where(i => i.HouseholdId == 13);
-            var budgets = db.BudgetItems.Where(b => b.HouseholdId == 13);
+            var accounts = db.BankAccounts.Where(a => a.HouseholdId == 13).ToList();
+            var invitedUsers = db.InvitedUsers.Where(i => i.HouseholdId == 13).ToList();
+            var budgets = db.BudgetItems.Where(b => b.HouseholdId == 13).ToList();
             var transactions = db.Transactions.Where(t => t.BankAccountId == 25 ||
                                                     t.BankAccountId == 26 ||
                                                     t.BankAccountId == 31 ||
-                                                    t.BankAccountId == 33);
-            var categories = db.Categories.Where(c => c.HouseholdId == 13);
+                                                    t.BankAccountId == 33).ToList();
+            var categories = db.Categories.Where(c => c.HouseholdId == 13).ToList();
             var users = db.Users.Where(u => u.HouseholdId == 13);
 
             foreach (var account in accounts)
+                //context.BankAccounts.Attach(account);
                 context.BankAccounts.Remove(account);
+            //received error "The object cannot be deleted because it was not found in the ObjectStateManager" so tried attach.
 
             foreach (var iUser in invitedUsers)
                 context.InvitedUsers.Remove(iUser);

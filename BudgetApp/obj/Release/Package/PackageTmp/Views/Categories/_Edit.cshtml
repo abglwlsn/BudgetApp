@@ -1,34 +1,25 @@
 ﻿@model BudgetApp.Models.Category
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Categories"))
 {
     @Html.AntiForgeryToken()
     
-    <div class="form-horizontal">
-        <h4>Category</h4>
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
         @Html.HiddenFor(model=>model.HouseholdId)
-
+    <hr />
+    <div class="alert alert-info">
+        <p><strong>FYI:</strong> If you change the name of this category, it will move all transactions and budget items currently attached to this category into the new name.</p>
+    </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
                 @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
         </div>
-        <div class="col-md-8">
-            <p><strong>FYI:</strong> If you change the name of this category, it will retroactively change the category of all transactions currently attached to this category.</p>
+
+        <div class="form-group pull-right">
+            <input type="submit" value="Save" class="btn btn-teal" />
+            <button type="button" class="cancel-cat btn btn-teal">Cancel</button>
         </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
+        <div class="clearfix"></div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
