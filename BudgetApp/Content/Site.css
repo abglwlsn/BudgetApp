@@ -318,6 +318,10 @@ label {
     margin-top:-15px;
 }
 
+#temp {
+    display:none;
+}
+
 
 /* -------- DATA TABLE ---------*/
 

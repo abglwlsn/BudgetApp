@@ -172,6 +172,13 @@
 
     //.cancel-cat - remove partial
     //.cancel-invite - remove partial
+    $('#invitedUsers').on('click', '.cancel-invite', function () {
+        $('.removeIUser').detach();
+    })
+
+    $('#catsRender').on('click', '.cancel-cat', function () {
+        $('.removeCat').detach();
+    })
 
     //manually change checkbox values (in partial views)
     function ManualCheckbox(target) {

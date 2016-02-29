@@ -16,7 +16,7 @@
         @if (Model.BudgetItem != null)
         {
             <dt>Budget Item:</dt>
-            <dd>$@Html.DisplayFor(model => model.BudgetItem.Name)</dd>
+            <dd>@Html.DisplayFor(model => model.BudgetItem.Name)</dd>
         }
         <dt>@Html.DisplayNameFor(model => model.Transacted):</dt>
         <dd>@Model.Transacted.DateTime.ToShortDateString()</dd>
@@ -38,7 +38,7 @@
         @Html.AntiForgeryToken()
         <div class="form-actions no-color pull-right">
             <input type="submit" value="Delete" class="btn btn-danger btn-sm" />
-            <a href=@Url.Action("Index", "Transactions") class="btn btn-primary btn-sm" autofocus>Cancel</a>
+            <a href=@Url.Action("Index", "Transactions") class="btn btn-teal btn-sm" autofocus>Cancel</a>
         </div>
     }
 </div>

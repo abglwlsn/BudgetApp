@@ -42,9 +42,9 @@ namespace BudgetApp.Controllers
                                 {
                                     Account = account,
                                     ReconciledBalance = reconciledI - reconciledE,
-                                }).ToList();
+                                }).OrderBy(a=>a.Account.Name).ToList();
 
-            var budgetsList = hh.BudgetItems.Where(b => b.IsSoftDeleted != true);
+            var budgetsList = hh.BudgetItems.Where(b => b.IsSoftDeleted != true).OrderBy(b=>b.Name);
 
             var model = new DashboardViewModel
             {
