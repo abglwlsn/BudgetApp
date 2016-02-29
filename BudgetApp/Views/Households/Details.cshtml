@@ -226,7 +226,8 @@
                     <div class="form-group pull-right">
                         <input id="leaveId" type="hidden" name="id" value="" />
                         <button type="button" class="btn btn-teal" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger">Leave Household</button>
+                    @if (!User.IsInRole("SuperUser"))
+                    {<button type="submit" class="btn btn-danger">Leave Household</button>}
                     </div>}
             </div>
         </div><!-- /.modal-content -->

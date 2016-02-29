@@ -1,19 +1,20 @@
 ﻿@model BudgetApp.Models.Category
 
-@using (Html.BeginForm("Edit", "Categories"))
-{
-    @Html.AntiForgeryToken()
-    
+<div class="removeCat">
+    @using (Html.BeginForm("Edit", "Categories"))
+    {
+        @Html.AntiForgeryToken()
+
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
-        @Html.HiddenFor(model=>model.HouseholdId)
-    <hr />
-    <div class="alert alert-info">
-        <p><strong>FYI:</strong> If you change the name of this category, it will move all transactions and budget items currently attached to this category into the new name.</p>
-    </div>
+        @Html.HiddenFor(model => model.HouseholdId)
+        <hr />
+        <div class="alert alert-info">
+            <p><strong>FYI:</strong> If you change the name of this category, it will move all transactions and budget items currently attached to this category into the new name.</p>
+        </div>
         <div class="form-group">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
         </div>
 
         <div class="form-group pull-right">
@@ -21,5 +22,5 @@
             <button type="button" class="cancel-cat btn btn-teal">Cancel</button>
         </div>
         <div class="clearfix"></div>
-}
-
+    }
+</div>

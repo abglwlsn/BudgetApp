@@ -55,12 +55,12 @@
                                         {
                                             @Html.AntiForgeryToken()
                                             if (currentUserId != user.Id && user.HasAdminRights == true)
-                                            {<button type="submit" class="btn btn-teal btn-xs">Make Admin</button> }
+                                            {<button type="submit" class="btn btn-teal btn-xs">Remove Admin</button> }
                                             else if (currentUserId != user.Id && user.HasAdminRights != true)
-                                            {<button type="submit" class="btn btn-teal btn-xs">Remove Admin</button>}
+                                            {<button type="submit" class="btn btn-teal btn-xs">Make Admin</button>}
                                         }
                                     }
-                                    if (user.Id != currentUserId || user.IsSuperUser == false)
+                                    if (user.Id != currentUserId && user.IsSuperUser == false)
                                     {<button type="button" class="expel btn btn-danger btn-xs" data-toggle="modal" data-target="#expelModal" data-id="@user.Id">Expel</button>}
                                 }
                             </td>
@@ -226,7 +226,8 @@
                     <div class="form-group pull-right">
                         <input id="leaveId" type="hidden" name="id" value="" />
                         <button type="button" class="btn btn-teal" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger">Leave Household</button>
+                    @if (!User.IsInRole("SuperUser"))
+                    {<button type="submit" class="btn btn-danger">Leave Household</button>}
                     </div>}
             </div>
         </div><!-- /.modal-content -->

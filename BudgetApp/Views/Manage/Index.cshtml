@@ -1,4 +1,8 @@
 ﻿@model BudgetApp.Models.IndexViewModel
+    @using Microsoft.AspNet.Identity;
+@using BudgetApp.HelperExtensions;
+
+
 @{
     ViewBag.Title = "Manage";
 }
@@ -79,7 +83,11 @@
             }
         <hr />
             <div id="manage">
-                <a href=@Url.Action("ChangePassword") class="btn btn-dark text-center">Change Password</a><br />
+                @if (Convert.ToInt32(User.Identity.GetHouseholdId()) == 13)
+                { <button type="button" class="btn btn-dark text-center" disabled>Change Password</button>}
+                else { 
+                <a href=@Url.Action("ChangePassword") class="btn btn-dark text-center">Change Password</a>}
+                <br />
                 <a href=@Url.Action("Manage", "ManageLogins") class="btn btn-dark text-center">Manage (@Model.Logins.Count) External Logins</a>
             </div>
         <hr />
