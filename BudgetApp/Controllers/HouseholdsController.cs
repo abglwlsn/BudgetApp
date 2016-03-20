@@ -21,6 +21,7 @@ namespace BudgetApp.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Households
+        [AuthorizeHouseholdRequired]
         public ActionResult Index()
         {
             var userId = User.Identity.GetUserId();

@@ -12,6 +12,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BudgetApp.Models;
 using BudgetApp.HelperExtensions;
+using System.Configuration;
+using System.Data.SqlClient;
 
 namespace BudgetApp.Controllers
 {
@@ -28,7 +30,7 @@ namespace BudgetApp.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -40,9 +42,9 @@ namespace BudgetApp.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -97,9 +99,9 @@ namespace BudgetApp.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    if (user.HouseholdId!=null)
+                    if (user.HouseholdId != null)
                     {
-                    return RedirectToAction("Index", "Households");
+                        return RedirectToAction("Index", "Households");
                     }
                     else
                     {
@@ -122,39 +124,19 @@ namespace BudgetApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> LoginGuestSuperUser()
         {
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var user = await UserManager.FindByNameAsync("scrooge@mcduck.com");
-            if (user != null)
-            {
-                if (!await UserManager.IsEmailConfirmedAsync(user.Id))
-                {
-                    string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account-Resend");
-                    ViewBag.errorMessage = "You must have a confirmed email to log in. The confirmation link has been resent to your email account.";
-                    return View("Error");
-                }
-            }
+            //drop demo household
+            db.Database.ExecuteSqlCommand(
+                "EXEC DeleteDemoHousehold");
 
+            //restore demo household
+            db.Database.ExecuteSqlCommand(
+                "EXEC RestoreDemoHousehold");
+
+            //sign in user
+            var user = await UserManager.FindByNameAsync("scrooge@mcduck.com");
             var result = await SignInManager.PasswordSignInAsync("scrooge@mcduck.com", "Cash1!", false, shouldLockout: false);
 
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    if (user.HouseholdId != null)
-                    {
-                        return RedirectToAction("Index", "Households");
-                    }
-                    else
-                    {
-                        return RedirectToAction("Create", "Households");
-                    }
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View("Login");
-            }
+            return RedirectToAction("Index", "Households");
         }
 
         // POST: /Account/LoginGuest
@@ -163,44 +145,19 @@ namespace BudgetApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> LoginGuest()
         {
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var user = await UserManager.FindByNameAsync("dewey@mcduck.com");
-            if (user != null)
-            {
-                if (!await UserManager.IsEmailConfirmedAsync(user.Id))
-                {
-                    string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account-Resend");
-                    ViewBag.errorMessage = "You must have a confirmed email to log in. The confirmation link has been resent to your email account.";
-                    return View("Error");
-                }
-            }
+            //drop demo household
+            db.Database.ExecuteSqlCommand(
+                "EXEC DeleteDemoHousehold");
 
+            //restore demo household
+            db.Database.ExecuteSqlCommand(
+                "EXEC RestoreDemoHousehold");
+
+            // sign in user
+            var user = await UserManager.FindByNameAsync("dewey@mcduck.com");
             var result = await SignInManager.PasswordSignInAsync("dewey@mcduck.com", "Cash1!", false, shouldLockout: false);
 
-            //db.RemoveDuckDBChanges();
-
-            //var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            //db.Database.ExecuteSqlCommand(System.IO.File.ReadAllText(baseDirectory + "\\BudgetAppSeedDB.sql"));
-            
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    if (user.HouseholdId != null)
-                    {
-                        return RedirectToAction("Index", "Households");
-                    }
-                    else
-                    {
-                        return RedirectToAction("Create", "Households");
-                    }
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View("Login");
-            }
+            return RedirectToAction("Index", "Households");
         }
 
         //
@@ -232,7 +189,7 @@ namespace BudgetApp.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -314,7 +271,7 @@ namespace BudgetApp.Controllers
         {
             var user = await UserManager.FindByNameAsync(model.Email);
 
-            if(user != null)
+            if (user != null)
             {
                 string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
@@ -355,7 +312,7 @@ namespace BudgetApp.Controllers
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                 await UserManager.SendEmailAsync(user.Id, "Reset Password", "Cachin' Cash has been notified that you need a new password. Please click <a href=\"" + callbackUrl + "\">here</a> to reset your password.");
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
@@ -510,7 +467,7 @@ namespace BudgetApp.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName};
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

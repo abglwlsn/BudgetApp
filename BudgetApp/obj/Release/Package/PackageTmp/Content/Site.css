@@ -145,7 +145,7 @@ footer {
 }
 
 .app-title {
-    font-family: 'Bangers', cursive;
+        font-family: 'Bangers', cursive;
     font-size:5em;
     /*color:#09c3c3;*/
     color:#fff;
@@ -387,12 +387,6 @@ img {
     background:#0adbdb;
     border-color:#0adbdb;
     color:#fff;
-}
-
-.btn-demo {
-    position:absolute;
-    right:7px;
-    bottom:7px;
 }
 
 .btn-pad {

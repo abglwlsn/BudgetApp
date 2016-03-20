@@ -65,13 +65,13 @@ namespace BudgetApp.Controllers
             var accountsOverviewBar = (from account in hh.BankAccounts.Where(a=>a.IsSoftDeleted!=true)
                                       let income = (from transaction in account.Transactions
                                           .Where(t => t.Income == true &&
-                                                 t.Transacted.DateTime.Year == DateTime.Now.Year &&
-                                                 t.Transacted.DateTime.Month == DateTime.Now.Month)
+                                                 t.Transacted.DateTime.Year == 2016 &&
+                                                 t.Transacted.DateTime.Month == 2)
                                                     select transaction.Amount).DefaultIfEmpty().Sum()
                                       let expense = (from trans in account.Transactions
                                            .Where(t => t.Income == false &&
-                                                 t.Transacted.DateTime.Year == DateTime.Now.Year &&
-                                                 t.Transacted.DateTime.Month == DateTime.Now.Month)
+                                                 t.Transacted.DateTime.Year == 2016 &&
+                                                 t.Transacted.DateTime.Month == 2)
                                                      select trans.Amount).DefaultIfEmpty().Sum()
                                       select new
                                       {
@@ -94,8 +94,8 @@ namespace BudgetApp.Controllers
             var expenseDonut = (from category in hh.Categories
                                      let expense = (from transaction in category.Transactions
                                                     where transaction.Income != true &&
-                                                    transaction.Transacted.DateTime.Year == DateTime.Now.Year &&
-                                                    transaction.Transacted.DateTime.Month == DateTime.Now.Month
+                                                    transaction.Transacted.DateTime.Year == 2016 &&
+                                                    transaction.Transacted.DateTime.Month == 2
                                                     select transaction.Amount).DefaultIfEmpty().Sum()
                                 where expense > 0
                                      select new
@@ -107,8 +107,8 @@ namespace BudgetApp.Controllers
             var incomeDonut = (from category in hh.Categories
                                     let income = (from transaction in category.Transactions
                                                    where transaction.Income == true &&      
-                                                   transaction.Transacted.DateTime.Year == DateTime.Now.Year &&
-                                                   transaction.Transacted.DateTime.Month == DateTime.Now.Month
+                                                   transaction.Transacted.DateTime.Year == 2016 &&
+                                                   transaction.Transacted.DateTime.Month == 2
                                                   select transaction.Amount).DefaultIfEmpty().Sum()
                                where income > 0
                                     select new
@@ -116,18 +116,6 @@ namespace BudgetApp.Controllers
                                         label = category.Name,
                                         value = income
                                     }).ToArray();
-
-            //            var accountsHistoryLine = from account in hh.BankAccounts.Where(a=>a.IsSoftDeleted!=true)
-            //                                      let income = (from transaction in account.Transactions
-            //    .Where(t => t.Income == true &&
-            //           t.Transacted.DateTime.Year == DateTime.Now.Year &&
-            //           t.Transacted.DateTime.Month == DateTime.Now.Month)
-            //                                                    select transaction.Amount).DefaultIfEmpty().Sum()
-
-            //riamang[1:54 PM]
-            //var monthsToDate = Enumerable.Range(1, DateTime.Today.Month)
-            //                           .Select(m => new DateTime(DateTime.Today.Year, m, 1))
-            //                           .ToList();
 
             var allData = new
             {

@@ -170,8 +170,7 @@
     AssignPartialViewHandler('#catsRender', '#editView', '.deleteCat', 'Categories', '_Delete', true);
     AssignPartialViewHandler('#invitedUsers', "#inviteUserPartial", '.invite', 'InvitedUsers', '_Create', false);
 
-    //.cancel-cat - remove partial
-    //.cancel-invite - remove partial
+    //cancels
     $('#invitedUsers').on('click', '.cancel-invite', function () {
         $('.removeIUser').detach();
     })

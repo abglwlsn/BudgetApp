@@ -395,6 +395,8 @@
     <Content Include="Views\Transactions\Create.cshtml" />
     <Content Include="Views\InvitedUsers\_Create.cshtml" />
     <Content Include="Views\BankAccounts\_Transactions.cshtml" />
+    <Content Include="Views\Account\ResendEmailConfirmation.cshtml" />
+    <Content Include="Views\Account\ConfirmationSent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
